@@ -1,0 +1,10 @@
+{
+  "name": "notion-tools",
+  "description": "A set of tools to automate things around Notion.",
+  "repository": "https://github.com/JonathanWbn/notion-tools.git",
+  "author": "JonathanWbn <jwieben@hey.com>",
+  "private": true,
+  "dependencies": {
+    "@notionhq/client": "0.1.9"
+  }
+}
