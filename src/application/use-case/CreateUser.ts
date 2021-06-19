@@ -1,5 +1,6 @@
-import { Authorization } from "../authorization";
-import { UserRepository } from "../repository/UserRepository";
+import { User } from '../../domain/User'
+import { Authorization } from '../authorization'
+import { UserRepository } from '../repository/UserRepository'
 
 export class CreateUser {
   constructor(
@@ -7,11 +8,11 @@ export class CreateUser {
     private readonly userRepository: UserRepository
   ) {}
 
-  public async invoke() {
-    await this.authorization.assertIsAllowedToCreateUsers();
+  public async invoke(): Promise<User> {
+    await this.authorization.assertIsAllowedToCreateUsers()
 
-    const user = await this.userRepository.create();
+    const user = await this.userRepository.create()
 
-    return user;
+    return user
   }
 }

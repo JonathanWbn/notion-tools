@@ -1,10 +1,10 @@
-import { ToolConfig, User } from "../../domain/User";
-import { Authorization } from "../authorization";
-import { UserRepository } from "../repository/UserRepository";
+import { ToolConfig, User } from '../../domain/User'
+import { Authorization } from '../authorization'
+import { UserRepository } from '../repository/UserRepository'
 
 interface CreateUserRequest {
-  userId: User["id"];
-  configId: ToolConfig["id"];
+  userId: User['id']
+  configId: ToolConfig['id']
 }
 
 export class DisableToolConfig {
@@ -13,14 +13,11 @@ export class DisableToolConfig {
     private readonly userRepository: UserRepository
   ) {}
 
-  public async invoke(request: CreateUserRequest) {
-    await this.authorization.assertIsAllowedToUpdateUser(request.userId);
+  public async invoke(request: CreateUserRequest): Promise<User> {
+    await this.authorization.assertIsAllowedToUpdateUser(request.userId)
 
-    const user = await this.userRepository.disableToolConfig(
-      request.userId,
-      request.configId
-    );
+    const user = await this.userRepository.disableToolConfig(request.userId, request.configId)
 
-    return user;
+    return user
   }
 }

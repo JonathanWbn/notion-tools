@@ -1,15 +1,13 @@
-import { Tool } from "../../domain/Tool";
+import { Tool } from '../../domain/Tool'
 
-export interface ToolCreatePayload
-  extends Pick<Tool, "name" | "description" | "config"> {}
+export type ToolCreatePayload = Pick<Tool, 'name' | 'description' | 'config'>
 
-export interface ToolUpdatePayload
-  extends Partial<Pick<Tool, "name" | "description" | "config">> {}
+export type ToolUpdatePayload = Partial<Pick<Tool, 'name' | 'description' | 'config'>>
 
 export interface ToolRepository {
-  create(tool: ToolCreatePayload): Promise<Tool>;
-  update(toolId: Tool["id"], tool: ToolUpdatePayload): Promise<Tool>;
-  disable(toolId: Tool["id"]): Promise<Tool>;
-  getById(toolId: Tool["id"]): Promise<Tool>;
-  getAll(): Promise<Tool[]>;
+  create(tool: ToolCreatePayload): Promise<Tool>
+  update(toolId: Tool['id'], tool: ToolUpdatePayload): Promise<Tool>
+  disable(toolId: Tool['id']): Promise<Tool>
+  getById(toolId: Tool['id']): Promise<Tool>
+  getAll(): Promise<Tool[]>
 }
