@@ -1,5 +1,5 @@
 import { ToolConfig, User } from '../../domain/User'
-import { Authorization } from '../authorization'
+import { Authorization } from '../Authorization'
 import { UserRepository } from '../repository/UserRepository'
 
 interface CreateUserRequest {

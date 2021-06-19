@@ -5,12 +5,19 @@
   "author": "JonathanWbn <jwieben@hey.com>",
   "license": "UNLICENSED",
   "scripts": {
-    "lint": "eslint src/**/*"
+    "lint": "eslint src/**/* pages/**/* && tsc --noEmit",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
-    "@notionhq/client": "0.1.9"
+    "@notionhq/client": "0.1.9",
+    "next": "^11.0.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "devDependencies": {
+    "@types/react": "^17.0.11",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
     "eslint": "^7.29.0",
