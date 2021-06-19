@@ -1,18 +1,12 @@
-export interface Tool {
-  id: string;
-  name: string;
-  description: string;
-  config: Record<string, unknown>;
-  isActive: boolean;
-}
+import { Tool } from "../../domain/Tool";
 
-interface ToolCreatePayload
+export interface ToolCreatePayload
   extends Pick<Tool, "name" | "description" | "config"> {}
 
-interface ToolUpdatePayload
+export interface ToolUpdatePayload
   extends Partial<Pick<Tool, "name" | "description" | "config">> {}
 
-export interface Tools {
+export interface ToolRepository {
   create(tool: ToolCreatePayload): Promise<Tool>;
   update(toolId: Tool["id"], tool: ToolUpdatePayload): Promise<Tool>;
   disable(toolId: Tool["id"]): Promise<Tool>;
