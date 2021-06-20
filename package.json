@@ -11,6 +11,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^1.4.0",
     "@notionhq/client": "0.1.9",
     "next": "^11.0.0",
     "react": "^17.0.2",
