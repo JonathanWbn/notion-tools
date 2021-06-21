@@ -1,6 +1,8 @@
 import React, { FunctionComponent } from 'react'
 import { UserProvider } from '@auth0/nextjs-auth0'
 
+import Header from '../components/header'
+
 interface Props {
   Component: FunctionComponent
   pageProps: unknown
@@ -9,7 +11,10 @@ interface Props {
 const App: FunctionComponent<Props> = ({ Component, pageProps }: Props) => {
   return (
     <UserProvider>
-      <Component {...pageProps} />
+      <Header />
+      <main>
+        <Component {...pageProps} />
+      </main>
     </UserProvider>
   )
 }

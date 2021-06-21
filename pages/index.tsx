@@ -1,22 +1,7 @@
-import { useUser } from '@auth0/nextjs-auth0'
-
 import { FunctionComponent } from 'react'
 
-const App: FunctionComponent = () => {
-  const { user, error, isLoading } = useUser()
-
-  if (isLoading) return <div>Loading...</div>
-  if (error) return <div>{error.message}</div>
-
-  if (user) {
-    return (
-      <div>
-        Welcome {user.name}! <a href="/api/auth/logout">Logout</a>
-      </div>
-    )
-  }
-
-  return <a href="/api/auth/login">Login</a>
+const Home: FunctionComponent = () => {
+  return <h1>Landing Page</h1>
 }
 
-export default App
+export default Home
