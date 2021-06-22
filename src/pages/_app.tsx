@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react'
 import { UserProvider } from '@auth0/nextjs-auth0'
 
-import Header from '../components/header'
+import Header from '../infrastructure/client/components/header'
 
 interface Props {
   Component: FunctionComponent

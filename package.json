@@ -5,7 +5,7 @@
   "author": "JonathanWbn <jwieben@hey.com>",
   "license": "UNLICENSED",
   "scripts": {
-    "lint": "eslint src/**/* pages/**/* && tsc --noEmit",
+    "lint": "eslint src/**/* && tsc --noEmit",
     "dev": "next dev",
     "build": "next build",
     "start": "next start"

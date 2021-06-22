@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { CreateUser } from '../../src/application/use-case/CreateUser'
-import { EnvAuthorization } from '../../src/infrastructure/EnvAuthorization'
-import { DynamoUserRepository } from '../../src/infrastructure/repository/DynamoUserRepository'
+import { CreateUser } from '../../application/use-case/CreateUser'
+import { EnvAuthorization } from '../../infrastructure/EnvAuthorization'
+import { DynamoUserRepository } from '../../infrastructure/repository/DynamoUserRepository'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   const { body, method } = req
