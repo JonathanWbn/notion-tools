@@ -24,8 +24,6 @@ export class DynamoUserRepository implements UserRepository {
       isActive: true,
     }
 
-    console.log('newUser', newUser)
-
     await documentClient
       .put({
         TableName: process.env.DYNAMO_DB_USER_REPOSITORY,
@@ -39,5 +37,17 @@ export class DynamoUserRepository implements UserRepository {
       .promise()
 
     return newUser
+  }
+
+  public async getById(auth0UserId: User['auth0UserId']): Promise<User> {
+    const results = await documentClient
+      .query({
+        TableName: process.env.DYNAMO_DB_USER_REPOSITORY,
+        KeyConditionExpression: 'auth0UserId = :auth0UserId',
+        ExpressionAttributeValues: { ':auth0UserId': auth0UserId },
+      })
+      .promise()
+
+    return results.Items[0] as User
   }
 }

@@ -10,6 +10,5 @@ export interface UserRepository {
   // ): Promise<User>
   // disableToolConfig(userId: User['id'], toolConfigId: ToolConfig['id']): Promise<User>
   // disable(userId: User['id']): Promise<User>
-  // getById(userId: User['id']): Promise<User>
-  // getAll(): Promise<User[]>
+  getById(userId: User['auth0UserId']): Promise<User>
 }
