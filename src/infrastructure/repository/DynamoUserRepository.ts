@@ -1,6 +1,6 @@
 import { UserRepository } from '../../application/repository/UserRepository'
 import AWS from 'aws-sdk'
-import { User } from '../../domain/User'
+import { ToolConfig, User } from '../../domain/User'
 
 AWS.config.update({
   accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID,
@@ -39,6 +39,33 @@ export class DynamoUserRepository implements UserRepository {
     return newUser
   }
 
+  public async addToolConfig(
+    auth0UserId: User['auth0UserId'],
+    toolConfig: ToolConfig
+  ): Promise<User> {
+    const user = await this.getById(auth0UserId)
+
+    const updatedUser = {
+      ...user,
+      toolConfigs: [...user.toolConfigs, toolConfig],
+    }
+
+    await documentClient
+      .update({
+        TableName: process.env.DYNAMO_DB_USER_REPOSITORY,
+        Key: {
+          auth0UserId,
+        },
+        UpdateExpression: 'set toolConfigs = :configs',
+        ExpressionAttributeValues: {
+          ':configs': JSON.stringify(updatedUser.toolConfigs),
+        },
+      })
+      .promise()
+
+    return updatedUser
+  }
+
   public async getById(auth0UserId: User['auth0UserId']): Promise<User> {
     const results = await documentClient
       .query({
@@ -48,6 +75,11 @@ export class DynamoUserRepository implements UserRepository {
       })
       .promise()
 
-    return results.Items[0] as User
+    const user = results.Items[0]
+
+    return {
+      ...user,
+      toolConfigs: JSON.parse(user.toolConfigs),
+    } as User
   }
 }

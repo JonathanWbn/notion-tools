@@ -8,8 +8,4 @@ export class EnvAuthorization implements Authorization {
       throw new Error('UNAUTHORIZED')
     }
   }
-
-  public async assertIsAllowedToUpdateUser(): Promise<void> {
-    throw new Error('not implemented')
-  }
 }
