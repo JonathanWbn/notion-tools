@@ -39,6 +39,20 @@ export class DynamoUserRepository implements UserRepository {
     return newUser
   }
 
+  public async getToolConfigById(
+    userId: User['auth0UserId'],
+    toolConfigId: ToolConfig['id']
+  ): Promise<ToolConfig> {
+    const user = await this.getById(userId)
+    const config = user.toolConfigs.find((config) => config.id === toolConfigId)
+
+    if (!config) {
+      throw Error('No config found.')
+    }
+
+    return config
+  }
+
   public async addToolConfig(
     auth0UserId: User['auth0UserId'],
     toolConfig: ToolConfig
@@ -48,6 +62,35 @@ export class DynamoUserRepository implements UserRepository {
     const updatedUser = {
       ...user,
       toolConfigs: [...user.toolConfigs, toolConfig],
+    }
+
+    await documentClient
+      .update({
+        TableName: process.env.DYNAMO_DB_USER_REPOSITORY,
+        Key: {
+          auth0UserId,
+        },
+        UpdateExpression: 'set toolConfigs = :configs',
+        ExpressionAttributeValues: {
+          ':configs': JSON.stringify(updatedUser.toolConfigs),
+        },
+      })
+      .promise()
+
+    return updatedUser
+  }
+
+  public async updateToolConfig(
+    auth0UserId: User['auth0UserId'],
+    toolConfig: ToolConfig
+  ): Promise<User> {
+    const user = await this.getById(auth0UserId)
+
+    const updatedUser = {
+      ...user,
+      toolConfigs: user.toolConfigs.map((config) =>
+        config.id === toolConfig.id ? toolConfig : config
+      ),
     }
 
     await documentClient

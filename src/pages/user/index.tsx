@@ -19,6 +19,7 @@ const User: FunctionComponent = () => {
         {user.toolConfigs.map((config) => (
           <li key={config.id}>
             {tools.find((tool) => tool.id === config.toolId).name}{' '}
+            {config.isActive ? 'Active' : 'Disabled'}{' '}
             <Link href={`/user/config/${config.id}`}>Config</Link>
           </li>
         ))}

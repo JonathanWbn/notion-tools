@@ -2,7 +2,7 @@ import { UserProfile, useUser as use0AuthUser, withPageAuthRequired } from '@aut
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import { FunctionComponent } from 'react'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import { User as IUser } from '../../../domain/User'
 import { useTools } from '../../tools'
 
@@ -17,10 +17,16 @@ const User: FunctionComponent = () => {
   const toolConfig = user.toolConfigs.find((config) => config.id === id)
   const tool = tools.find((tool) => tool.id === toolConfig.toolId)
 
+  async function disableTool() {
+    await axios.post(`/api/users/${user.auth0UserId}/toolConfig/${toolConfig.id}/disable`)
+    mutate(`/api/users/${auth0user.sub}`)
+  }
+
   return (
     <>
       <h1>Tool: {tool.name}</h1>
       <p>{JSON.stringify(toolConfig)}</p>
+      <button onClick={disableTool}>Disable</button>
     </>
   )
 }
