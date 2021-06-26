@@ -39,6 +39,33 @@ export class DynamoUserRepository implements UserRepository {
     return newUser
   }
 
+  public async updateNotionAccess(
+    userId: User['auth0UserId'],
+    notionAccess: User['notionAccess']
+  ): Promise<User> {
+    const user = await this.getById(userId)
+
+    const updatedUser = {
+      ...user,
+      notionAccess,
+    }
+
+    await documentClient
+      .update({
+        TableName: process.env.DYNAMO_DB_USER_REPOSITORY,
+        Key: {
+          auth0UserId: userId,
+        },
+        UpdateExpression: 'set notionAccess = :notionAccess',
+        ExpressionAttributeValues: {
+          ':notionAccess': JSON.stringify(notionAccess),
+        },
+      })
+      .promise()
+
+    return updatedUser
+  }
+
   public async getToolConfigById(
     userId: User['auth0UserId'],
     toolConfigId: ToolConfig['id']
@@ -123,6 +150,7 @@ export class DynamoUserRepository implements UserRepository {
     return {
       ...user,
       toolConfigs: JSON.parse(user.toolConfigs),
+      notionAccess: user.notionAccess ? JSON.parse(user.notionAccess) : undefined,
     } as User
   }
 }

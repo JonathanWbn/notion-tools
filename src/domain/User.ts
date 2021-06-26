@@ -7,8 +7,16 @@ export interface ToolConfig {
   isActive: boolean
 }
 
+export interface NotionAccess {
+  access_token: string
+  workspace_name: string
+  workspace_icon: string
+  bot_id: string
+}
+
 export interface User {
   auth0UserId: string
   toolConfigs: ToolConfig[]
+  notionAccess?: NotionAccess
   isActive: boolean
 }
