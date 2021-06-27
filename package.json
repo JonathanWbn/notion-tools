@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.4.0",
-    "@notionhq/client": "0.1.9",
+    "@notionhq/client": "^0.2.0",
     "aws-sdk": "^2.931.0",
     "axios": "^0.21.1",
     "next": "^11.0.0",
