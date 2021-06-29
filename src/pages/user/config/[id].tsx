@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { FunctionComponent, useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { User as IUser } from '../../../domain/User'
+import { disableToolConfig } from '../../../infrastructure/client/api-client'
 import { useTools } from '../../tools'
 
 const User: FunctionComponent = () => {
@@ -25,7 +26,7 @@ const User: FunctionComponent = () => {
   }
 
   async function disableTool() {
-    await axios.post(`/api/users/${user.auth0UserId}/toolConfig/${toolConfig.id}/disable`)
+    await disableToolConfig(toolConfig.id, user.auth0UserId)
     mutate(`/api/users/${auth0user.sub}`)
   }
 

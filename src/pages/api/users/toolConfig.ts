@@ -1,9 +1,13 @@
 import { withApiAuthRequired } from '@auth0/nextjs-auth0'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { CreateToolConfig } from '../../../application/use-case/CreateToolConfig'
+import { AddToolToUserResponse } from '../../../infrastructure/client/api-client'
 import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
 
-const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
+const handler = async (
+  req: NextApiRequest,
+  res: NextApiResponse<AddToolToUserResponse>
+): Promise<void> => {
   const { body, method } = req
 
   try {
@@ -22,7 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
     }
   } catch (err) {
     console.log('err', err)
-    res.status(500).json({ statusCode: 500, message: err.message })
+    res.status(500).end()
   }
 }
 

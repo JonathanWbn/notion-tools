@@ -6,13 +6,19 @@ import { DynamoUserRepository } from '../../infrastructure/repository/DynamoUser
 
 const { NOTION_OAUTH_CLIENT_ID, NOTION_OAUTH_CLIENT_SECRET } = process.env
 
-const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-  const { method } = req
+interface Req extends NextApiRequest {
+  query: {
+    code: string
+  }
+}
+
+const handler = async (req: Req, res: NextApiResponse): Promise<void> => {
+  const { method, query } = req
 
   try {
     switch (method) {
       case 'GET': {
-        const { code } = req.query
+        const { code } = query
         const { user } = getSession(req, res)
 
         const { data } = await axios.post(
