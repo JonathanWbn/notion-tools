@@ -1,7 +1,8 @@
-import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0'
+import { withApiAuthRequired } from '@auth0/nextjs-auth0'
 import { Client } from '@notionhq/client/build/src'
 import { Database } from '@notionhq/client/build/src/api-types'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { getUserFromSession } from '../../../infrastructure/api-utils'
 import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
 
 const userRepository = new DynamoUserRepository()
@@ -12,11 +13,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Database[]>): P
   try {
     switch (method) {
       case 'GET': {
-        const { user: authUser } = getSession(req, res) || {}
-        if (!authUser) {
-          res.status(401).end()
-          return
-        }
+        const authUser = getUserFromSession(req, res)
+
         const user = await userRepository.getById(authUser.sub)
         if (!user.notionAccess) {
           res.status(401).end()

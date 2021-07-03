@@ -1,6 +1,7 @@
-import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0'
+import { withApiAuthRequired } from '@auth0/nextjs-auth0'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { DisableToolConfig } from '../../../../application/use-case/DisableToolConfig'
+import { getUserFromSession } from '../../../../infrastructure/api-utils'
 import { DynamoUserRepository } from '../../../../infrastructure/repository/DynamoUserRepository'
 
 const handler = async (
@@ -12,11 +13,7 @@ const handler = async (
   try {
     switch (method) {
       case 'POST': {
-        const { user: authUser } = getSession(req, res) || {}
-        if (!authUser) {
-          res.status(401).end()
-          return
-        }
+        const authUser = getUserFromSession(req, res)
         const disableToolConfig = new DisableToolConfig(new DynamoUserRepository())
 
         await disableToolConfig.invoke({

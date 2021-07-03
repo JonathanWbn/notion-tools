@@ -1,30 +1,20 @@
-import { getSession } from '@auth0/nextjs-auth0'
+import { withApiAuthRequired } from '@auth0/nextjs-auth0'
 import axios from 'axios'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ConnectNotion } from '../../../application/use-case/ConnectNotion'
+import { getUserFromSession } from '../../../infrastructure/api-utils'
 import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
 
 const { NOTION_OAUTH_CLIENT_ID, NOTION_OAUTH_CLIENT_SECRET } = process.env
 
-interface Req extends NextApiRequest {
-  query: {
-    code: string
-  }
-}
-
-const handler = async (req: Req, res: NextApiResponse): Promise<void> => {
+const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   const { method, query } = req
 
   try {
     switch (method) {
       case 'GET': {
         const { code } = query
-        const { user } = getSession(req, res) || {}
-
-        if (!user) {
-          res.status(401).json({ statusCode: 401, message: 'No user found in session.' })
-          return
-        }
+        const authUser = getUserFromSession(req, res)
 
         const { data } = await axios.post(
           'https://api.notion.com/v1/oauth/token',
@@ -45,7 +35,7 @@ const handler = async (req: Req, res: NextApiResponse): Promise<void> => {
         const connectNotion = new ConnectNotion(new DynamoUserRepository())
 
         await connectNotion.invoke({
-          auth0UserId: user.sub,
+          auth0UserId: authUser.sub,
           notionAccess: data,
         })
 
@@ -58,4 +48,4 @@ const handler = async (req: Req, res: NextApiResponse): Promise<void> => {
   }
 }
 
-export default handler
+export default withApiAuthRequired(handler)

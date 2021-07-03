@@ -1,6 +1,7 @@
-import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0'
+import { withApiAuthRequired } from '@auth0/nextjs-auth0'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { User } from '../../../domain/User'
+import { getUserFromSession } from '../../../infrastructure/api-utils'
 import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<User>): Promise<void> => {
@@ -9,11 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<User>): Promise
   try {
     switch (method) {
       case 'GET': {
-        const { user: authUser } = getSession(req, res) || {}
-        if (!authUser) {
-          res.status(401).end()
-          return
-        }
+        const authUser = getUserFromSession(req, res)
         const userRepository = new DynamoUserRepository()
         const user = await userRepository.getById(authUser.sub as string)
 
