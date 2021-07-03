@@ -2,9 +2,12 @@ import { UserRepository } from '../../application/repository/UserRepository'
 import AWS from 'aws-sdk'
 import { ToolConfig, User } from '../../domain/User'
 
+const { DYNAMO_DB_USER_REPOSITORY, MY_AWS_ACCESS_KEY_ID, MY_AWS_SECRET_ACCESS_KEY } =
+  process.env as Record<string, string>
+
 AWS.config.update({
-  accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
+  accessKeyId: MY_AWS_ACCESS_KEY_ID,
+  secretAccessKey: MY_AWS_SECRET_ACCESS_KEY,
   region: 'eu-central-1',
 })
 
@@ -26,7 +29,7 @@ export class DynamoUserRepository implements UserRepository {
 
     await documentClient
       .put({
-        TableName: process.env.DYNAMO_DB_USER_REPOSITORY,
+        TableName: DYNAMO_DB_USER_REPOSITORY,
         Item: {
           auth0UserId: newUser.auth0UserId,
           toolConfigs: JSON.stringify(newUser.toolConfigs),
@@ -52,7 +55,7 @@ export class DynamoUserRepository implements UserRepository {
 
     await documentClient
       .update({
-        TableName: process.env.DYNAMO_DB_USER_REPOSITORY,
+        TableName: DYNAMO_DB_USER_REPOSITORY,
         Key: {
           auth0UserId: userId,
         },
@@ -93,7 +96,7 @@ export class DynamoUserRepository implements UserRepository {
 
     await documentClient
       .update({
-        TableName: process.env.DYNAMO_DB_USER_REPOSITORY,
+        TableName: DYNAMO_DB_USER_REPOSITORY,
         Key: {
           auth0UserId,
         },
@@ -122,7 +125,7 @@ export class DynamoUserRepository implements UserRepository {
 
     await documentClient
       .update({
-        TableName: process.env.DYNAMO_DB_USER_REPOSITORY,
+        TableName: DYNAMO_DB_USER_REPOSITORY,
         Key: {
           auth0UserId,
         },
@@ -139,11 +142,15 @@ export class DynamoUserRepository implements UserRepository {
   public async getById(auth0UserId: User['auth0UserId']): Promise<User> {
     const results = await documentClient
       .query({
-        TableName: process.env.DYNAMO_DB_USER_REPOSITORY,
+        TableName: DYNAMO_DB_USER_REPOSITORY,
         KeyConditionExpression: 'auth0UserId = :auth0UserId',
         ExpressionAttributeValues: { ':auth0UserId': auth0UserId },
       })
       .promise()
+
+    if (!results.Items) {
+      throw Error('No User found.')
+    }
 
     const user = results.Items[0]
 

@@ -13,7 +13,13 @@ const tools: Tool[] = [
 
 export class MemoryToolRepository implements ToolRepository {
   getById(toolId: Tool['id']): Tool {
-    return tools.find((tool) => tool.id === toolId)
+    const tool = tools.find((tool) => tool.id === toolId)
+
+    if (!tool) {
+      throw new Error('No tool found.')
+    }
+
+    return tool
   }
 
   getAll(): Tool[] {

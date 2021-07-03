@@ -11,8 +11,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
   try {
     switch (method) {
       case 'GET': {
-        const { user: authUser } = getSession(req, res)
+        const { user: authUser } = getSession(req, res) || {}
+        if (!authUser) {
+          res.status(401).json({ statusCode: 401, message: 'No user found in session.' })
+          return
+        }
         const user = await userRepository.getById(authUser.sub)
+        if (!user.notionAccess) {
+          res.status(401).json({ statusCode: 401, message: 'User has no Notion access token.' })
+          return
+        }
 
         const notion = new Client({ auth: user.notionAccess.access_token })
         const databases = await notion.databases.list()

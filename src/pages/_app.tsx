@@ -5,7 +5,8 @@ import Header from '../infrastructure/client/components/header'
 
 interface Props {
   Component: FunctionComponent
-  pageProps: unknown
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pageProps: Record<string, any>
 }
 
 const App: FunctionComponent<Props> = ({ Component, pageProps }: Props) => {

@@ -1,23 +1,28 @@
-import { UserProfile, useUser as use0AuthUser, withPageAuthRequired } from '@auth0/nextjs-auth0'
+import { withPageAuthRequired } from '@auth0/nextjs-auth0'
+import type { Database } from '@notionhq/client/build/src/api-types'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import { FunctionComponent, useState } from 'react'
-import useSWR, { mutate } from 'swr'
-import { User as IUser } from '../../../domain/User'
-import { disableToolConfig } from '../../../infrastructure/client/api-client'
-import { useTools } from '../../tools'
+import { mutate } from 'swr'
+import { disableToolConfig, useTools, useUser } from '../../../infrastructure/client/api-client'
 
 const User: FunctionComponent = () => {
   const router = useRouter()
   const { id } = router.query
   const { tools } = useTools()
   const { user, auth0user } = useUser()
-  const [databases, setDatabases] = useState([])
+  const [databases, setDatabases] = useState<Database[]>([])
 
-  if (!user || !auth0user || !tools) return <h1>loading...</h1>
+  if (!tools || !user) return <h1>loading...</h1>
 
   const toolConfig = user.toolConfigs.find((config) => config.id === id)
+  if (!toolConfig) {
+    return <h1>No config found.</h1>
+  }
   const tool = tools.find((tool) => tool.id === toolConfig.toolId)
+  if (!tool) {
+    return <h1>No tool found.</h1>
+  }
 
   async function showDatabases() {
     const { data } = await axios.get('/api/notion/databases')
@@ -26,6 +31,9 @@ const User: FunctionComponent = () => {
   }
 
   async function disableTool() {
+    if (!user || !auth0user || !toolConfig) {
+      throw 'Cannot disable tool'
+    }
     await disableToolConfig(toolConfig.id, user.auth0UserId)
     mutate(`/api/users/${auth0user.sub}`)
   }
@@ -45,15 +53,6 @@ const User: FunctionComponent = () => {
       </select>
     </>
   )
-}
-
-const fetcher = (url: string): Promise<IUser> => axios.get(url).then((res) => res.data)
-
-export function useUser(): { user: IUser; auth0user: UserProfile } {
-  const { user: auth0user } = use0AuthUser()
-  const { data: user } = useSWR(`/api/users/${auth0user?.sub}`, fetcher)
-
-  return { user, auth0user }
 }
 
 export const getServerSideProps = withPageAuthRequired()

@@ -19,7 +19,12 @@ const handler = async (req: Req, res: NextApiResponse): Promise<void> => {
     switch (method) {
       case 'GET': {
         const { code } = query
-        const { user } = getSession(req, res)
+        const { user } = getSession(req, res) || {}
+
+        if (!user) {
+          res.status(401).json({ statusCode: 401, message: 'No user found in session.' })
+          return
+        }
 
         const { data } = await axios.post(
           'https://api.notion.com/v1/oauth/token',

@@ -1,4 +1,6 @@
+import { UserProfile, useUser as use0AuthUser } from '@auth0/nextjs-auth0'
 import axios from 'axios'
+import useSWR from 'swr'
 import { Tool } from '../../domain/Tool'
 import { ToolConfig, User } from '../../domain/User'
 
@@ -36,4 +38,22 @@ export async function disableToolConfig(
   )
 
   return data
+}
+
+const fetcher = (url: string) => axios.get(url).then((res) => res.data)
+
+export function useUser(): { user?: User; auth0user?: UserProfile } {
+  const { user: auth0user } = use0AuthUser()
+  const { data: user } = useSWR<User>(
+    auth0user?.sub ? `/api/users/${auth0user.sub}` : null,
+    fetcher
+  )
+
+  return { user, auth0user }
+}
+
+export function useTools(): { tools: Tool[]; error: Error } {
+  const { data, error } = useSWR('/api/tools', fetcher)
+
+  return { tools: data, error }
 }
