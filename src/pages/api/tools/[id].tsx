@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { Tool } from '../../../domain/Tool'
 import { MemoryToolRepository } from '../../../infrastructure/repository/MemoryToolRepository'
 
-const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
+const handler = async (req: NextApiRequest, res: NextApiResponse<Tool>): Promise<void> => {
   const { method, query } = req
 
   try {
@@ -15,7 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
     }
   } catch (err) {
     console.log('err', err)
-    res.status(500).json({ statusCode: 500, message: err.message })
+    res.status(500).end()
   }
 }
 

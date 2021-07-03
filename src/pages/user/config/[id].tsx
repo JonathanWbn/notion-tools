@@ -10,7 +10,7 @@ const User: FunctionComponent = () => {
   const router = useRouter()
   const { id } = router.query
   const { tools } = useTools()
-  const { user, auth0user } = useUser()
+  const { user } = useUser()
   const [databases, setDatabases] = useState<Database[]>([])
 
   if (!tools || !user) return <h1>loading...</h1>
@@ -25,17 +25,17 @@ const User: FunctionComponent = () => {
   }
 
   async function showDatabases() {
-    const { data } = await axios.get('/api/notion/databases')
+    const { data } = await axios.get<Database[]>('/api/notion/databases')
 
-    setDatabases(data.results)
+    setDatabases(data)
   }
 
   async function disableTool() {
-    if (!user || !auth0user || !toolConfig) {
+    if (!toolConfig) {
       throw 'Cannot disable tool'
     }
-    await disableToolConfig(toolConfig.id, user.auth0UserId)
-    mutate(`/api/users/${auth0user.sub}`)
+    await disableToolConfig(toolConfig.id)
+    mutate('/api/users/me')
   }
 
   return (

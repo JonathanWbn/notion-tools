@@ -5,36 +5,28 @@ import { Tool } from '../../domain/Tool'
 import { ToolConfig, User } from '../../domain/User'
 
 interface AddToolToUserRequest {
-  auth0UserId: User['auth0UserId']
   toolConfig: ToolConfig['config']
   toolId: Tool['id']
 }
 
 export type AddToolToUserResponse = User
 
-export async function addToolToUser(
-  toolId: string,
-  userId: string
-): Promise<AddToolToUserResponse> {
+export async function addToolToUser(toolId: string): Promise<AddToolToUserResponse> {
   const request: AddToolToUserRequest = {
-    auth0UserId: userId,
     toolConfig: {},
     toolId,
   }
 
-  const { data } = await axios.post<AddToolToUserResponse>('/api/users/toolConfig', request)
+  const { data } = await axios.post<AddToolToUserResponse>('/api/users/tool-config', request)
 
   return data
 }
 
 export type DisableToolConfigResponse = User
 
-export async function disableToolConfig(
-  configId: string,
-  userId: string
-): Promise<DisableToolConfigResponse> {
+export async function disableToolConfig(configId: string): Promise<DisableToolConfigResponse> {
   const { data } = await axios.post<DisableToolConfigResponse>(
-    `/api/users/${userId}/toolConfig/${configId}/disable`
+    `/api/users/tool-config/disable?configId=${configId}`
   )
 
   return data
@@ -44,10 +36,7 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 
 export function useUser(): { user?: User; auth0user?: UserProfile } {
   const { user: auth0user } = use0AuthUser()
-  const { data: user } = useSWR<User>(
-    auth0user?.sub ? `/api/users/${auth0user.sub}` : null,
-    fetcher
-  )
+  const { data: user } = useSWR<User>(auth0user?.sub ? '/api/users/me' : null, fetcher)
 
   return { user, auth0user }
 }

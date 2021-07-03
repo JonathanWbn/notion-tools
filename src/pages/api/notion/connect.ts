@@ -1,8 +1,8 @@
 import { getSession } from '@auth0/nextjs-auth0'
 import axios from 'axios'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ConnectNotion } from '../../application/use-case/ConnectNotion'
-import { DynamoUserRepository } from '../../infrastructure/repository/DynamoUserRepository'
+import { ConnectNotion } from '../../../application/use-case/ConnectNotion'
+import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
 
 const { NOTION_OAUTH_CLIENT_ID, NOTION_OAUTH_CLIENT_SECRET } = process.env
 
@@ -31,7 +31,7 @@ const handler = async (req: Req, res: NextApiResponse): Promise<void> => {
           {
             grant_type: 'authorization_code',
             code,
-            redirect_uri: 'https://notion-tools.io/api/notion-connect',
+            redirect_uri: 'https://notion-tools.io/api/notion/connect',
           },
           {
             headers: {

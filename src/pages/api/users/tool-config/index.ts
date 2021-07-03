@@ -1,8 +1,8 @@
-import { withApiAuthRequired } from '@auth0/nextjs-auth0'
+import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { CreateToolConfig } from '../../../application/use-case/CreateToolConfig'
-import { AddToolToUserResponse } from '../../../infrastructure/client/api-client'
-import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
+import { CreateToolConfig } from '../../../../application/use-case/CreateToolConfig'
+import { AddToolToUserResponse } from '../../../../infrastructure/client/api-client'
+import { DynamoUserRepository } from '../../../../infrastructure/repository/DynamoUserRepository'
 
 const handler = async (
   req: NextApiRequest,
@@ -13,10 +13,15 @@ const handler = async (
   try {
     switch (method) {
       case 'POST': {
+        const { user: authUser } = getSession(req, res) || {}
+        if (!authUser) {
+          res.status(401).end()
+          return
+        }
         const createToolConfig = new CreateToolConfig(new DynamoUserRepository())
 
         const updatedUser = await createToolConfig.invoke({
-          auth0UserId: body.auth0UserId,
+          auth0UserId: authUser.sub,
           toolConfig: body.toolConfig,
           toolId: body.toolId,
         })
