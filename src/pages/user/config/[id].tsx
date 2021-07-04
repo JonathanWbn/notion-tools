@@ -1,6 +1,6 @@
 import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { useRouter } from 'next/router'
-import { FunctionComponent, useEffect, useState } from 'react'
+import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
 import { mutate } from 'swr'
 import { ToolConfig, RecurringFrequency, TimeOfDay, Weekday } from '../../../domain/User'
 import {
@@ -45,13 +45,15 @@ const User: FunctionComponent = () => {
     mutate('/api/users/me')
   }
 
+  const selectedDatabase = databases?.find((db) => db.id === formState?.config.databaseId)
+
   return (
     <>
       <h1>Tool: {tool.name}</h1>
       <p>ToolConfig: {JSON.stringify(toolConfig)}</p>
       <p>FormState: {JSON.stringify(formState)}</p>
       {formState && (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
           <label>
             Enabled
             <input
@@ -134,6 +136,67 @@ const User: FunctionComponent = () => {
               }
             ></input>
           </label>
+          {selectedDatabase && (
+            <>
+              <h2>Create page with properties</h2>
+              {Object.entries(selectedDatabase.properties).map(([name, property]) => {
+                const handleChange = (
+                  e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
+                ) => {
+                  setFormState({
+                    ...formState,
+                    config: {
+                      ...formState.config,
+                      properties: {
+                        ...formState.config.properties,
+                        [property.id]: e.target.value,
+                      },
+                    },
+                  })
+                }
+                if (property.type === 'select') {
+                  return (
+                    <label key={property.id}>
+                      {name}
+                      <select
+                        value={formState.config.properties?.[property.id]}
+                        onChange={handleChange}
+                      >
+                        <option value="">---</option>
+                        {property.select.options.map((option) => (
+                          <option key={option.id} value={option.id}>
+                            {option.name}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  )
+                } else if (property.type === 'title') {
+                  return (
+                    <label key={property.id}>
+                      {name}
+                      <input
+                        value={formState.config.properties?.[property.id]}
+                        onChange={handleChange}
+                      ></input>
+                    </label>
+                  )
+                } else if (property.type === 'date') {
+                  return (
+                    <label key={property.id}>
+                      {name}
+                      <input
+                        type="date"
+                        value={formState.config.properties?.[property.id]}
+                        onChange={handleChange}
+                      ></input>
+                    </label>
+                  )
+                }
+                return null
+              })}
+            </>
+          )}
           <button>Save</button>
         </form>
       )}

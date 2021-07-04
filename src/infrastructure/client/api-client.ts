@@ -15,7 +15,9 @@ export type AddToolToUserResponse = User
 
 export async function addToolToUser(toolId: string): Promise<AddToolToUserResponse> {
   const request: AddToolToUserRequest = {
-    toolConfig: {},
+    toolConfig: {
+      properties: {},
+    },
     toolId,
   }
 

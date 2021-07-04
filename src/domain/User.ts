@@ -12,6 +12,9 @@ export interface RecurringToolConfig {
   frequency?: RecurringFrequency
   weekday?: Weekday
   timeOfDay?: TimeOfDay
+  properties: {
+    [propertyId: string]: string
+  }
 }
 
 export interface NotionAccess {
