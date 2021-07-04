@@ -1,17 +1,29 @@
 import { withPageAuthRequired } from '@auth0/nextjs-auth0'
-import type { Database } from '@notionhq/client/build/src/api-types'
-import axios from 'axios'
 import { useRouter } from 'next/router'
-import { FunctionComponent, useState } from 'react'
+import { FunctionComponent, useEffect, useState } from 'react'
 import { mutate } from 'swr'
-import { disableToolConfig, useTools, useUser } from '../../../infrastructure/client/api-client'
+import { ToolConfig, RecurringFrequency, TimeOfDay, Weekday } from '../../../domain/User'
+import {
+  updateToolConfig,
+  useDatabases,
+  useTools,
+  useUser,
+} from '../../../infrastructure/client/api-client'
 
 const User: FunctionComponent = () => {
   const router = useRouter()
   const { id } = router.query
   const { tools } = useTools()
   const { user } = useUser()
-  const [databases, setDatabases] = useState<Database[]>([])
+  const { databases } = useDatabases()
+  const [formState, setFormState] = useState<ToolConfig>()
+
+  useEffect(() => {
+    if (user) {
+      const toolConfig = user.toolConfigs.find((config) => config.id === id)
+      if (toolConfig) setFormState(toolConfig)
+    }
+  }, [user])
 
   if (!tools || !user) return <h1>loading...</h1>
 
@@ -24,33 +36,107 @@ const User: FunctionComponent = () => {
     return <h1>No tool found.</h1>
   }
 
-  async function showDatabases() {
-    const { data } = await axios.get<Database[]>('/api/notion/databases')
-
-    setDatabases(data)
-  }
-
-  async function disableTool() {
-    if (!toolConfig) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    if (!toolConfig || !formState) {
       throw 'Cannot disable tool'
     }
-    await disableToolConfig(toolConfig.id)
+    await updateToolConfig(toolConfig.id, formState)
     mutate('/api/users/me')
   }
 
   return (
     <>
       <h1>Tool: {tool.name}</h1>
-      <p>{JSON.stringify(toolConfig)}</p>
-      <button onClick={disableTool}>Disable</button>
-      <button onClick={showDatabases}>Load databases</button>
-      <select>
-        {databases.map((database) => (
-          <option key={database.id} value={database.id}>
-            {database.title[0].plain_text}
-          </option>
-        ))}
-      </select>
+      <p>ToolConfig: {JSON.stringify(toolConfig)}</p>
+      <p>FormState: {JSON.stringify(formState)}</p>
+      {formState && (
+        <form onSubmit={handleSubmit}>
+          <label>
+            Enabled
+            <input
+              type="checkbox"
+              checked={formState.isActive}
+              onChange={(e) => setFormState({ ...formState, isActive: e.target.checked })}
+            ></input>
+          </label>
+          <h2>Config</h2>
+          <label>
+            Database
+            <select
+              value={formState.config.databaseId}
+              onChange={(e) =>
+                setFormState({
+                  ...formState,
+                  config: { ...formState.config, databaseId: e.target.value },
+                })
+              }
+            >
+              <option value="">---</option>
+              {databases?.map((database) => (
+                <option key={database.id} value={database.id}>
+                  {database.title[0].plain_text}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Frequency
+            <select
+              value={formState.config.frequency}
+              onChange={(e) =>
+                setFormState({
+                  ...formState,
+                  config: { ...formState.config, frequency: e.target.value as RecurringFrequency },
+                })
+              }
+            >
+              <option value="">---</option>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+            </select>
+          </label>
+          {formState.config.frequency === 'weekly' && (
+            <label>
+              Day of week
+              <select
+                value={formState.config.weekday}
+                onChange={(e) =>
+                  setFormState({
+                    ...formState,
+                    config: { ...formState.config, weekday: e.target.value as Weekday },
+                  })
+                }
+              >
+                <option value="">---</option>
+                <option value="mon">Monday</option>
+                <option value="tues">Tuesday</option>
+                <option value="wed">Wednesday</option>
+                <option value="thu">Thursday</option>
+                <option value="fri">Friday</option>
+                <option value="sat">Saturday</option>
+                <option value="sun">Sunday</option>
+              </select>
+            </label>
+          )}
+          <label>
+            Time of taks creation (UTC)
+            <input
+              value={formState.config.timeOfDay || ''}
+              type="time"
+              min="00:00"
+              max="24:00"
+              onChange={(e) =>
+                setFormState({
+                  ...formState,
+                  config: { ...formState.config, timeOfDay: e.target.value as TimeOfDay },
+                })
+              }
+            ></input>
+          </label>
+          <button>Save</button>
+        </form>
+      )}
     </>
   )
 }

@@ -1,15 +1,16 @@
 import { ToolConfig, User } from '../../domain/User'
 import { UserRepository } from '../repository/UserRepository'
 
-interface DisableToolConfigRequest {
+interface UpdateToolConfigRequest {
   auth0UserId: User['auth0UserId']
   toolConfigId: ToolConfig['id']
+  toolConfig: Partial<ToolConfig>
 }
 
-export class DisableToolConfig {
+export class UpdateToolConfig {
   constructor(private readonly userRepository: UserRepository) {}
 
-  public async invoke(request: DisableToolConfigRequest): Promise<User> {
+  public async invoke(request: UpdateToolConfigRequest): Promise<User> {
     const toolConfig = await this.userRepository.getToolConfigById(
       request.auth0UserId,
       request.toolConfigId
@@ -17,7 +18,7 @@ export class DisableToolConfig {
 
     const user = await this.userRepository.updateToolConfig(request.auth0UserId, {
       ...toolConfig,
-      isActive: false,
+      ...request.toolConfig,
     })
 
     return user

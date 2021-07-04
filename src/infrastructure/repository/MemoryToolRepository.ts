@@ -6,7 +6,6 @@ const tools: Tool[] = [
     id: 'recurring-tasks',
     name: 'Recurring Tasks',
     description: 'A simple way of automatically creating recurring tasks based on a schedule.',
-    config: {},
     isActive: true,
   },
 ]

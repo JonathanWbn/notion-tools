@@ -2,9 +2,8 @@ import { FunctionComponent } from 'react'
 import { addToolToUser, useTools } from '../infrastructure/client/api-client'
 
 const Tools: FunctionComponent = () => {
-  const { tools, error } = useTools()
+  const { tools } = useTools()
 
-  if (error) return <h1>failed to load</h1>
   if (!tools) return <h1>loading...</h1>
 
   return (
