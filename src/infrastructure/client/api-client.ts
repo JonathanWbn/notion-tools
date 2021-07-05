@@ -13,7 +13,7 @@ interface AddToolToUserRequest {
 
 export type AddToolToUserResponse = User
 
-export async function addToolToUser(toolId: string): Promise<AddToolToUserResponse> {
+export async function addToolToUser(toolId: string): Promise<void> {
   const request: AddToolToUserRequest = {
     toolConfig: {
       properties: {},
@@ -21,9 +21,7 @@ export async function addToolToUser(toolId: string): Promise<AddToolToUserRespon
     toolId,
   }
 
-  const { data } = await axios.post<AddToolToUserResponse>('/api/users/tool-config', request)
-
-  return data
+  await axios.post<AddToolToUserResponse>('/api/users/tool-config', request)
 }
 
 export type UpdateToolConfigResponse = User

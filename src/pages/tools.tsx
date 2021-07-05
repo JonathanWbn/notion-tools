@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'react'
 import { addToolToUser, useTools } from '../infrastructure/client/api-client'
+import { Tool } from '../infrastructure/client/components/tool'
 
 const Tools: FunctionComponent = () => {
   const { tools } = useTools()
@@ -9,10 +10,7 @@ const Tools: FunctionComponent = () => {
   return (
     <ul>
       {tools.map((tool) => (
-        <li key={tool.id}>
-          {tool.name} - {tool.description}
-          <button onClick={() => addToolToUser(tool.id)}>Add</button>
-        </li>
+        <Tool key={tool.id} tool={tool} onAdd={addToolToUser} />
       ))}
     </ul>
   )

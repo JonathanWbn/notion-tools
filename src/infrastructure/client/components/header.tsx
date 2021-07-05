@@ -1,8 +1,8 @@
-import { FunctionComponent } from 'react'
+import { ReactElement } from 'react'
 import { useUser } from '@auth0/nextjs-auth0'
 import Link from 'next/link'
 
-const Header: FunctionComponent = () => {
+export function Header(): ReactElement {
   const { user, error, isLoading } = useUser()
 
   if (isLoading) return <div>Loading...</div>
@@ -30,5 +30,3 @@ const Header: FunctionComponent = () => {
 
   return <a href="/api/auth/login">Login</a>
 }
-
-export default Header
