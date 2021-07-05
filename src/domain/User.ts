@@ -12,9 +12,21 @@ export interface RecurringToolConfig {
   frequency?: RecurringFrequency
   weekday?: Weekday
   timeOfDay?: TimeOfDay
-  properties: {
+  properties?: {
     [propertyId: string]: string
   }
+}
+
+export const configIsComplete = (config: RecurringToolConfig): boolean => {
+  if (!config.databaseId || !config.timeOfDay || !config.frequency) {
+    return false
+  }
+
+  if (config.frequency === 'weekly' && !config.weekday) {
+    return false
+  }
+
+  return true
 }
 
 export interface NotionAccess {

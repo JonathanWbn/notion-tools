@@ -50,10 +50,7 @@ export function ToolConfigForm({ initialValues, onSubmit }: Props): ReactElement
         <Select
           value={values.config.weekday}
           onChange={(v) =>
-            setValues({
-              ...values,
-              config: { ...values.config, weekday: v as Weekday },
-            })
+            setValues({ ...values, config: { ...values.config, weekday: v as Weekday } })
           }
           options={[
             { value: 'mon', label: 'Monday' },
@@ -154,7 +151,7 @@ function Select({
 interface PropertyInputProps {
   property: Property
   name: string
-  value: string
+  value: string | undefined
   onChange: (val: string) => void
 }
 

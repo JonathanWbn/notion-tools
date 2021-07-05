@@ -2,7 +2,7 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { useRouter } from 'next/router'
 import { FunctionComponent } from 'react'
 import { mutate } from 'swr'
-import { ToolConfig } from '../../../domain/User'
+import { configIsComplete, ToolConfig } from '../../../domain/User'
 import { updateToolConfig, useTools, useUser } from '../../../infrastructure/client/api-client'
 import { ToolConfigForm } from '../../../infrastructure/client/components/tool-config-form'
 
@@ -24,6 +24,11 @@ const User: FunctionComponent = () => {
   }
 
   async function handleSubmit(config: ToolConfig): Promise<void> {
+    if (!configIsComplete(config['config'])) {
+      alert('Config is incomplete.')
+      return
+    }
+
     await updateToolConfig((toolConfig as ToolConfig).id, config)
     mutate('/api/users/me')
   }
