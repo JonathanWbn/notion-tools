@@ -1,4 +1,11 @@
-import { Property } from '@notionhq/client/build/src/api-types'
+import _ from 'lodash'
+import {
+  DatePropertyValue,
+  InputPropertyValue,
+  Property,
+  SelectPropertyValue,
+  TitlePropertyValue,
+} from '@notionhq/client/build/src/api-types'
 import { PropsWithChildren, ReactElement, useState } from 'react'
 import { RecurringFrequency, TimeOfDay, ToolConfig, Weekday } from '../../../domain/User'
 import { useDatabases } from '../api-client'
@@ -89,15 +96,28 @@ export function ToolConfigForm({ initialValues, onSubmit }: Props): ReactElement
               name={name}
               property={property}
               value={values.config.properties?.[property.id]}
-              onChange={(v) =>
-                setValues({
-                  ...values,
-                  config: {
-                    ...values.config,
-                    properties: { ...values.config.properties, [property.id]: v },
-                  },
-                })
-              }
+              onChange={(propertyValue) => {
+                if (propertyValue) {
+                  setValues({
+                    ...values,
+                    config: {
+                      ...values.config,
+                      properties: {
+                        ...values.config.properties,
+                        [property.id]: propertyValue,
+                      },
+                    },
+                  })
+                } else {
+                  setValues({
+                    ...values,
+                    config: {
+                      ...values.config,
+                      properties: _.omit(values.config.properties, property.id),
+                    },
+                  })
+                }
+              }}
             />
           ))}
         </>
@@ -151,16 +171,32 @@ function Select({
 interface PropertyInputProps {
   property: Property
   name: string
-  value: string | undefined
-  onChange: (val: string) => void
+  value: InputPropertyValue | undefined
+  onChange: (val: InputPropertyValue | undefined) => void
 }
 
 function PropertyInput({ property, value, onChange, name }: PropertyInputProps): ReactElement {
   if (property.type === 'select') {
+    value = value as SelectPropertyValue | undefined
     return (
       <label key={property.id}>
         {name}
-        <select value={value} onChange={(e) => onChange(e.target.value)}>
+        <select
+          value={value ? value.select.id : ''}
+          onChange={(e) => {
+            const selectedOption = property.select.options.find((opt) => opt.id === e.target.value)
+            if (!selectedOption) {
+              onChange(undefined)
+              return
+            }
+            const v: SelectPropertyValue = {
+              id: property.id,
+              type: 'select',
+              select: selectedOption,
+            }
+            onChange(v)
+          }}
+        >
           <option value="">---</option>
           {property.select.options.map((option) => (
             <option key={option.id} value={option.id}>
@@ -171,17 +207,62 @@ function PropertyInput({ property, value, onChange, name }: PropertyInputProps):
       </label>
     )
   } else if (property.type === 'title') {
+    value = value as TitlePropertyValue | undefined
+    const textValue = value
+      ? value.title
+          .filter((el) => el.type === 'text')
+          .map((el) => el.plain_text)
+          .join('')
+      : ''
     return (
       <label key={property.id}>
         {name}
-        <input value={value} onChange={(e) => onChange(e.target.value)}></input>
+        <input
+          value={textValue}
+          onChange={(e) => {
+            const v: TitlePropertyValue = {
+              id: property.id,
+              type: 'title',
+              title: [
+                {
+                  type: 'text',
+                  plain_text: e.target.value,
+                  text: { content: e.target.value },
+                  annotations: {
+                    bold: false,
+                    code: false,
+                    color: 'default',
+                    italic: false,
+                    strikethrough: false,
+                    underline: false,
+                  },
+                },
+              ],
+            }
+            onChange(v)
+          }}
+        ></input>
       </label>
     )
   } else if (property.type === 'date') {
+    value = value as DatePropertyValue | undefined
     return (
       <label key={property.id}>
         {name}
-        <input type="date" value={value} onChange={(e) => onChange(e.target.value)}></input>
+        <input
+          type="date"
+          value={value ? value.date.start : ''}
+          onChange={(e) => {
+            const v: DatePropertyValue = {
+              id: property.id,
+              type: 'date',
+              date: {
+                start: e.target.value,
+              },
+            }
+            onChange(v)
+          }}
+        ></input>
       </label>
     )
   }

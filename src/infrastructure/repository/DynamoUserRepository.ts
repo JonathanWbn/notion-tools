@@ -156,7 +156,7 @@ export class DynamoUserRepository implements UserRepository {
 
     return {
       ...user,
-      toolConfigs: JSON.parse(user.toolConfigs),
+      toolConfigs: JSON.parse(user.toolConfigs || '[]'),
       notionAccess: user.notionAccess ? JSON.parse(user.notionAccess) : undefined,
     } as User
   }

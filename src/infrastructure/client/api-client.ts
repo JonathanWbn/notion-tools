@@ -22,6 +22,10 @@ export async function addToolToUser(toolId: string): Promise<void> {
   await axios.post<AddToolToUserResponse>('/api/users/tool-config', request)
 }
 
+export async function runToolConfig(configId: string): Promise<void> {
+  await axios.post(`/api/users/tool-config/${configId}/run`)
+}
+
 export type UpdateToolConfigResponse = User
 
 export async function updateToolConfig(

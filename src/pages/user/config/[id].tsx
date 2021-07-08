@@ -3,7 +3,12 @@ import { useRouter } from 'next/router'
 import { FunctionComponent } from 'react'
 import { mutate } from 'swr'
 import { configIsComplete, ToolConfig } from '../../../domain/User'
-import { updateToolConfig, useTools, useUser } from '../../../infrastructure/client/api-client'
+import {
+  runToolConfig,
+  updateToolConfig,
+  useTools,
+  useUser,
+} from '../../../infrastructure/client/api-client'
 import { ToolConfigForm } from '../../../infrastructure/client/components/tool-config-form'
 
 const User: FunctionComponent = () => {
@@ -33,10 +38,15 @@ const User: FunctionComponent = () => {
     mutate('/api/users/me')
   }
 
+  async function handleTestRunClick() {
+    await runToolConfig(id as string)
+  }
+
   return (
     <>
       <h1>Tool: {tool.name}</h1>
       <ToolConfigForm initialValues={toolConfig} onSubmit={handleSubmit} />
+      <button onClick={handleTestRunClick}>Test Run</button>
     </>
   )
 }

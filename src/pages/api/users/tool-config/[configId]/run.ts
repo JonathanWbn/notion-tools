@@ -1,25 +1,24 @@
 import { withApiAuthRequired } from '@auth0/nextjs-auth0'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { UpdateToolConfig } from '../../../../application/use-case/UpdateToolConfig'
-import { getUserFromSession } from '../../../../infrastructure/api-utils'
-import { DynamoUserRepository } from '../../../../infrastructure/repository/DynamoUserRepository'
+import { RunToolConfig } from '../../../../../application/use-case/RunToolConfig'
+import { getUserFromSession } from '../../../../../infrastructure/api-utils'
+import { DynamoUserRepository } from '../../../../../infrastructure/repository/DynamoUserRepository'
 
 const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<{ success: true }>
 ): Promise<void> => {
-  const { query, method, body } = req
+  const { query, method } = req
 
   try {
     switch (method) {
-      case 'PATCH': {
+      case 'POST': {
         const authUser = getUserFromSession(req, res)
-        const updateToolConfig = new UpdateToolConfig(new DynamoUserRepository())
+        const updateToolConfig = new RunToolConfig(new DynamoUserRepository())
 
         await updateToolConfig.invoke({
           auth0UserId: authUser.sub,
           toolConfigId: query.configId as string,
-          toolConfig: body,
         })
 
         res.status(200).send({ success: true })

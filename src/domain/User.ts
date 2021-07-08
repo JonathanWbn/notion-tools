@@ -1,3 +1,4 @@
+import { InputPropertyValue } from '@notionhq/client/build/src/api-types'
 import { Tool } from './Tool'
 
 export interface ToolConfig {
@@ -13,7 +14,7 @@ export interface RecurringToolConfig {
   weekday?: Weekday
   timeOfDay?: TimeOfDay
   properties?: {
-    [propertyId: string]: string
+    [propertyId: string]: InputPropertyValue
   }
 }
 

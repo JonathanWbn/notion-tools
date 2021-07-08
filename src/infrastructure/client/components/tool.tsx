@@ -1,9 +1,9 @@
 import { ReactElement } from 'react'
-import { Tool } from '../../../domain/Tool'
+import { Tool as ITool } from '../../../domain/Tool'
 
 interface Props {
-  tool: Tool
-  onAdd: (toolId: Tool['id']) => Promise<void>
+  tool: ITool
+  onAdd: (toolId: ITool['id']) => Promise<void>
 }
 
 export function Tool({ tool, onAdd }: Props): ReactElement {
