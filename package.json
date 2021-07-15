@@ -8,7 +8,8 @@
     "lint": "eslint src/**/* && tsc --noEmit",
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "deploy": "tsc && cp -R node_modules .build/ && sam deploy"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.4.2",

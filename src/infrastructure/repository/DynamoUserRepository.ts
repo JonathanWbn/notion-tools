@@ -160,4 +160,21 @@ export class DynamoUserRepository implements UserRepository {
       notionAccess: user.notionAccess ? JSON.parse(user.notionAccess) : undefined,
     } as User
   }
+
+  public async getAll(): Promise<User[]> {
+    const results = await documentClient.scan({ TableName: DYNAMO_DB_USER_REPOSITORY }).promise()
+
+    if (!results.Items) {
+      throw Error('No User found.')
+    }
+
+    return results.Items.map(
+      (user) =>
+        ({
+          ...user,
+          toolConfigs: JSON.parse(user.toolConfigs || '[]'),
+          notionAccess: user.notionAccess ? JSON.parse(user.notionAccess) : undefined,
+        } as User)
+    )
+  }
 }

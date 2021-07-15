@@ -14,9 +14,9 @@ const handler = async (
     switch (method) {
       case 'POST': {
         const authUser = getUserFromSession(req, res)
-        const updateToolConfig = new RunToolConfig(new DynamoUserRepository())
+        const runToolConfig = new RunToolConfig(new DynamoUserRepository())
 
-        await updateToolConfig.invoke({
+        await runToolConfig.invoke({
           auth0UserId: authUser.sub,
           toolConfigId: query.configId as string,
         })

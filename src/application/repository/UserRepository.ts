@@ -10,4 +10,5 @@ export interface UserRepository {
   addToolConfig(userId: User['auth0UserId'], toolConfig: ToolConfig): Promise<User>
   updateToolConfig(userId: User['auth0UserId'], toolConfig: ToolConfig): Promise<User>
   getById(userId: User['auth0UserId']): Promise<User>
+  getAll(): Promise<User[]>
 }

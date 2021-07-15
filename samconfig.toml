@@ -1,0 +1,10 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "NotionTools"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-kyyzgx3zb974"
+s3_prefix = "NotionTools"
+region = "eu-central-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"

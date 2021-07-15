@@ -1,0 +1,21 @@
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  ExecuteTools:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs14.x
+      Handler: infrastructure/lambdas/execute-tools.handler
+      CodeUri: ./.build
+      Timeout: 10
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: notion-tools-users-dev
+      Environment:
+        Variables:
+          DYNAMO_DB_USER_REPOSITORY: notion-tools-users-dev
+      Events:
+        EveryMinute:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 minute)
