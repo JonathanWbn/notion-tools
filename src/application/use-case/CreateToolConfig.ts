@@ -17,6 +17,7 @@ export class CreateToolConfig {
       toolId: request.toolId,
       config: request.toolConfig,
       isActive: true,
+      executedAt: [],
     }
 
     const user = await this.userRepository.addToolConfig(request.auth0UserId, toolConfig)

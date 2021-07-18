@@ -6,5 +6,5 @@ stack_name = "NotionTools"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-kyyzgx3zb974"
 s3_prefix = "NotionTools"
 region = "eu-central-1"
-confirm_changeset = true
+confirm_changeset = false
 capabilities = "CAPABILITY_IAM"

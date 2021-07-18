@@ -24,5 +24,10 @@ export class RunToolConfig {
       parent: { database_id: toolConfig.config.databaseId as string },
       properties: toolConfig.config.properties,
     })
+
+    await this.userRepository.updateToolConfig(user.auth0UserId, {
+      ...toolConfig,
+      executedAt: [...toolConfig.executedAt, new Date().toISOString()],
+    })
   }
 }

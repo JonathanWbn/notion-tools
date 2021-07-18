@@ -1,5 +1,5 @@
 import { RunToolConfig } from '../../application/use-case/RunToolConfig'
-import { configIsComplete } from '../../domain/User'
+import { configIsComplete, shouldBeExecuted } from '../../domain/User'
 import { DynamoUserRepository } from '../repository/DynamoUserRepository'
 
 export const handler = async (): Promise<string> => {
@@ -7,9 +7,8 @@ export const handler = async (): Promise<string> => {
 
   const users = await userRepository.getAll()
 
-  console.log('users', users)
-
   for (const user of users) {
+    console.log('user', user)
     const configsToExecute = user.toolConfigs.filter(
       (config) => config.isActive && configIsComplete(config.config)
     )
@@ -19,10 +18,13 @@ export const handler = async (): Promise<string> => {
 
       const runToolConfig = new RunToolConfig(userRepository)
 
-      await runToolConfig.invoke({
-        auth0UserId: user.auth0UserId,
-        toolConfigId: config.id,
-      })
+      if (shouldBeExecuted(config)) {
+        console.log('executing')
+        await runToolConfig.invoke({
+          auth0UserId: user.auth0UserId,
+          toolConfigId: config.id,
+        })
+      }
     }
   }
 

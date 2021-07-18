@@ -16,6 +16,7 @@ const documentClient = new AWS.DynamoDB.DocumentClient({ region: 'eu-central-1' 
 interface PersistedItem {
   auth0UserId: string
   toolConfigs: string
+  notionAccess: string
   isActive: boolean
 }
 
@@ -152,13 +153,9 @@ export class DynamoUserRepository implements UserRepository {
       throw Error('No User found.')
     }
 
-    const user = results.Items[0]
+    const user = results.Items[0] as PersistedItem
 
-    return {
-      ...user,
-      toolConfigs: JSON.parse(user.toolConfigs || '[]'),
-      notionAccess: user.notionAccess ? JSON.parse(user.notionAccess) : undefined,
-    } as User
+    return this.parseUser(user)
   }
 
   public async getAll(): Promise<User[]> {
@@ -168,13 +165,17 @@ export class DynamoUserRepository implements UserRepository {
       throw Error('No User found.')
     }
 
-    return results.Items.map(
-      (user) =>
-        ({
-          ...user,
-          toolConfigs: JSON.parse(user.toolConfigs || '[]'),
-          notionAccess: user.notionAccess ? JSON.parse(user.notionAccess) : undefined,
-        } as User)
-    )
+    return (results.Items as PersistedItem[]).map(this.parseUser)
+  }
+
+  private parseUser(user: PersistedItem): User {
+    return {
+      ...user,
+      toolConfigs: (JSON.parse(user.toolConfigs || '[]') as ToolConfig[]).map((config) => ({
+        ...config,
+        executedAt: config.executedAt || [],
+      })),
+      notionAccess: user.notionAccess ? JSON.parse(user.notionAccess) : undefined,
+    }
   }
 }

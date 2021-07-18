@@ -6,6 +6,7 @@ export interface ToolConfig {
   toolId: Tool['id']
   config: RecurringToolConfig
   isActive: boolean
+  executedAt: string[]
 }
 
 export interface RecurringToolConfig {
@@ -30,6 +31,61 @@ export const configIsComplete = (config: RecurringToolConfig): boolean => {
   return true
 }
 
+export const shouldBeExecuted = (toolConfig: ToolConfig): boolean => {
+  const { config } = toolConfig
+  const now = new Date()
+  let latestExecutionDate: Date
+  if (config.frequency === 'daily' && config.timeOfDay) {
+    const [hour, minute] = config.timeOfDay.split(':')
+    const executionToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      +hour,
+      +minute
+    )
+    const executionYesterday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() - 1,
+      +hour,
+      +minute
+    )
+    const todaysExecutionIsLater = +executionToday > +now
+    latestExecutionDate = todaysExecutionIsLater ? executionYesterday : executionToday
+  } else if (config.frequency === 'weekly' && config.weekday && config.timeOfDay) {
+    const [hour, minute] = config.timeOfDay.split(':')
+    const dayToSet = weekdayMap[config.weekday]
+    const currentDay = now.getDay()
+    const delta = dayToSet - currentDay
+    const executionThisWeek = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() + delta,
+      +hour,
+      +minute
+    )
+    const executionLastWeek = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() + delta - 7,
+      +hour,
+      +minute
+    )
+    const thisWeeksExecutionIsLater = +executionThisWeek > +now
+    latestExecutionDate = thisWeeksExecutionIsLater ? executionLastWeek : executionThisWeek
+  } else {
+    console.log('cannot determine execution')
+    return false
+  }
+
+  const hasBeenExecutedSince = toolConfig.executedAt.some(
+    (executionDate) => +new Date(executionDate) > +latestExecutionDate
+  )
+
+  return !hasBeenExecutedSince
+}
+
 export interface NotionAccess {
   access_token: string
   workspace_name: string
@@ -49,6 +105,16 @@ export type TimeOfDay = `${Hour}:${Minute}`
 export type RecurringFrequency = 'daily' | 'weekly'
 
 export type Weekday = 'mon' | 'tues' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
+
+const weekdayMap: Record<Weekday, number> = {
+  sun: 0,
+  mon: 1,
+  tues: 2,
+  wed: 3,
+  thu: 4,
+  fri: 5,
+  sat: 6,
+}
 
 export type Hour =
   | '00'
