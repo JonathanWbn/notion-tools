@@ -10,7 +10,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "deploy": "tsc && cp -R node_modules .build/ && sam deploy"
+    "predeploy": "tsc && cp -R package.json .build/",
+    "deploy": "sam deploy"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.4.2",
