@@ -1,6 +1,7 @@
 {
   "name": "notion-tools",
   "description": "A set of tools to automate things around Notion.",
+  "version": "0.0.1",
   "repository": "https://github.com/JonathanWbn/notion-tools.git",
   "author": "JonathanWbn <jwieben@hey.com>",
   "license": "UNLICENSED",
