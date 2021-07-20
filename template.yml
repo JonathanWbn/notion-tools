@@ -10,10 +10,10 @@ Resources:
       Timeout: 10
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: notion-tools-users-dev
+            TableName: !Ref UserTable
       Environment:
         Variables:
-          DYNAMO_DB_USER_REPOSITORY: notion-tools-users-dev
+          DYNAMO_DB_USER_REPOSITORY: !Ref UserTable
       Events:
         EveryMinute:
           Type: Schedule
