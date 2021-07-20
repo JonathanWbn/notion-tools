@@ -11,7 +11,7 @@ AWS.config.update({
   region: 'eu-central-1',
 })
 
-const documentClient = new AWS.DynamoDB.DocumentClient({ region: 'eu-central-1' })
+const documentClient = new AWS.DynamoDB.DocumentClient()
 
 interface PersistedItem {
   auth0UserId: string

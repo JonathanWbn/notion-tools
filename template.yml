@@ -19,3 +19,16 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: rate(1 minute)
+
+  UserTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: auth0UserId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: auth0UserId
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
