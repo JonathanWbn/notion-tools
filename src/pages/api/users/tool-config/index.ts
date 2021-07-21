@@ -19,7 +19,6 @@ const handler = async (
 
         const updatedUser = await createToolConfig.invoke({
           auth0UserId: authUser.sub,
-          toolConfig: body.toolConfig,
           toolId: body.toolId,
         })
 

@@ -1,89 +1,13 @@
 import { InputPropertyValue } from '@notionhq/client/build/src/api-types'
+import { weekdayMap } from '../utils'
 import { Tool } from './Tool'
+import { isFuture, sub, set, setDay, isAfter } from 'date-fns'
 
-export interface ToolConfig {
-  id: string
-  toolId: Tool['id']
-  config: RecurringToolConfig
+export interface User {
+  auth0UserId: string
+  toolConfigs: ToolConfig[]
+  notionAccess?: NotionAccess
   isActive: boolean
-  executedAt: string[]
-}
-
-export interface RecurringToolConfig {
-  databaseId?: string
-  frequency?: RecurringFrequency
-  weekday?: Weekday
-  timeOfDay?: TimeOfDay
-  properties?: {
-    [propertyId: string]: InputPropertyValue
-  }
-}
-
-export const configIsComplete = (config: RecurringToolConfig): boolean => {
-  if (!config.databaseId || !config.timeOfDay || !config.frequency) {
-    return false
-  }
-
-  if (config.frequency === 'weekly' && !config.weekday) {
-    return false
-  }
-
-  return true
-}
-
-export const shouldBeExecuted = (toolConfig: ToolConfig): boolean => {
-  const { config } = toolConfig
-  const now = new Date()
-  let latestExecutionDate: Date
-  if (config.frequency === 'daily' && config.timeOfDay) {
-    const [hour, minute] = config.timeOfDay.split(':')
-    const executionToday = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      +hour,
-      +minute
-    )
-    const executionYesterday = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate() - 1,
-      +hour,
-      +minute
-    )
-    const todaysExecutionIsLater = +executionToday > +now
-    latestExecutionDate = todaysExecutionIsLater ? executionYesterday : executionToday
-  } else if (config.frequency === 'weekly' && config.weekday && config.timeOfDay) {
-    const [hour, minute] = config.timeOfDay.split(':')
-    const dayToSet = weekdayMap[config.weekday]
-    const currentDay = now.getDay()
-    const delta = dayToSet - currentDay
-    const executionThisWeek = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate() + delta,
-      +hour,
-      +minute
-    )
-    const executionLastWeek = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate() + delta - 7,
-      +hour,
-      +minute
-    )
-    const thisWeeksExecutionIsLater = +executionThisWeek > +now
-    latestExecutionDate = thisWeeksExecutionIsLater ? executionLastWeek : executionThisWeek
-  } else {
-    console.log('cannot determine execution')
-    return false
-  }
-
-  const hasBeenExecutedSince = toolConfig.executedAt.some(
-    (executionDate) => +new Date(executionDate) > +latestExecutionDate
-  )
-
-  return !hasBeenExecutedSince
 }
 
 export interface NotionAccess {
@@ -93,113 +17,95 @@ export interface NotionAccess {
   bot_id: string
 }
 
-export interface User {
-  auth0UserId: string
-  toolConfigs: ToolConfig[]
-  notionAccess?: NotionAccess
+export class ToolConfig implements IToolConfig {
+  static _isExecutable(toolConfig: IToolConfig): boolean {
+    if (
+      !toolConfig.settings.databaseId ||
+      !toolConfig.settings.timeOfDay ||
+      !toolConfig.settings.frequency
+    ) {
+      return false
+    }
+
+    if (toolConfig.settings.frequency === 'weekly' && !toolConfig.settings.weekday) {
+      return false
+    }
+
+    if (!toolConfig.settings.properties) {
+      return false
+    }
+
+    return true
+  }
+
+  constructor(
+    public readonly id: string,
+    public readonly toolId: Tool['id'],
+    public readonly settings: RecurringToolSettings,
+    public readonly isActive: boolean,
+    public readonly lastExecutedAt?: string
+  ) {}
+
+  get isExecutable(): boolean {
+    return ToolConfig._isExecutable(this)
+  }
+
+  public shouldBeExecutedNow(): boolean {
+    if (!this.isExecutable) {
+      return false
+    }
+
+    const now = new Date()
+    let latestScheduledExecution: Date
+
+    const [hour, minute] = (this.settings.timeOfDay as TimeOfDay).split(':')
+
+    if (this.settings.frequency === 'daily') {
+      const executionToday = set(now, { hours: +hour, minutes: +minute })
+      const executionYesterday = sub(executionToday, { days: 1 })
+
+      latestScheduledExecution = isFuture(executionToday) ? executionYesterday : executionToday
+    } else if (this.settings.frequency === 'weekly') {
+      const dayToSet = weekdayMap[this.settings.weekday as Weekday]
+      const executionThisWeek = setDay(set(now, { hours: +hour, minutes: +minute }), dayToSet)
+      const executionLastWeek = sub(executionThisWeek, { days: 7 })
+
+      latestScheduledExecution = isFuture(executionThisWeek) ? executionLastWeek : executionThisWeek
+    } else {
+      throw new Error(`Invalid frequency ${this.settings.frequency}`)
+    }
+
+    const hasBeenExecutedSince =
+      this.lastExecutedAt && isAfter(new Date(this.lastExecutedAt), latestScheduledExecution)
+
+    return !hasBeenExecutedSince
+  }
+
+  public copyWith({ toolId, settings, isActive, lastExecutedAt }: Partial<ToolConfig>): ToolConfig {
+    return new ToolConfig(
+      this.id,
+      toolId || this.toolId,
+      settings || this.settings,
+      isActive !== undefined ? isActive : this.isActive,
+      lastExecutedAt || this.lastExecutedAt
+    )
+  }
+}
+
+export interface IToolConfig {
+  id: string
+  toolId: Tool['id']
+  settings: RecurringToolSettings
   isActive: boolean
+  lastExecutedAt?: string
 }
 
-export type TimeOfDay = `${Hour}:${Minute}`
-
-export type RecurringFrequency = 'daily' | 'weekly'
-
-export type Weekday = 'mon' | 'tues' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
-
-const weekdayMap: Record<Weekday, number> = {
-  sun: 0,
-  mon: 1,
-  tues: 2,
-  wed: 3,
-  thu: 4,
-  fri: 5,
-  sat: 6,
+export interface RecurringToolSettings {
+  databaseId?: string
+  frequency?: 'daily' | 'weekly'
+  weekday?: Weekday
+  timeOfDay?: TimeOfDay
+  properties?: {
+    [propertyId: string]: InputPropertyValue
+  }
 }
-
-export type Hour =
-  | '00'
-  | '01'
-  | '02'
-  | '03'
-  | '04'
-  | '05'
-  | '06'
-  | '07'
-  | '08'
-  | '09'
-  | '10'
-  | '11'
-  | '12'
-  | '13'
-  | '14'
-  | '15'
-  | '16'
-  | '17'
-  | '18'
-  | '19'
-  | '20'
-  | '21'
-  | '22'
-  | '23'
-
-export type Minute =
-  | '00'
-  | '01'
-  | '02'
-  | '03'
-  | '04'
-  | '05'
-  | '06'
-  | '07'
-  | '08'
-  | '09'
-  | '10'
-  | '11'
-  | '12'
-  | '13'
-  | '14'
-  | '15'
-  | '16'
-  | '17'
-  | '18'
-  | '19'
-  | '20'
-  | '21'
-  | '22'
-  | '23'
-  | '24'
-  | '25'
-  | '26'
-  | '27'
-  | '28'
-  | '29'
-  | '30'
-  | '31'
-  | '32'
-  | '33'
-  | '34'
-  | '35'
-  | '36'
-  | '37'
-  | '38'
-  | '39'
-  | '40'
-  | '41'
-  | '42'
-  | '43'
-  | '44'
-  | '45'
-  | '46'
-  | '47'
-  | '48'
-  | '49'
-  | '50'
-  | '51'
-  | '52'
-  | '53'
-  | '54'
-  | '55'
-  | '56'
-  | '57'
-  | '58'
-  | '59'

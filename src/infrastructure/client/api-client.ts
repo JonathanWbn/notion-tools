@@ -4,22 +4,12 @@ import { Database } from '@notionhq/client/build/src/api-types'
 import axios from 'axios'
 import useSWR from 'swr'
 import { Tool } from '../../domain/Tool'
-import { ToolConfig, User } from '../../domain/User'
-
-interface AddToolToUserRequest {
-  toolConfig: ToolConfig['config']
-  toolId: Tool['id']
-}
+import { IToolConfig, User } from '../../domain/User'
 
 export type AddToolToUserResponse = User
 
 export async function addToolToUser(toolId: string): Promise<void> {
-  const request: AddToolToUserRequest = {
-    toolConfig: {},
-    toolId,
-  }
-
-  await axios.post<AddToolToUserResponse>('/api/users/tool-config', request)
+  await axios.post<AddToolToUserResponse>('/api/users/tool-config', { toolId })
 }
 
 export async function runToolConfig(configId: string): Promise<void> {
@@ -30,7 +20,7 @@ export type UpdateToolConfigResponse = User
 
 export async function updateToolConfig(
   configId: string,
-  config: Partial<ToolConfig>
+  config: Partial<IToolConfig>
 ): Promise<UpdateToolConfigResponse> {
   const { data } = await axios.patch<UpdateToolConfigResponse>(
     `/api/users/tool-config/${configId}`,

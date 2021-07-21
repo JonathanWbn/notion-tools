@@ -2,7 +2,7 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { useRouter } from 'next/router'
 import { FunctionComponent } from 'react'
 import { mutate } from 'swr'
-import { configIsComplete, ToolConfig } from '../../../domain/User'
+import { IToolConfig, ToolConfig } from '../../../domain/User'
 import {
   runToolConfig,
   updateToolConfig,
@@ -28,13 +28,13 @@ const User: FunctionComponent = () => {
     return <h1>No tool found.</h1>
   }
 
-  async function handleSubmit(config: ToolConfig): Promise<void> {
-    if (!configIsComplete(config['config'])) {
+  async function handleSubmit(config: IToolConfig): Promise<void> {
+    if (!ToolConfig._isExecutable(config)) {
       alert('Config is incomplete.')
       return
     }
 
-    await updateToolConfig((toolConfig as ToolConfig).id, config)
+    await updateToolConfig((toolConfig as IToolConfig).id, config)
     mutate('/api/users/me')
   }
 

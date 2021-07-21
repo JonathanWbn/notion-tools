@@ -7,16 +7,16 @@ import {
   TitlePropertyValue,
 } from '@notionhq/client/build/src/api-types'
 import { PropsWithChildren, ReactElement, useState } from 'react'
-import { RecurringFrequency, TimeOfDay, ToolConfig, Weekday } from '../../../domain/User'
+import { RecurringToolSettings, IToolConfig } from '../../../domain/User'
 import { useDatabases } from '../api-client'
 
 interface Props {
-  initialValues: ToolConfig
-  onSubmit: (values: ToolConfig) => Promise<void>
+  initialValues: IToolConfig
+  onSubmit: (values: IToolConfig) => Promise<void>
 }
 
 export function ToolConfigForm({ initialValues, onSubmit }: Props): ReactElement {
-  const [values, setValues] = useState<ToolConfig>(initialValues)
+  const [values, setValues] = useState<IToolConfig>(initialValues)
   const { databases } = useDatabases()
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -24,7 +24,7 @@ export function ToolConfigForm({ initialValues, onSubmit }: Props): ReactElement
     onSubmit(values)
   }
 
-  const selectedDatabase = databases?.find((db) => db.id === values?.config.databaseId)
+  const selectedDatabase = databases?.find((db) => db.id === values?.settings.databaseId)
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
       <Checkbox value={values.isActive} onChange={(v) => setValues({ ...values, isActive: v })}>
@@ -32,8 +32,8 @@ export function ToolConfigForm({ initialValues, onSubmit }: Props): ReactElement
       </Checkbox>
       <h2>Config</h2>
       <Select
-        value={values.config.databaseId}
-        onChange={(v) => setValues({ ...values, config: { ...values.config, databaseId: v } })}
+        value={values.settings.databaseId}
+        onChange={(v) => setValues({ ...values, settings: { ...values.settings, databaseId: v } })}
         options={(databases || []).map((database) => ({
           value: database.id,
           label: database.title[0].plain_text,
@@ -42,9 +42,12 @@ export function ToolConfigForm({ initialValues, onSubmit }: Props): ReactElement
         Database
       </Select>
       <Select
-        value={values.config.frequency}
+        value={values.settings.frequency}
         onChange={(v) =>
-          setValues({ ...values, config: { ...values.config, frequency: v as RecurringFrequency } })
+          setValues({
+            ...values,
+            settings: { ...values.settings, frequency: v as RecurringToolSettings['frequency'] },
+          })
         }
         options={[
           { value: 'daily', label: 'Daily' },
@@ -53,11 +56,11 @@ export function ToolConfigForm({ initialValues, onSubmit }: Props): ReactElement
       >
         Frequency
       </Select>
-      {values.config.frequency === 'weekly' && (
+      {values.settings.frequency === 'weekly' && (
         <Select
-          value={values.config.weekday}
+          value={values.settings.weekday}
           onChange={(v) =>
-            setValues({ ...values, config: { ...values.config, weekday: v as Weekday } })
+            setValues({ ...values, settings: { ...values.settings, weekday: v as Weekday } })
           }
           options={[
             { value: 'mon', label: 'Monday' },
@@ -75,14 +78,14 @@ export function ToolConfigForm({ initialValues, onSubmit }: Props): ReactElement
       <label>
         Time of taks creation (UTC)
         <input
-          value={values.config.timeOfDay || ''}
+          value={values.settings.timeOfDay || ''}
           type="time"
           min="00:00"
           max="24:00"
           onChange={(e) =>
             setValues({
               ...values,
-              config: { ...values.config, timeOfDay: e.target.value as TimeOfDay },
+              settings: { ...values.settings, timeOfDay: e.target.value as TimeOfDay },
             })
           }
         ></input>
@@ -95,15 +98,15 @@ export function ToolConfigForm({ initialValues, onSubmit }: Props): ReactElement
               key={property.id}
               name={name}
               property={property}
-              value={values.config.properties?.[property.id]}
+              value={values.settings.properties?.[property.id]}
               onChange={(propertyValue) => {
                 if (propertyValue) {
                   setValues({
                     ...values,
-                    config: {
-                      ...values.config,
+                    settings: {
+                      ...values.settings,
                       properties: {
-                        ...values.config.properties,
+                        ...values.settings.properties,
                         [property.id]: propertyValue,
                       },
                     },
@@ -111,9 +114,9 @@ export function ToolConfigForm({ initialValues, onSubmit }: Props): ReactElement
                 } else {
                   setValues({
                     ...values,
-                    config: {
-                      ...values.config,
-                      properties: _.omit(values.config.properties, property.id),
+                    settings: {
+                      ...values.settings,
+                      properties: _.omit(values.settings.properties, property.id),
                     },
                   })
                 }

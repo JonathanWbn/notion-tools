@@ -16,10 +16,10 @@ export class UpdateToolConfig {
       request.toolConfigId
     )
 
-    const user = await this.userRepository.updateToolConfig(request.auth0UserId, {
-      ...toolConfig,
-      ...request.toolConfig,
-    })
+    const user = await this.userRepository.updateToolConfig(
+      request.auth0UserId,
+      toolConfig.copyWith(request.toolConfig)
+    )
 
     return user
   }
