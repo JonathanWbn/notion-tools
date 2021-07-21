@@ -10,6 +10,11 @@ export class ConnectNotion {
   constructor(private readonly userRepository: UserRepository) {}
 
   public async invoke(request: ConnectNotionRequest): Promise<User> {
-    return await this.userRepository.updateNotionAccess(request.auth0UserId, request.notionAccess)
+    const user = await this.userRepository.getById(request.auth0UserId)
+
+    return await this.userRepository.update(request.auth0UserId, {
+      ...user,
+      notionAccess: request.notionAccess,
+    })
   }
 }

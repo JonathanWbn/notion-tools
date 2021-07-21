@@ -43,101 +43,22 @@ export class DynamoUserRepository implements UserRepository {
     return newUser
   }
 
-  public async updateNotionAccess(
-    userId: User['auth0UserId'],
-    notionAccess: User['notionAccess']
-  ): Promise<User> {
-    const user = await this.getById(userId)
-
-    const updatedUser = {
-      ...user,
-      notionAccess,
-    }
-
-    await documentClient
-      .update({
-        TableName: DYNAMO_DB_USER_REPOSITORY,
-        Key: {
-          auth0UserId: userId,
-        },
-        UpdateExpression: 'set notionAccess = :notionAccess',
-        ExpressionAttributeValues: {
-          ':notionAccess': JSON.stringify(notionAccess),
-        },
-      })
-      .promise()
-
-    return updatedUser
-  }
-
-  public async getToolConfigById(
-    userId: User['auth0UserId'],
-    toolConfigId: ToolConfig['id']
-  ): Promise<ToolConfig> {
-    const user = await this.getById(userId)
-    const config = user.toolConfigs.find((config) => config.id === toolConfigId)
-
-    if (!config) {
-      throw Error('No config found.')
-    }
-
-    return config
-  }
-
-  public async addToolConfig(
-    auth0UserId: User['auth0UserId'],
-    toolConfig: ToolConfig
-  ): Promise<User> {
-    const user = await this.getById(auth0UserId)
-
-    const updatedUser = {
-      ...user,
-      toolConfigs: [...user.toolConfigs, toolConfig],
-    }
-
+  public async update(auth0UserId: User['auth0UserId'], user: User): Promise<User> {
     await documentClient
       .update({
         TableName: DYNAMO_DB_USER_REPOSITORY,
         Key: {
           auth0UserId,
         },
-        UpdateExpression: 'set toolConfigs = :configs',
+        UpdateExpression: 'set toolConfigs = :configs, notionAccess = :notionAccess',
         ExpressionAttributeValues: {
-          ':configs': JSON.stringify(updatedUser.toolConfigs),
+          ':configs': JSON.stringify(user.toolConfigs),
+          ':notionAccess': JSON.stringify(user.notionAccess),
         },
       })
       .promise()
 
-    return updatedUser
-  }
-
-  public async updateToolConfig(
-    auth0UserId: User['auth0UserId'],
-    toolConfig: ToolConfig
-  ): Promise<User> {
-    const user = await this.getById(auth0UserId)
-
-    const updatedUser = {
-      ...user,
-      toolConfigs: user.toolConfigs.map((config) =>
-        config.id === toolConfig.id ? toolConfig : config
-      ),
-    }
-
-    await documentClient
-      .update({
-        TableName: DYNAMO_DB_USER_REPOSITORY,
-        Key: {
-          auth0UserId,
-        },
-        UpdateExpression: 'set toolConfigs = :configs',
-        ExpressionAttributeValues: {
-          ':configs': JSON.stringify(updatedUser.toolConfigs),
-        },
-      })
-      .promise()
-
-    return updatedUser
+    return user
   }
 
   public async getById(auth0UserId: User['auth0UserId']): Promise<User> {

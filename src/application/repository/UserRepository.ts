@@ -1,14 +1,8 @@
-import { NotionAccess, ToolConfig, User } from '../../domain/User'
+import { User } from '../../domain/User'
 
 export interface UserRepository {
-  create(auth0UserId: User['auth0UserId']): Promise<User>
-  updateNotionAccess(userId: User['auth0UserId'], notionAccess: NotionAccess): Promise<User>
-  getToolConfigById(
-    userId: User['auth0UserId'],
-    toolConfigId: ToolConfig['id']
-  ): Promise<ToolConfig>
-  addToolConfig(userId: User['auth0UserId'], toolConfig: ToolConfig): Promise<User>
-  updateToolConfig(userId: User['auth0UserId'], toolConfig: ToolConfig): Promise<User>
+  create(userId: User['auth0UserId']): Promise<User>
+  update(userId: User['auth0UserId'], user: User): Promise<User>
   getById(userId: User['auth0UserId']): Promise<User>
   getAll(): Promise<User[]>
 }

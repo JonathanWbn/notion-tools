@@ -11,16 +11,13 @@ export class UpdateToolConfig {
   constructor(private readonly userRepository: UserRepository) {}
 
   public async invoke(request: UpdateToolConfigRequest): Promise<User> {
-    const toolConfig = await this.userRepository.getToolConfigById(
-      request.auth0UserId,
-      request.toolConfigId
-    )
+    const user = await this.userRepository.getById(request.auth0UserId)
 
-    const user = await this.userRepository.updateToolConfig(
-      request.auth0UserId,
-      toolConfig.copyWith(request.toolConfig)
-    )
-
-    return user
+    return await this.userRepository.update(request.auth0UserId, {
+      ...user,
+      toolConfigs: user.toolConfigs.map((tc) =>
+        tc.id === request.toolConfigId ? tc.copyWith(request.toolConfig) : tc
+      ),
+    })
   }
 }

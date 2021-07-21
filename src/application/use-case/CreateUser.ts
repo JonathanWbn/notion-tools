@@ -15,8 +15,6 @@ export class CreateUser {
   public async invoke(request: CreateUserRequest): Promise<User> {
     await this.authorization.assertIsAllowedToCreateUsers()
 
-    const user = await this.userRepository.create(request.auth0UserId)
-
-    return user
+    return await this.userRepository.create(request.auth0UserId)
   }
 }

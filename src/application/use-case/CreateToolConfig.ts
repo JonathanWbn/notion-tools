@@ -13,9 +13,11 @@ export class CreateToolConfig {
 
   public async invoke(request: CreateToolConfigRequest): Promise<User> {
     const toolConfig = new ToolConfig(uuid(), request.toolId, {}, true)
+    const user = await this.userRepository.getById(request.auth0UserId)
 
-    const user = await this.userRepository.addToolConfig(request.auth0UserId, toolConfig)
-
-    return user
+    return await this.userRepository.update(request.auth0UserId, {
+      ...user,
+      toolConfigs: [...user.toolConfigs, toolConfig],
+    })
   }
 }

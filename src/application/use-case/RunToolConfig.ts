@@ -31,9 +31,13 @@ export class RunToolConfig {
       properties: toolConfig.settings.properties!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     })
 
-    await this.userRepository.updateToolConfig(
-      user.auth0UserId,
-      toolConfig.copyWith({ lastExecutedAt: new Date().toISOString() })
-    )
+    await this.userRepository.update(user.auth0UserId, {
+      ...user,
+      toolConfigs: user.toolConfigs.map((config) =>
+        config.id === request.toolConfigId
+          ? config.copyWith({ lastExecutedAt: new Date().toISOString() })
+          : config
+      ),
+    })
   }
 }
