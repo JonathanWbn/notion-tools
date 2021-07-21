@@ -53,7 +53,7 @@ export class DynamoUserRepository implements UserRepository {
         UpdateExpression: 'set toolConfigs = :configs, notionAccess = :notionAccess',
         ExpressionAttributeValues: {
           ':configs': JSON.stringify(user.toolConfigs),
-          ':notionAccess': JSON.stringify(user.notionAccess),
+          ':notionAccess': JSON.stringify(user.notionAccess) || '',
         },
       })
       .promise()
