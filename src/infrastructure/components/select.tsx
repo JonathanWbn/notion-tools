@@ -4,6 +4,7 @@ interface SelectProps {
   value: string | undefined
   onChange: (val: string) => void
   options: { value: string; label: string }[]
+  noEmptyOption?: boolean
 }
 
 export function Select({
@@ -11,12 +12,13 @@ export function Select({
   onChange,
   options,
   children,
+  noEmptyOption,
 }: PropsWithChildren<SelectProps>): ReactElement {
   return (
     <label>
       {children}
       <select value={value} onChange={(e) => onChange(e.target.value)}>
-        <option value="">---</option>
+        {!noEmptyOption && <option value="">---</option>}
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

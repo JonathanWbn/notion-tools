@@ -31,10 +31,6 @@ export class ToolConfig implements IToolConfig {
       return false
     }
 
-    if (!toolConfig.settings.properties) {
-      return false
-    }
-
     return true
   }
 
