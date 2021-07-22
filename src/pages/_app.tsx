@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react'
 import { UserProvider } from '@auth0/nextjs-auth0'
+import 'tailwindcss/tailwind.css'
 
 import { Header } from '../infrastructure/components/header'
 

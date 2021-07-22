@@ -42,7 +42,7 @@ export function ToolConfigForm({ initialValues, onSubmit }: Props): ReactElement
 
   const selectedDatabase = databases?.find((db) => db.id === values?.settings.databaseId)
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
+    <form onSubmit={handleSubmit} className="flex flex-col">
       <Checkbox value={values.isActive} onChange={(v) => handleChange('isActive', v)}>
         Enabled
       </Checkbox>
