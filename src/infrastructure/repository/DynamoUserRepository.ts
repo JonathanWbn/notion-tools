@@ -1,6 +1,6 @@
 import { UserRepository } from '../../application/repository/UserRepository'
 import AWS from 'aws-sdk'
-import { ToolConfig, User } from '../../domain/User'
+import { IToolConfig, ToolConfig, User } from '../../domain/User'
 
 const { DYNAMO_DB_USER_REPOSITORY, MY_AWS_ACCESS_KEY_ID, MY_AWS_SECRET_ACCESS_KEY } =
   process.env as Record<string, string>
@@ -92,8 +92,18 @@ export class DynamoUserRepository implements UserRepository {
   private parseUser(user: PersistedItem): User {
     return {
       ...user,
-      toolConfigs: JSON.parse(user.toolConfigs || '[]') as ToolConfig[],
+      toolConfigs: JSON.parse(user.toolConfigs || '[]').map(this.parseToolConfig),
       notionAccess: user.notionAccess ? JSON.parse(user.notionAccess) : undefined,
     }
+  }
+
+  private parseToolConfig(toolConfig: IToolConfig): ToolConfig {
+    return new ToolConfig(
+      toolConfig.id,
+      toolConfig.toolId,
+      toolConfig.settings,
+      toolConfig.isActive,
+      toolConfig.lastExecutedAt
+    )
   }
 }

@@ -10,7 +10,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "predeploy": "tsc && cp -R package.json .build/",
+    "predeploy": "tsc --noEmit false && cp -R package.json .build/",
     "deploy": "sam deploy"
   },
   "dependencies": {
