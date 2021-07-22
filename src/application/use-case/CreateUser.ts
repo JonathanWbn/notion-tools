@@ -3,7 +3,7 @@ import { Authorization } from '../Authorization'
 import { UserRepository } from '../repository/UserRepository'
 
 interface CreateUserRequest {
-  auth0UserId: User['auth0UserId']
+  userId: User['userId']
 }
 
 export class CreateUser {
@@ -15,6 +15,6 @@ export class CreateUser {
   public async invoke(request: CreateUserRequest): Promise<User> {
     await this.authorization.assertIsAllowedToCreateUsers()
 
-    return await this.userRepository.create(request.auth0UserId)
+    return await this.userRepository.create(request.userId)
   }
 }

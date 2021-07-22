@@ -20,7 +20,7 @@ export const handler = async (): Promise<string> => {
       if (config.shouldBeExecutedNow()) {
         console.log('executing')
         await runToolConfig.invoke({
-          auth0UserId: user.auth0UserId,
+          userId: user.userId,
           toolConfigId: config.id,
         })
       }

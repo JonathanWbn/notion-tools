@@ -17,7 +17,7 @@ const handler = async (
         const updateToolConfig = new UpdateToolConfig(new DynamoUserRepository())
 
         await updateToolConfig.invoke({
-          auth0UserId: authUser.sub,
+          userId: authUser.sub,
           toolConfigId: query.configId as string,
           toolConfig: body,
         })

@@ -4,7 +4,7 @@ import { Tool } from './Tool'
 import { isFuture, sub, set, setDay, isAfter } from 'date-fns'
 
 export interface User {
-  auth0UserId: string
+  userId: string
   toolConfigs: ToolConfig[]
   notionAccess?: NotionAccess
   isActive: boolean

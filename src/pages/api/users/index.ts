@@ -14,7 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
           new DynamoUserRepository()
         )
 
-        const newUser = await createUser.invoke({ auth0UserId: body.auth0Id })
+        const newUser = await createUser.invoke({ userId: body.userId })
 
         res.status(200).send(newUser)
       }

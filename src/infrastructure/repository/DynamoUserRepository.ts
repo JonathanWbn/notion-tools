@@ -14,16 +14,16 @@ AWS.config.update({
 const documentClient = new AWS.DynamoDB.DocumentClient()
 
 interface PersistedItem {
-  auth0UserId: string
+  userId: string
   toolConfigs: string
   notionAccess: string
   isActive: boolean
 }
 
 export class DynamoUserRepository implements UserRepository {
-  public async create(auth0UserId: User['auth0UserId']): Promise<User> {
+  public async create(userId: User['userId']): Promise<User> {
     const newUser: User = {
-      auth0UserId,
+      userId,
       toolConfigs: [],
       isActive: true,
     }
@@ -32,23 +32,23 @@ export class DynamoUserRepository implements UserRepository {
       .put({
         TableName: DYNAMO_DB_USER_REPOSITORY,
         Item: {
-          auth0UserId: newUser.auth0UserId,
+          userId: newUser.userId,
           toolConfigs: JSON.stringify(newUser.toolConfigs),
           isActive: newUser.isActive,
         } as PersistedItem,
-        ConditionExpression: 'attribute_not_exists(auth0UserId)',
+        ConditionExpression: 'attribute_not_exists(userId)',
       })
       .promise()
 
     return newUser
   }
 
-  public async update(auth0UserId: User['auth0UserId'], user: User): Promise<User> {
+  public async update(userId: User['userId'], user: User): Promise<User> {
     await documentClient
       .update({
         TableName: DYNAMO_DB_USER_REPOSITORY,
         Key: {
-          auth0UserId,
+          userId,
         },
         UpdateExpression: 'set toolConfigs = :configs, notionAccess = :notionAccess',
         ExpressionAttributeValues: {
@@ -61,12 +61,12 @@ export class DynamoUserRepository implements UserRepository {
     return user
   }
 
-  public async getById(auth0UserId: User['auth0UserId']): Promise<User> {
+  public async getById(userId: User['userId']): Promise<User> {
     const results = await documentClient
       .query({
         TableName: DYNAMO_DB_USER_REPOSITORY,
-        KeyConditionExpression: 'auth0UserId = :auth0UserId',
-        ExpressionAttributeValues: { ':auth0UserId': auth0UserId },
+        KeyConditionExpression: 'userId = :userId',
+        ExpressionAttributeValues: { ':userId': userId },
       })
       .promise()
 

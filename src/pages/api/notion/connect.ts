@@ -35,7 +35,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
         const connectNotion = new ConnectNotion(new DynamoUserRepository())
 
         await connectNotion.invoke({
-          auth0UserId: authUser.sub,
+          userId: authUser.sub,
           notionAccess: data,
         })
 

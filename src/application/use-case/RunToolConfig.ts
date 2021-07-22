@@ -3,7 +3,7 @@ import { ToolConfig, User } from '../../domain/User'
 import { UserRepository } from '../repository/UserRepository'
 
 interface RunToolConfigRequest {
-  auth0UserId: User['auth0UserId']
+  userId: User['userId']
   toolConfigId: ToolConfig['id']
 }
 
@@ -11,7 +11,7 @@ export class RunToolConfig {
   constructor(private readonly userRepository: UserRepository) {}
 
   public async invoke(request: RunToolConfigRequest): Promise<void> {
-    const user = await this.userRepository.getById(request.auth0UserId)
+    const user = await this.userRepository.getById(request.userId)
 
     const toolConfig = user.toolConfigs.find((config) => config.id === request.toolConfigId)
 
@@ -31,7 +31,7 @@ export class RunToolConfig {
       properties: toolConfig.settings.properties!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     })
 
-    await this.userRepository.update(user.auth0UserId, {
+    await this.userRepository.update(user.userId, {
       ...user,
       toolConfigs: user.toolConfigs.map((config) =>
         config.id === request.toolConfigId

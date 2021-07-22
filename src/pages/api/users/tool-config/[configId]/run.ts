@@ -17,7 +17,7 @@ const handler = async (
         const runToolConfig = new RunToolConfig(new DynamoUserRepository())
 
         await runToolConfig.invoke({
-          auth0UserId: authUser.sub,
+          userId: authUser.sub,
           toolConfigId: query.configId as string,
         })
 
