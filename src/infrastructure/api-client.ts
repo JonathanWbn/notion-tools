@@ -3,8 +3,8 @@ import { useUser as use0AuthUser } from '@auth0/nextjs-auth0'
 import { Database } from '@notionhq/client/build/src/api-types'
 import axios from 'axios'
 import useSWR from 'swr'
-import { Tool } from '../../domain/Tool'
-import { IToolConfig, User } from '../../domain/User'
+import { Tool } from '../domain/Tool'
+import { IToolConfig, User } from '../domain/User'
 
 export type AddToolToUserResponse = User
 

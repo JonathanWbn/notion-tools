@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { Tool as ITool } from '../../../domain/Tool'
+import { Tool as ITool } from '../../domain/Tool'
 
 interface Props {
   tool: ITool

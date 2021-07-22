@@ -7,7 +7,7 @@ import {
   TitlePropertyValue,
 } from '@notionhq/client/build/src/api-types'
 import { PropsWithChildren, ReactElement, useState } from 'react'
-import { RecurringToolSettings, IToolConfig } from '../../../domain/User'
+import { RecurringToolSettings, IToolConfig } from '../../domain/User'
 import { useDatabases } from '../api-client'
 
 interface Props {

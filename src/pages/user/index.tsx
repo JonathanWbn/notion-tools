@@ -1,8 +1,8 @@
 import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { FunctionComponent } from 'react'
-import { useUser } from '../../infrastructure/client/api-client'
-import { NotionConnect } from '../../infrastructure/client/components/notion-connect'
-import { UserToolConfigs } from '../../infrastructure/client/components/user-tool-configs'
+import { useUser } from '../../infrastructure/api-client'
+import { NotionConnect } from '../../infrastructure/components/notion-connect'
+import { UserToolConfigs } from '../../infrastructure/components/user-tool-configs'
 
 const User: FunctionComponent = () => {
   const { auth0user } = useUser()

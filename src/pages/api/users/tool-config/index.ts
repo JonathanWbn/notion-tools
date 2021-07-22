@@ -2,7 +2,7 @@ import { withApiAuthRequired } from '@auth0/nextjs-auth0'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { CreateToolConfig } from '../../../../application/use-case/CreateToolConfig'
 import { getUserFromSession } from '../../../../infrastructure/api-utils'
-import { AddToolToUserResponse } from '../../../../infrastructure/client/api-client'
+import { AddToolToUserResponse } from '../../../../infrastructure/api-client'
 import { DynamoUserRepository } from '../../../../infrastructure/repository/DynamoUserRepository'
 
 const handler = async (

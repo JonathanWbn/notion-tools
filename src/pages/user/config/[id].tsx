@@ -8,8 +8,8 @@ import {
   updateToolConfig,
   useTools,
   useUser,
-} from '../../../infrastructure/client/api-client'
-import { ToolConfigForm } from '../../../infrastructure/client/components/tool-config-form'
+} from '../../../infrastructure/api-client'
+import { ToolConfigForm } from '../../../infrastructure/components/tool-config-form'
 
 const User: FunctionComponent = () => {
   const router = useRouter()

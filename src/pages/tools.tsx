@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react'
-import { addToolToUser, useTools } from '../infrastructure/client/api-client'
-import { Tool } from '../infrastructure/client/components/tool'
+import { addToolToUser, useTools } from '../infrastructure/api-client'
+import { Tool } from '../infrastructure/components/tool'
 
 const Tools: FunctionComponent = () => {
   const { tools } = useTools()
