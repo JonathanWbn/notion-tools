@@ -4,7 +4,7 @@ import { Tool } from '../../domain/Tool'
 const tools: Tool[] = [
   {
     id: 'recurring-tasks',
-    name: 'Recurring Tasks',
+    name: 'Recurring Task',
     description: 'A simple way of automatically creating recurring tasks based on a schedule.',
     isActive: true,
   },

@@ -17,12 +17,12 @@ const handler = async (
         const authUser = getUserFromSession(req, res)
         const createToolConfig = new CreateToolConfig(new DynamoUserRepository())
 
-        const updatedUser = await createToolConfig.invoke({
+        const config = await createToolConfig.invoke({
           userId: authUser.sub,
           toolId: body.toolId,
         })
 
-        res.status(200).send(updatedUser)
+        res.status(200).send(config)
       }
     }
   } catch (err) {

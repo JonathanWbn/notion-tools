@@ -6,10 +6,12 @@ import useSWR from 'swr'
 import { Tool } from '../domain/Tool'
 import { IToolConfig, User } from '../domain/User'
 
-export type AddToolToUserResponse = User
+export type AddToolToUserResponse = IToolConfig
 
-export async function addToolToUser(toolId: string): Promise<void> {
-  await axios.post<AddToolToUserResponse>('/api/users/tool-config', { toolId })
+export async function addToolToUser(toolId: string): Promise<IToolConfig> {
+  const { data } = await axios.post<AddToolToUserResponse>('/api/users/tool-config', { toolId })
+
+  return data
 }
 
 export async function runToolConfig(configId: string): Promise<void> {

@@ -24,7 +24,7 @@ const Home: FunctionComponent = () => {
           <li>{'Create an empty daily checklist page every night.'}</li>
         </ul>
         <a
-          className="bg-green-200 py-1 px-8 mt-6 self bg-lightGreen text-lg float-right border-green text-green hover:text-darkGreen"
+          className="bg-green-200 py-1 px-8 mt-6 bg-lightGreen text-lg float-right border-green text-green hover:text-darkGreen"
           href="/api/auth/signup"
         >
           <span className="border-b border-darkGreen text-current font-medium">Try it out!</span>

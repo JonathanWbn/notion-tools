@@ -11,13 +11,15 @@ interface CreateToolConfigRequest {
 export class CreateToolConfig {
   constructor(private readonly userRepository: UserRepository) {}
 
-  public async invoke(request: CreateToolConfigRequest): Promise<User> {
-    const toolConfig = new ToolConfig(uuid(), request.toolId, {}, true)
+  public async invoke(request: CreateToolConfigRequest): Promise<ToolConfig> {
+    const toolConfig = new ToolConfig(uuid(), request.toolId, {}, false)
     const user = await this.userRepository.getById(request.userId)
 
-    return await this.userRepository.update(request.userId, {
+    await this.userRepository.update(request.userId, {
       ...user,
       toolConfigs: [...user.toolConfigs, toolConfig],
     })
+
+    return toolConfig
   }
 }

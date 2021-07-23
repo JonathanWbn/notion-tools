@@ -8,7 +8,7 @@ export function Header(): ReactElement {
   return (
     <header className="flex justify-between p-6 items-center">
       <Link href="/">
-        <a className="text-3xl font-bold">🧰 Notion tools</a>
+        <a className="text-3xl">🧰</a>
       </Link>
       {user ? (
         <Link href="/user">
