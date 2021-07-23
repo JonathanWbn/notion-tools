@@ -61,6 +61,10 @@ export class DynamoUserRepository implements UserRepository {
     return user
   }
 
+  public async delete(userId: User['userId']): Promise<void> {
+    await documentClient.delete({ TableName: DYNAMO_DB_USER_REPOSITORY, Key: { userId } }).promise()
+  }
+
   public async getById(userId: User['userId']): Promise<User> {
     const results = await documentClient
       .query({

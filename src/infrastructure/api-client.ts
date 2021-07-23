@@ -14,6 +14,10 @@ export async function addToolToUser(toolId: string): Promise<IToolConfig> {
   return data
 }
 
+export async function deleteUser(): Promise<void> {
+  await axios.delete('/api/users/me')
+}
+
 export async function runToolConfig(configId: string): Promise<void> {
   await axios.post(`/api/users/tool-config/${configId}/run`)
 }
