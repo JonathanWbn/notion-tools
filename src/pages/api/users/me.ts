@@ -21,8 +21,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
       case 'DELETE': {
         const managementClient = new ManagementClient({
           domain: 'notion-tools.eu.auth0.com',
-          clientId: process.env.AUTH0_CLIENT_ID,
-          clientSecret: process.env.AUTH0_CLIENT_SECRET,
+          clientId: process.env.AUTH0_BE_CLIENT_ID,
+          clientSecret: process.env.AUTH0_BE_CLIENT_SECRET,
           scope: 'delete:users',
         })
         const authUser = getUserFromSession(req, res)
