@@ -15,7 +15,7 @@ const App: FunctionComponent<Props> = ({ Component, pageProps }: Props) => {
   return (
     <UserProvider>
       <Head>
-        <title>Notion Tools</title>
+        <title>Notion tools</title>
         <link rel="shortcut icon" type="image/png" href="/favicon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
