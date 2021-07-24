@@ -3,11 +3,11 @@ import { FunctionComponent } from 'react'
 const Home: FunctionComponent = () => {
   return (
     <div className="px-10 flex flex-col items-center">
-      <h1 className="text-5xl mt-60 font-bold">Notion, but even more powerful.</h1>
+      <h1 className="text-5xl mt-80 font-bold">Notion, but even more powerful.</h1>
       <h2 className="text-lg mt-4 text-gray-600">
         Solutions for your <i>{'"I wish I could automate that"'}</i> moments.
       </h2>
-      <div className="w-full border-b border-opacity-80 mt-60" />
+      <div className="w-full border-b border-opacity-80 mt-80" />
       <div className="max-w-2xl w-full">
         <h1 className="mt-5 text-2xl font-bold">
           🔁 Recurring tasks <span className="font-light">| beta | free</span>

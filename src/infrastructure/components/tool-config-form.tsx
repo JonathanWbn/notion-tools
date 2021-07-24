@@ -13,7 +13,6 @@ import { SelectInput } from './select-input'
 import { Select } from './select'
 import { TitleInput } from './title-input'
 import { DateInput } from './date-input'
-import { Checkbox } from './checkbox'
 
 interface Props {
   initialValues: IToolConfig
@@ -38,15 +37,9 @@ export function ToolConfigForm({ initialValues, onSubmit }: Props): ReactElement
     setValues({ ..._.set(values, name, value) })
   }
 
-  console.log('values', values)
-
   const selectedDatabase = databases?.find((db) => db.id === values?.settings.databaseId)
   return (
     <form onSubmit={handleSubmit} className="flex flex-col">
-      <Checkbox value={values.isActive} onChange={(v) => handleChange('isActive', v)}>
-        Enabled
-      </Checkbox>
-      <h2>Config</h2>
       <Select
         value={values.settings.databaseId}
         onChange={(v) => handleChange('settings.databaseId', v)}
