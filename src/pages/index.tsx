@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react'
+import { Button } from '../infrastructure/components/button'
 
 const Home: FunctionComponent = () => {
   return (
@@ -8,7 +9,7 @@ const Home: FunctionComponent = () => {
         Solutions for your <i>{'"I wish I could automate that"'}</i> moments.
       </h2>
       <div className="w-full border-b border-opacity-80 mt-80" />
-      <div className="max-w-2xl w-full">
+      <div className="max-w-2xl w-full flex flex-col">
         <h1 className="mt-5 text-2xl font-bold">
           🔁 Recurring tasks <span className="font-light">| beta | free</span>
         </h1>
@@ -23,13 +24,10 @@ const Home: FunctionComponent = () => {
           </li>
           <li>{'Create an empty daily checklist page every night.'}</li>
         </ul>
-        <a
-          className="bg-green-200 py-1 px-8 mt-6 bg-lightGreen text-lg float-right border-green text-green hover:text-darkGreen"
-          href="/api/auth/signup"
-        >
-          <span className="border-b border-darkGreen text-current font-medium">Try it out!</span>
-        </a>
-        <h1 className="text-2xl font-bold mt-36">🏗️ In development</h1>
+        <Button className="self-end mt-10" color="green" href="/api/auth/signup">
+          Try it out!
+        </Button>
+        <h1 className="text-2xl font-bold mt-20">🏗️ In development</h1>
         <div className="rounded-sm bg-gray-100 bg-opacity-80 mt-4 p-4">
           1️⃣ Create pre-filled database items via an embedded button.
         </div>

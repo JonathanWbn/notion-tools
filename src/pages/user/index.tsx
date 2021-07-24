@@ -8,6 +8,7 @@ import {
   useTools,
   useUser,
 } from '../../infrastructure/api-client'
+import { Button } from '../../infrastructure/components/button'
 import router from 'next/router'
 
 const User: FunctionComponent = () => {
@@ -17,36 +18,22 @@ const User: FunctionComponent = () => {
 
   return (
     <div className="px-10 flex flex-col items-center">
-      <div className="max-w-2xl w-full">
+      <div className="max-w-2xl w-full flex flex-col">
         <h1 className="text-4xl font-bold">Dashboard</h1>
         {user && (
           <>
             <div className="w-full border-b border-opacity-80 my-5" />
-            {user.notionAccess ? (
-              <div className="flex items-center justify-between font-bold">
-                <p className="text-lg">✅ Connected to Notion</p>
-                <a
-                  className="bg-green-200 py-1 px-8 bg-lightBlue float-right border-blue text-blue hover:text-darkBlue"
-                  href="https://api.notion.com/v1/oauth/authorize?client_id=e2305792-b84e-4d00-bffb-a026ebed4f56&redirect_uri=https://notion-tools.io/api/notion/connect&response_type=code"
-                >
-                  <span className="border-b border-darkBlue text-current font-medium">
-                    Re-connect Notion
-                  </span>
-                </a>
-              </div>
-            ) : (
-              <div className="flex items-center justify-between font-bold">
-                <p className="text-lg">❌ Not connected to Notion</p>
-                <a
-                  className="bg-green-200 py-1 px-8 bg-lightBlue float-right border-blue text-blue hover:text-darkBlue"
-                  href="https://api.notion.com/v1/oauth/authorize?client_id=e2305792-b84e-4d00-bffb-a026ebed4f56&redirect_uri=https://notion-tools.io/api/notion/connect&response_type=code"
-                >
-                  <span className="border-b border-darkBlue text-current font-medium">
-                    Connect Notion
-                  </span>
-                </a>
-              </div>
-            )}
+            <div className="flex items-center justify-between font-bold">
+              <p className="text-lg">
+                {user.notionAccess ? '✅ Connected to Notion' : '❌ Not connected to Notion'}
+              </p>
+              <Button
+                color="blue"
+                href="https://api.notion.com/v1/oauth/authorize?client_id=e2305792-b84e-4d00-bffb-a026ebed4f56&redirect_uri=https://notion-tools.io/api/notion/connect&response_type=code"
+              >
+                {user.notionAccess ? 'Re-connect Notion' : 'Connect Notion'}
+              </Button>
+            </div>
             <div className="w-full border-b border-opacity-80 my-5" />
             <h1 className="text-2xl font-bold mb-2">Tools</h1>
             <ul className="list-disc pl-6">
@@ -71,8 +58,9 @@ const User: FunctionComponent = () => {
                 )
               })}
             </ul>
-            <button
-              className="bg-green-200 py-1 px-8 mt-6 bg-lightGreen float-right border-green text-green hover:text-darkGreen"
+            <Button
+              className="self-end mt-10"
+              color="green"
               onClick={async () => {
                 if (tools) {
                   const config = await addToolToUser(tools[0].id)
@@ -80,14 +68,12 @@ const User: FunctionComponent = () => {
                 }
               }}
             >
-              <span className="border-b border-darkGreen text-current font-medium">
-                Add recurring task
-              </span>
-            </button>
-            <div className="w-full border-b border-opacity-80 mt-20 mb-5" />
+              Add recurring task
+            </Button>
+            <div className="w-full border-b border-opacity-80 my-5" />
             <div className="flex items-center justify-around">
-              <button
-                className="bg-red-200 py-1 px-8 mt-6 bg-lightRed border-red text-red hover:text-darkRed"
+              <Button
+                color="red"
                 onClick={async () => {
                   if (tools) {
                     await deleteUser()
@@ -95,20 +81,15 @@ const User: FunctionComponent = () => {
                   }
                 }}
               >
-                <span className="border-b border-darkRed text-current font-medium">
-                  Delete account
-                </span>
-              </button>
-              <a
-                className="bg-red-200 py-1 px-8 mt-6 bg-lightYellow border-yellow text-yellow hover:text-darkYellow"
+                Delete account
+              </Button>
+              <Button
+                color="yellow"
                 href="mailto:jwieben@hey.com?subject=Bug report: Notion tools"
-                target="_blank"
-                rel="noreferrer"
+                isExternal
               >
-                <span className="border-b border-darkYellow text-current font-medium">
-                  Report bug 🐛
-                </span>
-              </a>
+                Report bug 🐛
+              </Button>
             </div>
           </>
         )}
