@@ -2,7 +2,7 @@
 import { useUser as use0AuthUser } from '@auth0/nextjs-auth0'
 import { Database } from '@notionhq/client/build/src/api-types'
 import axios from 'axios'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import { Tool } from '../domain/Tool'
 import { IToolConfig, User } from '../domain/User'
 
@@ -10,6 +10,8 @@ export type AddToolToUserResponse = IToolConfig
 
 export async function addToolToUser(toolId: string): Promise<IToolConfig> {
   const { data } = await axios.post<AddToolToUserResponse>('/api/users/tool-config', { toolId })
+
+  mutate('/api/users/me')
 
   return data
 }

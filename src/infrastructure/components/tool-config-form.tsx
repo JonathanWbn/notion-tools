@@ -6,7 +6,7 @@ import {
   SelectPropertyValue,
   TitlePropertyValue,
 } from '@notionhq/client/build/src/api-types'
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { IToolConfig } from '../../domain/User'
 import { useDatabases } from '../api-client'
 import { SelectInput } from './select-input'
@@ -15,92 +15,97 @@ import { TitleInput } from './title-input'
 import { DateInput } from './date-input'
 
 interface Props {
-  initialValues: IToolConfig
-  onSubmit: (values: IToolConfig) => Promise<void>
+  initialValues: IToolConfig['settings']
+  onAutoSave: (values: IToolConfig['settings']) => Promise<void>
 }
 
-export function ToolConfigForm({ initialValues, onSubmit }: Props): ReactElement {
-  const [values, setValues] = useState<IToolConfig>(initialValues)
+export function ToolConfigForm({ initialValues, onAutoSave }: Props): ReactElement {
+  const [values, setValues] = useState<IToolConfig['settings']>(initialValues)
   const { databases } = useDatabases()
+
+  const debouncedOnAutoSave = useRef(_.debounce(onAutoSave, 500))
+
+  useEffect(() => {
+    if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
+      debouncedOnAutoSave.current(values)
+      return debouncedOnAutoSave.current.cancel
+    }
+  }, [values])
 
   const databaseOptions = (databases || []).map((database) => ({
     value: database.id,
     label: database.title[0].plain_text,
   }))
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    onSubmit(values)
-  }
-
   function handleChange(name: string, value: unknown) {
-    setValues({ ..._.set(values, name, value) })
+    setValues({ ...values, [name]: value })
   }
 
-  const selectedDatabase = databases?.find((db) => db.id === values?.settings.databaseId)
+  const selectedDatabase = databases?.find((db) => db.id === values.databaseId)
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col">
-      <Select
-        value={values.settings.databaseId}
-        onChange={(v) => handleChange('settings.databaseId', v)}
-        options={databaseOptions}
-      >
-        Database
-      </Select>
-      <Select
-        value={values.settings.frequency}
-        onChange={(v) => handleChange('settings.frequency', v)}
-        options={frequencyOptions}
-      >
-        Frequency
-      </Select>
-      {values.settings.frequency === 'weekly' && (
+    <>
+      <label className="flex justify-between mb-2">
+        <span className="text-lg">Database</span>
         <Select
-          value={values.settings.weekday}
-          onChange={(v) => handleChange('settings.weekday', v)}
-          options={weekdayOptions}
-        >
-          Day of week
-        </Select>
+          value={values.databaseId}
+          onChange={(v) => handleChange('databaseId', v)}
+          options={databaseOptions}
+        />
+      </label>
+      <label className="flex justify-between mb-2">
+        <span className="text-lg">Frequency</span>
+        <Select
+          value={values.frequency}
+          onChange={(v) => handleChange('frequency', v)}
+          options={frequencyOptions}
+        />
+      </label>
+      {values.frequency === 'weekly' && (
+        <label className="flex justify-between mb-2">
+          <span className="text-lg">Day of week</span>
+          <Select
+            value={values.weekday}
+            onChange={(v) => handleChange('weekday', v)}
+            options={weekdayOptions}
+          />
+        </label>
       )}
-      <label>
-        Time of taks creation (UTC)
+      <label className="flex justify-between">
+        <span className="text-lg">Time of creation (UTC)</span>
         <input
-          value={values.settings.timeOfDay || ''}
+          value={values.timeOfDay || ''}
+          className="border w-40 text-sm p-2 appearance-none focus:outline-none focus:border-gray-400"
           type="time"
           min="00:00"
           max="24:00"
-          onChange={(e) => handleChange('settings.timeOfDay', e.target.value)}
+          onChange={(e) => handleChange('timeOfDay', e.target.value)}
         ></input>
       </label>
       {selectedDatabase && (
         <>
-          <h2>Create page with properties</h2>
+          <div className="w-full border-b border-opacity-80 my-5" />
+          <h1 className="text-2xl mb-2">Fields</h1>
           {Object.entries(selectedDatabase.properties).map(([name, property]) => (
             <PropertyInput
               key={property.id}
               name={name}
               property={property}
-              value={values.settings.properties?.[property.id]}
+              value={values.properties?.[property.id]}
               onChange={(propertyValue) => {
                 if (propertyValue) {
-                  handleChange('settings.properties', {
-                    ...values.settings.properties,
+                  handleChange('properties', {
+                    ...values.properties,
                     [property.id]: propertyValue,
                   })
                 } else {
-                  handleChange(
-                    'settings.properties',
-                    _.omit(values.settings.properties, property.id)
-                  )
+                  handleChange('properties', _.omit(values.properties, property.id))
                 }
               }}
             />
           ))}
         </>
       )}
-      <button>Save</button>
-    </form>
+    </>
   )
 }
 

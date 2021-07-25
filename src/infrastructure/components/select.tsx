@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 interface SelectProps {
   value: string | undefined
@@ -7,24 +7,19 @@ interface SelectProps {
   noEmptyOption?: boolean
 }
 
-export function Select({
-  value,
-  onChange,
-  options,
-  children,
-  noEmptyOption,
-}: PropsWithChildren<SelectProps>): ReactElement {
+export function Select({ value, onChange, options, noEmptyOption }: SelectProps): ReactElement {
   return (
-    <label>
-      {children}
-      <select value={value} onChange={(e) => onChange(e.target.value)}>
-        {!noEmptyOption && <option value="">---</option>}
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </label>
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="border w-40 text-sm p-2 appearance-none focus:outline-none focus:border-gray-400"
+    >
+      {!noEmptyOption && <option value=""></option>}
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
   )
 }

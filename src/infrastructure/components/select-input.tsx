@@ -9,9 +9,10 @@ export function SelectInput({
   name,
 }: PropertyInputProps<SelectProperty, SelectPropertyValue>): ReactElement {
   return (
-    <label key={property.id}>
-      {name}
+    <label className="flex justify-between mb-2 items-center">
+      <span className="text-lg">{name}</span>
       <select
+        className="border w-40 text-sm p-2 appearance-none focus:outline-none focus:border-gray-400"
         value={value ? value.select.id : ''}
         onChange={(e) => {
           const selectedOption = property.select.options.find((opt) => opt.id === e.target.value)
@@ -27,7 +28,7 @@ export function SelectInput({
           onChange(v)
         }}
       >
-        <option value="">---</option>
+        <option value=""></option>
         {property.select.options.map((option) => (
           <option key={option.id} value={option.id}>
             {option.name}

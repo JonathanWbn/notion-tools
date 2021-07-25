@@ -7,6 +7,8 @@ interface Props {
   children: ReactNode
   href?: string
   isExternal?: boolean
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any
 }
 
 export function Button({
@@ -16,6 +18,7 @@ export function Button({
   href,
   isExternal,
   className,
+  ...rest
 }: Props): ReactElement {
   const Tag = href ? 'a' : 'button'
 
@@ -28,6 +31,7 @@ export function Button({
       href={href}
       target={isExternal ? '_blank' : undefined}
       rel={isExternal ? 'noopener noreferrer' : undefined}
+      {...rest}
     >
       <span className={`border-b border-${color} text-current font-medium`}>{children}</span>
     </Tag>

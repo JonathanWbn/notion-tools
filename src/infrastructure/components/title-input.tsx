@@ -15,10 +15,11 @@ export function TitleInput({
         .join('')
     : ''
   return (
-    <label key={property.id}>
-      {name}
+    <label className="flex justify-between mb-2 items-center">
+      <span className="text-lg">{name}</span>
       <input
         value={textValue}
+        className="border w-40 text-sm p-2 appearance-none focus:outline-none focus:border-gray-400"
         onChange={(e) => {
           const v: TitlePropertyValue = {
             id: property.id,
