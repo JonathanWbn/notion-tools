@@ -10,8 +10,8 @@ module.exports = {
       sans: ['Roboto', 'sans-serif'],
     },
     colors: {
-      ...colors,
       black: '#37352f',
+      gray: colors.gray,
       green: {
         light: '#ddecea',
         DEFAULT: '#5b9d92',

@@ -31,7 +31,7 @@ const User: FunctionComponent = () => {
   }, [savingState])
 
   useEffect(() => {
-    if (testingState === 'TESTED') {
+    if (testingState === 'TESTED' || testingState === 'FAILED') {
       const timeout = setTimeout(() => setTesting('INITIAL'), 1000)
       return () => clearTimeout(timeout)
     }
@@ -78,12 +78,12 @@ const User: FunctionComponent = () => {
             <div className="flex justify-between items-center">
               <h1 className="text-4xl font-bold">{tool.name}</h1>
               {savingState === 'SAVING' && (
-                <p className="flex items-center text-warmGray-500">
+                <p className="flex items-center text-gray-500">
                   <Spinner className="animate-spin mr-1" /> Saving...
                 </p>
               )}
               {savingState === 'SAVED' && (
-                <p className="flex items-center text-warmGray-500">
+                <p className="flex items-center text-gray-500">
                   <Circle className="mr-1" /> Saved.
                 </p>
               )}

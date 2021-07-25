@@ -22,18 +22,46 @@ export function Button({
 }: Props): ReactElement {
   const Tag = href ? 'a' : 'button'
 
+  const { bg, border, text, hoverText } = classMap[color]
+
   return (
     <Tag
-      className={`py-1 px-8 bg-${color}-light border-${color} text-${color} hover:text-${color}-dark ${
-        className || ''
-      }`}
+      className={`py-1 px-8 ${bg} ${border} ${text} ${hoverText} ${className || ''}`}
       onClick={onClick}
       href={href}
       target={isExternal ? '_blank' : undefined}
       rel={isExternal ? 'noopener noreferrer' : undefined}
       {...rest}
     >
-      <span className={`border-b border-${color} text-current font-medium`}>{children}</span>
+      <span className={`border-b ${border} text-current font-medium`}>{children}</span>
     </Tag>
   )
+}
+
+// using this map so that tailwind doesn't purge the dynamic classes
+const classMap: Record<Props['color'], Record<string, string>> = {
+  green: {
+    bg: 'bg-green-light',
+    border: 'border-green',
+    text: 'text-green',
+    hoverText: 'hover:text-green-dark',
+  },
+  red: {
+    bg: 'bg-red-light',
+    border: 'border-red',
+    text: 'text-red',
+    hoverText: 'hover:text-red-dark',
+  },
+  blue: {
+    bg: 'bg-blue-light',
+    border: 'border-blue',
+    text: 'text-blue',
+    hoverText: 'hover:text-blue-dark',
+  },
+  yellow: {
+    bg: 'bg-yellow-light',
+    border: 'border-yellow',
+    text: 'text-yellow',
+    hoverText: 'hover:text-yellow-dark',
+  },
 }

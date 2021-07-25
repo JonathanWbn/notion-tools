@@ -38,7 +38,11 @@ export function ToolConfigForm({ initialValues, onAutoSave }: Props): ReactEleme
   }))
 
   function handleChange(name: string, value: unknown) {
-    setValues({ ...values, [name]: value })
+    if (name === 'databaseId' && value !== values.databaseId) {
+      setValues({ ...values, properties: {}, [name]: value as string })
+    } else {
+      setValues({ ...values, [name]: value })
+    }
   }
 
   const selectedDatabase = databases?.find((db) => db.id === values.databaseId)
