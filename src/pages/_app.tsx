@@ -29,6 +29,20 @@ const App: FunctionComponent<Props> = ({ Component, pageProps }: Props) => {
           data-domain="notion-tools.io"
           src="https://plausible.io/js/plausible.js"
         ></script>
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `
+              var cpm = {};
+              (function(h,u,b){
+              var d=h.getElementsByTagName("script")[0],e=h.createElement("script");
+              e.async=true;e.src='https://cookiehub.net/c2/153365a2.js';
+              e.onload=function(){u.cookiehub.load(b);}
+              d.parentNode.insertBefore(e,d);
+              })(document,window,cpm);
+            `,
+          }}
+        />
       </Head>
       <Header />
       <main>
