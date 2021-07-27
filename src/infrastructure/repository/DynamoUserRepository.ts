@@ -96,18 +96,17 @@ export class DynamoUserRepository implements UserRepository {
   private parseUser(user: PersistedItem): User {
     return {
       ...user,
-      toolConfigs: JSON.parse(user.toolConfigs || '[]').map(this.parseToolConfig),
+      toolConfigs: (JSON.parse(user.toolConfigs || '[]') as IToolConfig[]).map(
+        (toolConfig) =>
+          new ToolConfig(
+            toolConfig.id,
+            toolConfig.toolId,
+            toolConfig.settings,
+            toolConfig.isActive,
+            toolConfig.lastExecutedAt
+          )
+      ),
       notionAccess: user.notionAccess ? JSON.parse(user.notionAccess) : undefined,
     }
-  }
-
-  private parseToolConfig(toolConfig: IToolConfig): ToolConfig {
-    return new ToolConfig(
-      toolConfig.id,
-      toolConfig.toolId,
-      toolConfig.settings,
-      toolConfig.isActive,
-      toolConfig.lastExecutedAt
-    )
   }
 }
