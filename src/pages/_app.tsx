@@ -24,6 +24,11 @@ const App: FunctionComponent<Props> = ({ Component, pageProps }: Props) => {
           rel="stylesheet"
         />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <script
+          defer
+          data-domain="notion-tools.io"
+          src="https://plausible.io/js/plausible.js"
+        ></script>
       </Head>
       <Header />
       <main>
