@@ -9,6 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Database[]>): P
     switch (method) {
       case 'GET': {
         await handleLogin(req, res, {
+          returnTo: '/user',
           authorizationParams: {
             screen_hint: 'signup',
           },

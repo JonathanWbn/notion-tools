@@ -27,7 +27,7 @@ export function Header(): ReactElement {
         <div>
           <a
             className="border-b border-gray-500 opacity-60 hover:opacity-100"
-            href="/api/auth/login"
+            href="/api/auth/login?returnTo=/user"
           >
             login
           </a>
