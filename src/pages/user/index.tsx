@@ -40,32 +40,36 @@ const User: FunctionComponent = () => {
         <div className="w-full border-b border-opacity-80 my-5" />
         {user ? (
           <>
-            <h1 className="text-2xl font-bold mb-2">Tools</h1>
-            <ul className="list-disc pl-6">
-              {user.toolConfigs.map((config) => {
-                const tool = tools?.find((tool) => tool.id === config.toolId)
-                if (!tool) return null
-                const details = [
-                  databases?.find((db) => db.id === config.settings.databaseId)?.title[0]
-                    .plain_text,
-                  config.settings.frequency,
-                  ...Object.values(config.settings.properties || {}).map(
-                    (prop) => prop.type === 'title' && prop.title[0].plain_text
-                  ),
-                ].filter(Boolean)
+            <h1 className="text-2xl font-bold mb-2">
+              {user.toolConfigs.length > 0 ? 'Tools' : 'No Tools Yet'}
+            </h1>
+            {user.toolConfigs.length > 0 && (
+              <ul className="list-disc pl-6">
+                {user.toolConfigs.map((config) => {
+                  const tool = tools?.find((tool) => tool.id === config.toolId)
+                  if (!tool) return null
+                  const details = [
+                    databases?.find((db) => db.id === config.settings.databaseId)?.title[0]
+                      .plain_text,
+                    config.settings.frequency,
+                    ...Object.values(config.settings.properties || {}).map(
+                      (prop) => prop.type === 'title' && prop.title[0].plain_text
+                    ),
+                  ].filter(Boolean)
 
-                return (
-                  <li className="mb-1" key={config.id}>
-                    <Link href={`/user/config/${config.id}`}>
-                      <a className="border-b border-link text-link hover:border-black hover:text-black">
-                        {!config.isActive && '[disabled]'} <b>{tool.name}</b>{' '}
-                        {details.length ? `(${details.join(', ')})` : ''}
-                      </a>
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
+                  return (
+                    <li className="mb-1" key={config.id}>
+                      <Link href={`/user/config/${config.id}`}>
+                        <a className="border-b border-link text-link hover:border-black hover:text-black">
+                          {!config.isActive && '[disabled]'} <b>{tool.name}</b>{' '}
+                          {details.length ? `(${details.join(', ')})` : ''}
+                        </a>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
             <Button
               className="self-end mt-10"
               color="green"
