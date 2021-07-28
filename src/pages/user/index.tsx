@@ -49,6 +49,9 @@ const User: FunctionComponent = () => {
                   databases?.find((db) => db.id === config.settings.databaseId)?.title[0]
                     .plain_text,
                   config.settings.frequency,
+                  ...Object.values(config.settings.properties || {}).map(
+                    (prop) => prop.type === 'title' && prop.title[0].plain_text
+                  ),
                 ].filter(Boolean)
 
                 return (
