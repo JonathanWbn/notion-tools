@@ -9,7 +9,7 @@ export function Header(): ReactElement {
 
   return (
     <header className="flex justify-between p-6 items-center">
-      <Link href="/">
+      <Link href={user ? '/user' : '/'}>
         <a className="text-3xl">🧰</a>
       </Link>
       {router.asPath === '/user' ? (
