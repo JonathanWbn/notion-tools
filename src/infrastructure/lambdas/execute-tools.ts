@@ -15,10 +15,10 @@ export const handler = async (): Promise<string> => {
     for (const config of configsToExecute) {
       console.log('config', config)
 
-      const runToolConfig = new RunToolConfig(userRepository)
-
       if (config.shouldBeExecutedNow()) {
         console.log('executing')
+        const runToolConfig = new RunToolConfig(userRepository)
+
         await runToolConfig.invoke({
           userId: user.userId,
           toolConfigId: config.id,

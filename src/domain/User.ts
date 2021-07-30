@@ -71,6 +71,9 @@ export class ToolConfig implements IToolConfig {
       throw new Error(`Invalid frequency ${this.settings.frequency}`)
     }
 
+    console.log('latestScheduledExecution', latestScheduledExecution)
+    console.log('this.lastExecutedAt', this.lastExecutedAt)
+
     const hasBeenExecutedSince =
       this.lastExecutedAt && isAfter(new Date(this.lastExecutedAt), latestScheduledExecution)
 
