@@ -39,6 +39,7 @@ export class ToolConfig implements IToolConfig {
     public readonly toolId: Tool['id'],
     public readonly settings: RecurringToolSettings,
     public readonly isActive: boolean,
+    public readonly createdAt: string,
     public readonly lastExecutedAt?: string
   ) {}
 
@@ -77,15 +78,22 @@ export class ToolConfig implements IToolConfig {
     const hasBeenExecutedSince =
       this.lastExecutedAt && isAfter(new Date(this.lastExecutedAt), latestScheduledExecution)
 
-    return !hasBeenExecutedSince
+    return !hasBeenExecutedSince && isAfter(latestScheduledExecution, new Date(this.createdAt))
   }
 
-  public copyWith({ toolId, settings, isActive, lastExecutedAt }: Partial<ToolConfig>): ToolConfig {
+  public copyWith({
+    toolId,
+    settings,
+    isActive,
+    lastExecutedAt,
+    createdAt,
+  }: Partial<ToolConfig>): ToolConfig {
     return new ToolConfig(
       this.id,
       toolId || this.toolId,
       settings || this.settings,
       isActive !== undefined ? isActive : this.isActive,
+      createdAt || this.createdAt,
       lastExecutedAt || this.lastExecutedAt
     )
   }
@@ -96,6 +104,7 @@ export interface IToolConfig {
   toolId: Tool['id']
   settings: RecurringToolSettings
   isActive: boolean
+  createdAt: string
   lastExecutedAt?: string
 }
 

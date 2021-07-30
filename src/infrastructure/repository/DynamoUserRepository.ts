@@ -103,6 +103,7 @@ export class DynamoUserRepository implements UserRepository {
             toolConfig.toolId,
             toolConfig.settings,
             toolConfig.isActive,
+            toolConfig.createdAt,
             toolConfig.lastExecutedAt
           )
       ),
