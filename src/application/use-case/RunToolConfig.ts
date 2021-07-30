@@ -1,6 +1,6 @@
 import { Client } from '@notionhq/client/build/src'
-import { InputPropertyValue } from '@notionhq/client/build/src/api-types'
-import { add } from 'date-fns'
+import { InputPropertyValue, RichTextInput } from '@notionhq/client/build/src/api-types'
+import { add, format } from 'date-fns'
 import { ToolConfig, User } from '../../domain/User'
 import { UserRepository } from '../repository/UserRepository'
 
@@ -57,6 +57,29 @@ export class RunToolConfig {
           type: value.type,
           date: { start: this.parseDate(value.date.start) },
         }
+      } else if (value.type === 'title') {
+        const parsedTitle = this.parseTitle(value.title)
+        if (parsedTitle) {
+          parsedProperties[key] = {
+            id: value.id,
+            type: value.type,
+            title: [
+              {
+                type: 'text',
+                plain_text: parsedTitle,
+                text: { content: parsedTitle },
+                annotations: {
+                  bold: false,
+                  code: false,
+                  color: 'default',
+                  italic: false,
+                  strikethrough: false,
+                  underline: false,
+                },
+              },
+            ],
+          }
+        }
       } else {
         parsedProperties[key] = value
       }
@@ -89,5 +112,18 @@ export class RunToolConfig {
     }
 
     return parsedDate.toISOString().substring(0, 10)
+  }
+
+  private parseTitle(title: RichTextInput[]): string | undefined {
+    const titleString = title
+      .filter((el) => el.type === 'text')
+      .map((el) => el.plain_text)
+      .join('')
+
+    if (titleString === 'formatted_day') {
+      return format(Date.now(), 'LLL do')
+    }
+
+    return titleString || undefined
   }
 }
