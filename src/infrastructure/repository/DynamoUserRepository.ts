@@ -17,7 +17,6 @@ interface PersistedItem {
   userId: string
   toolConfigs: string
   notionAccess: string
-  isActive: boolean
 }
 
 export class DynamoUserRepository implements UserRepository {
@@ -25,7 +24,6 @@ export class DynamoUserRepository implements UserRepository {
     const newUser: User = {
       userId,
       toolConfigs: [],
-      isActive: true,
     }
 
     await documentClient
@@ -34,7 +32,6 @@ export class DynamoUserRepository implements UserRepository {
         Item: {
           userId: newUser.userId,
           toolConfigs: JSON.stringify(newUser.toolConfigs),
-          isActive: newUser.isActive,
         } as PersistedItem,
         ConditionExpression: 'attribute_not_exists(userId)',
       })

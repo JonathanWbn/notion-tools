@@ -7,7 +7,6 @@ export interface User {
   userId: string
   toolConfigs: ToolConfig[]
   notionAccess?: NotionAccess
-  isActive: boolean
 }
 
 export interface NotionAccess {
