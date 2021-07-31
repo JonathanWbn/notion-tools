@@ -13,7 +13,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
   try {
     switch (method) {
       case 'GET': {
-        const { code } = query
+        const { code, error } = query
+
+        if (error) {
+          res.status(301).redirect('/user')
+          return
+        }
+
         const authUser = getUserFromSession(req, res)
 
         const { data } = await axios.post(
