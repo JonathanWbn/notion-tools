@@ -33,6 +33,10 @@ const App: FunctionComponent<Props> = ({ Component, pageProps }: Props) => {
           content="notion tools recurring tasks automation integration repeat"
         />
         <meta name="author" content="Jonathan Wieben" />
+        <meta
+          name="google-site-verification"
+          content="42MP1RP9DRZu3YefHgPeqdmpnI9WQfrHCS2sAbTlbMI"
+        />
         <script
           defer
           data-domain="notion-tools.io"
