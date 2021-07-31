@@ -24,6 +24,15 @@ const App: FunctionComponent<Props> = ({ Component, pageProps }: Props) => {
           rel="stylesheet"
         />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta
+          name="description"
+          content="A set of tools to automate things in Notion (e.g. recurring tasks)"
+        />
+        <meta
+          name="keywords"
+          content="notion tools recurring tasks automation integration repeat"
+        />
+        <meta name="author" content="Jonathan Wieben" />
         <script
           defer
           data-domain="notion-tools.io"
