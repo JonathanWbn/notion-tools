@@ -91,11 +91,11 @@ const Home: FunctionComponent = () => {
         </Toggle>
         <Toggle label="How can I trust that you are not going to misuse my data?">
           <p className="mb-2">
-            You {"can't"} and you {"shouldn't"}. Thankfully, there is no need for you to provide
-            access to your entire Notion workspace. When connecting notion-tools.io to your Notion
-            account, you are going to be asked to select the pages/databases you want to give access
-            to. You can also later re-configure these permissions either within Notion or within the
-            settings of this app.
+            Notion tools does not collect any user data (except an email for signup/login). When
+            connecting notion-tools.io to your Notion account, you are going to be asked to select
+            the pages/databases you want to give access to. You can also later re-configure these
+            permissions either within Notion or within the settings of this app. I encourage you to
+            only select the pages you are actually going to use.
           </p>
           <img
             className="w-80 shadow rounded-lg mx-auto"
