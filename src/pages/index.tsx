@@ -122,6 +122,13 @@ const Home: FunctionComponent = () => {
         {' / '}
         <a
           className="border-b border-gray-500 opacity-60 hover:opacity-100"
+          href="https://www.termsfeed.com/live/249035dc-8d27-4c14-ad35-a68cfdc94feb"
+        >
+          terms and conditions
+        </a>
+        {' / '}
+        <a
+          className="border-b border-gray-500 opacity-60 hover:opacity-100"
           href="https://jonathanwieben.com"
           target="_blank"
           rel="noreferrer"
