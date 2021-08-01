@@ -57,13 +57,21 @@ export class ToolConfig implements IToolConfig {
     const [hour, minute] = (this.settings.timeOfDay as TimeOfDay).split(':')
 
     if (this.settings.frequency === 'daily') {
-      const executionToday = set(now, { hours: +hour, minutes: +minute })
+      const executionToday = set(now, {
+        hours: +hour,
+        minutes: +minute,
+        seconds: 0,
+        milliseconds: 0,
+      })
       const executionYesterday = sub(executionToday, { days: 1 })
 
       latestScheduledExecution = isFuture(executionToday) ? executionYesterday : executionToday
     } else if (this.settings.frequency === 'weekly') {
       const dayToSet = weekdayMap[this.settings.weekday as Weekday]
-      const executionThisWeek = setDay(set(now, { hours: +hour, minutes: +minute }), dayToSet)
+      const executionThisWeek = setDay(
+        set(now, { hours: +hour, minutes: +minute, seconds: 0, milliseconds: 0 }),
+        dayToSet
+      )
       const executionLastWeek = sub(executionThisWeek, { days: 7 })
 
       latestScheduledExecution = isFuture(executionThisWeek) ? executionLastWeek : executionThisWeek
