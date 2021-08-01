@@ -3,6 +3,7 @@ import {
   CheckboxPropertyValue,
   DatePropertyValue,
   InputPropertyValue,
+  NumberPropertyValue,
   Property,
   RichTextPropertyValue,
   SelectPropertyValue,
@@ -16,6 +17,7 @@ import { Select } from './select'
 import { TitleInput } from './title-input'
 import { TextInput } from './text-input'
 import { CheckboxInput } from './checkbox-input'
+import { NumberInput } from './number-input'
 import { DateInput } from './date-input'
 
 interface Props {
@@ -139,6 +141,8 @@ function PropertyInput({ property, value, onChange, name }: PropertyInputProps):
     return (
       <CheckboxInput {...{ property, value: value as CheckboxPropertyValue, onChange, name }} />
     )
+  } else if (property.type === 'number') {
+    return <NumberInput {...{ property, value: value as NumberPropertyValue, onChange, name }} />
   }
 
   return <></>
