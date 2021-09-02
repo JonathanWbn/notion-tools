@@ -21,7 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
     }
   } catch (err) {
     console.log('err', err)
-    res.status(500).json({ statusCode: 500, message: err.message })
+    res.status(500).json({ statusCode: 500 })
   }
 }
 
