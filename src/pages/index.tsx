@@ -33,11 +33,17 @@ const Home: FunctionComponent = () => {
             Try it out!
           </Button>
         </div>
-        <img
-          className="w-full max-w-lg ml-10 shadow rounded-lg"
-          src="/recurring-tasks-demo.png"
-          alt="Recurring Tasks Demo"
-        />
+        <div className="w-full max-w-lg ml-10 my-4 shadow rounded-lg overflow-hidden">
+          <iframe
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/FwX161oSmO0?rel=0&showinfo=0&modestbranding=0"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title="Demo"
+          />
+        </div>
       </div>
       <div className="w-full border-b border-opacity-80 my-5" />
       <div className="max-w-2xl w-full flex flex-col">
