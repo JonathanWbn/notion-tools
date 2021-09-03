@@ -12,13 +12,13 @@ const Home: FunctionComponent = () => {
       <div className="w-full border-b border-opacity-80 mt-80" />
       <div className="w-full max-w-screen-xl flex justify-between py-14">
         <div className="max-w-2xl w-full flex flex-col">
-          <h1 className="mt-5 text-2xl font-bold">
+          <h3 className="mt-5 text-2xl font-bold">
             🔁 Recurring tasks <span className="font-light">| beta</span>
-          </h1>
-          <div className="rounded-sm bg-gray-100 bg-opacity-80 mt-4 p-4">
+          </h3>
+          <p className="rounded-sm bg-gray-100 bg-opacity-80 mt-4 p-4">
             <span className="mr-2">👉</span>This tool allows you to automatically create database
             pages on a schedule.
-          </div>
+          </p>
           <p className="font-bold mt-4 mb-1">Examples:</p>
           <ul className="list-disc pl-6">
             <li className="mb-1">
@@ -47,7 +47,7 @@ const Home: FunctionComponent = () => {
       </div>
       <div className="w-full border-b border-opacity-80 my-5" />
       <div className="max-w-2xl w-full flex flex-col">
-        <h1 className="text-2xl font-bold mb-3">❓ FAQ</h1>
+        <h3 className="text-2xl font-bold mb-3">❓ FAQ</h3>
         <Toggle label='Is "Recurring tasks" the only tool?'>
           <p className="mb-2">
             As of now, yes. But new tools are already being developed. Here are some of the tools
