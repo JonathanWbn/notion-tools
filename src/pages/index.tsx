@@ -80,9 +80,13 @@ const Home: FunctionComponent = () => {
         </Toggle>
         <Toggle label="What makes notion-tools.io different from existing automation tools like Zapier?">
           <p className="mb-2">
-            Products like Zapier are great at connecting services with each other (e.g. Notion with
-            Slack). But when it comes to automating advanced workflows <strong>within</strong>{' '}
-            Notion it becomes less powerful and more complex.
+            Products like{' '}
+            <a href="https://zapier.com/" target="_blank" rel="noreferrer" className="underline">
+              Zapier
+            </a>{' '}
+            are great at connecting services with each other (e.g. Notion with Slack). But when it
+            comes to automating advanced workflows <strong>within</strong> Notion it becomes less
+            powerful and more complex.
           </p>
           <p className="mb-2">
             notion-tools.io is going to focus on{' '}
@@ -101,7 +105,16 @@ const Home: FunctionComponent = () => {
             connecting notion-tools.io to your Notion account, you are going to be asked to select
             the pages/databases you want to give access to. You can also later re-configure these
             permissions either within Notion or within the settings of this app. I encourage you to
-            only select the pages you are actually going to use.
+            only select the pages you are actually going to use. Notion also has a{' '}
+            <a
+              href="https://www.notion.so/guides/understanding-notions-sharing-settings"
+              target="_blank"
+              rel="noreferrer"
+              className="underline"
+            >
+              guide
+            </a>{' '}
+            to further explain how permissions work.
           </p>
           <img
             className="w-80 shadow rounded-lg mx-auto"
