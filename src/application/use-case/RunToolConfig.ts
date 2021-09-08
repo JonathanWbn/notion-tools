@@ -1,12 +1,13 @@
 import { Client } from '@notionhq/client/build/src'
 import { InputPropertyValue, RichTextInput } from '@notionhq/client/build/src/api-types'
 import { add, format } from 'date-fns'
-import { ToolConfig, User } from '../../domain/User'
+import { RecurringTask } from '../../domain/RecurringTask'
+import { User } from '../../domain/User'
 import { UserRepository } from '../repository/UserRepository'
 
 interface RunToolConfigRequest {
   userId: User['userId']
-  toolConfigId: ToolConfig['id']
+  toolConfigId: RecurringTask['id']
 }
 
 export class RunToolConfig {
@@ -44,7 +45,7 @@ export class RunToolConfig {
   }
 
   private parseProperties(
-    properties: ToolConfig['settings']['properties']
+    properties: RecurringTask['settings']['properties']
   ): Record<string, InputPropertyValue> {
     const parsedProperties: Record<string, InputPropertyValue> = {}
 

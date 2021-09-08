@@ -10,7 +10,6 @@ import {
   TitlePropertyValue,
 } from '@notionhq/client/build/src/api-types'
 import { ReactElement, useEffect, useRef, useState } from 'react'
-import { IToolConfig } from '../../domain/User'
 import { useDatabases } from '../api-client'
 import { SelectInput } from './select-input'
 import { Select } from './select'
@@ -19,14 +18,15 @@ import { TextInput } from './text-input'
 import { CheckboxInput } from './checkbox-input'
 import { NumberInput } from './number-input'
 import { DateInput } from './date-input'
+import { IRecurringTask } from '../../domain/RecurringTask'
 
 interface Props {
-  initialValues: IToolConfig['settings']
-  onAutoSave: (values: IToolConfig['settings']) => Promise<void>
+  initialValues: IRecurringTask['settings']
+  onAutoSave: (values: IRecurringTask['settings']) => Promise<void>
 }
 
 export function ToolConfigForm({ initialValues, onAutoSave }: Props): ReactElement {
-  const [values, setValues] = useState<IToolConfig['settings']>(initialValues)
+  const [values, setValues] = useState<IRecurringTask['settings']>(initialValues)
   const { databases } = useDatabases()
 
   const debouncedOnAutoSave = useRef(_.debounce(onAutoSave, 500))

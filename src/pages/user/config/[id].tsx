@@ -2,16 +2,11 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { useRouter } from 'next/router'
 import { FunctionComponent, useEffect, useState } from 'react'
 import { mutate } from 'swr'
-import { IToolConfig, ToolConfig } from '../../../domain/User'
-import {
-  runToolConfig,
-  updateToolConfig,
-  useTools,
-  useUser,
-} from '../../../infrastructure/api-client'
+import { runToolConfig, updateToolConfig, useUser } from '../../../infrastructure/api-client'
 import { ToolConfigForm } from '../../../infrastructure/components/tool-config-form'
 import { Spinner, Circle } from '../../../infrastructure/components/icons'
 import { Button } from '../../../infrastructure/components/button'
+import { IRecurringTask, RecurringTask } from '../../../domain/RecurringTask'
 
 type SavingState = 'INITIAL' | 'SAVING' | 'SAVED'
 type TestingState = 'INITIAL' | 'TESTING' | 'TESTED' | 'FAILED'
@@ -19,7 +14,6 @@ type TestingState = 'INITIAL' | 'TESTING' | 'TESTED' | 'FAILED'
 const User: FunctionComponent = () => {
   const router = useRouter()
   const { id } = router.query
-  const { tools } = useTools()
   const { user } = useUser()
   const [savingState, setSaving] = useState<SavingState>('INITIAL')
   const [testingState, setTesting] = useState<TestingState>('INITIAL')
@@ -39,9 +33,8 @@ const User: FunctionComponent = () => {
   }, [testingState])
 
   const toolConfig = user?.toolConfigs.find((config) => config.id === id)
-  const tool = tools?.find((tool) => tool.id === toolConfig?.toolId)
 
-  async function handleSubmit(settings: IToolConfig['settings']): Promise<void> {
+  async function handleSubmit(settings: IRecurringTask['settings']): Promise<void> {
     if (!toolConfig) return
     setSaving('SAVING')
     await updateToolConfig(toolConfig.id, { settings })
@@ -74,23 +67,19 @@ const User: FunctionComponent = () => {
   return (
     <div className="px-10 flex flex-col items-center">
       <div className="max-w-2xl w-full flex flex-col">
-        {tool ? (
-          <div className="flex justify-between items-center">
-            <h1 className="text-4xl font-bold">{tool.name}</h1>
-            {savingState === 'SAVING' && (
-              <p className="flex items-center text-gray-500">
-                <Spinner className="animate-spin mr-1" /> Saving...
-              </p>
-            )}
-            {savingState === 'SAVED' && (
-              <p className="flex items-center text-gray-500">
-                <Circle className="mr-1" /> Saved.
-              </p>
-            )}
-          </div>
-        ) : (
-          <Spinner className="animate-spin mx-auto" />
-        )}
+        <div className="flex justify-between items-center">
+          <h1 className="text-4xl font-bold">Recurring task</h1>
+          {savingState === 'SAVING' && (
+            <p className="flex items-center text-gray-500">
+              <Spinner className="animate-spin mr-1" /> Saving...
+            </p>
+          )}
+          {savingState === 'SAVED' && (
+            <p className="flex items-center text-gray-500">
+              <Circle className="mr-1" /> Saved.
+            </p>
+          )}
+        </div>
         <div className="w-full border-b border-opacity-80 my-5" />
         {toolConfig ? (
           <>
@@ -113,11 +102,11 @@ const User: FunctionComponent = () => {
             )}
             <div className="flex items-center justify-between mt-5">
               <p className="text-lg font-bold">
-                {ToolConfig._isExecutable(toolConfig)
+                {RecurringTask._isExecutable(toolConfig)
                   ? '✅ Is complete'
                   : '❌ Incomplete configuration'}
               </p>
-              {ToolConfig._isExecutable(toolConfig) ? (
+              {RecurringTask._isExecutable(toolConfig) ? (
                 <Button
                   className="self-end"
                   color={

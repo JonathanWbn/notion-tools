@@ -1,20 +1,13 @@
 import Link from 'next/link'
 import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { FunctionComponent } from 'react'
-import {
-  addToolToUser,
-  deleteUser,
-  useDatabases,
-  useTools,
-  useUser,
-} from '../../infrastructure/api-client'
+import { addToolToUser, deleteUser, useDatabases, useUser } from '../../infrastructure/api-client'
 import { Button } from '../../infrastructure/components/button'
 import router from 'next/router'
 import { Spinner } from '../../infrastructure/components/icons'
 
 const User: FunctionComponent = () => {
   const { user } = useUser()
-  const { tools } = useTools()
   const { databases } = useDatabases()
 
   return (
@@ -46,8 +39,6 @@ const User: FunctionComponent = () => {
             {user.toolConfigs.length > 0 && (
               <ul className="list-disc pl-6">
                 {user.toolConfigs.map((config) => {
-                  const tool = tools?.find((tool) => tool.id === config.toolId)
-                  if (!tool) return null
                   const details = [
                     databases?.find((db) => db.id === config.settings.databaseId)?.title[0]
                       .plain_text,
@@ -61,7 +52,7 @@ const User: FunctionComponent = () => {
                     <li className="mb-1" key={config.id}>
                       <Link href={`/user/config/${config.id}`}>
                         <a className="border-b border-link text-link hover:border-black hover:text-black">
-                          {!config.isActive && '[disabled]'} <b>{tool.name}</b>{' '}
+                          {!config.isActive && '[disabled]'} <b>Recurring task</b>{' '}
                           {details.length ? `(${details.join(', ')})` : ''}
                         </a>
                       </Link>
@@ -74,10 +65,8 @@ const User: FunctionComponent = () => {
               className="self-end mt-10"
               color="green"
               onClick={async () => {
-                if (tools) {
-                  const config = await addToolToUser(tools[0].id)
-                  router.push(`/user/config/${config.id}`)
-                }
+                const config = await addToolToUser()
+                router.push(`/user/config/${config.id}`)
               }}
             >
               Add recurring task
@@ -92,10 +81,8 @@ const User: FunctionComponent = () => {
             <Button
               color="red"
               onClick={async () => {
-                if (tools) {
-                  await deleteUser()
-                  location.href = 'https://notion-tools.io/api/auth/logout'
-                }
+                await deleteUser()
+                location.href = 'https://notion-tools.io/api/auth/logout'
               }}
             >
               Delete account

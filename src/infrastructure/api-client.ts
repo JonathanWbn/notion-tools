@@ -3,13 +3,13 @@ import { useUser as use0AuthUser } from '@auth0/nextjs-auth0'
 import { Database } from '@notionhq/client/build/src/api-types'
 import axios from 'axios'
 import useSWR, { mutate } from 'swr'
-import { Tool } from '../domain/Tool'
-import { IToolConfig, User } from '../domain/User'
+import { IRecurringTask } from '../domain/RecurringTask'
+import { User } from '../domain/User'
 
-export type AddToolToUserResponse = IToolConfig
+export type AddToolToUserResponse = IRecurringTask
 
-export async function addToolToUser(toolId: string): Promise<IToolConfig> {
-  const { data } = await axios.post<AddToolToUserResponse>('/api/users/tool-config', { toolId })
+export async function addToolToUser(): Promise<IRecurringTask> {
+  const { data } = await axios.post<AddToolToUserResponse>('/api/users/tool-config')
 
   mutate('/api/users/me')
 
@@ -28,7 +28,7 @@ export type UpdateToolConfigResponse = User
 
 export async function updateToolConfig(
   configId: string,
-  config: Partial<IToolConfig>
+  config: Partial<IRecurringTask>
 ): Promise<UpdateToolConfigResponse> {
   const { data } = await axios.patch<UpdateToolConfigResponse>(
     `/api/users/tool-config/${configId}`,
@@ -45,12 +45,6 @@ export function useUser() {
   const { data: user } = useSWR<User>(auth0user?.sub ? '/api/users/me' : null, fetcher)
 
   return { user, auth0user }
-}
-
-export function useTools() {
-  const { data } = useSWR<Tool[]>('/api/tools', fetcher)
-
-  return { tools: data }
 }
 
 export function useDatabases() {

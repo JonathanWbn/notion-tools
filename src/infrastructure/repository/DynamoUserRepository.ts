@@ -1,6 +1,7 @@
 import { UserRepository } from '../../application/repository/UserRepository'
 import AWS from 'aws-sdk'
-import { IToolConfig, ToolConfig, User } from '../../domain/User'
+import { User } from '../../domain/User'
+import { IRecurringTask, RecurringTask } from '../../domain/RecurringTask'
 
 const { DYNAMO_DB_USER_REPOSITORY, MY_AWS_ACCESS_KEY_ID, MY_AWS_SECRET_ACCESS_KEY } =
   process.env as Record<string, string>
@@ -93,11 +94,10 @@ export class DynamoUserRepository implements UserRepository {
   private parseUser(user: PersistedItem): User {
     return {
       ...user,
-      toolConfigs: (JSON.parse(user.toolConfigs || '[]') as IToolConfig[]).map(
+      toolConfigs: (JSON.parse(user.toolConfigs || '[]') as IRecurringTask[]).map(
         (toolConfig) =>
-          new ToolConfig(
+          new RecurringTask(
             toolConfig.id,
-            toolConfig.toolId,
             toolConfig.settings,
             toolConfig.isActive,
             toolConfig.createdAt,

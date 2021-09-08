@@ -1,18 +1,17 @@
 import { v4 as uuid } from 'uuid'
-import { ToolConfig, User } from '../../domain/User'
-import { Tool } from '../../domain/Tool'
+import { User } from '../../domain/User'
 import { UserRepository } from '../repository/UserRepository'
+import { RecurringTask } from '../../domain/RecurringTask'
 
-interface CreateToolConfigRequest {
+interface CreateRecurringTaskRequest {
   userId: User['userId']
-  toolId: Tool['id']
 }
 
-export class CreateToolConfig {
+export class CreateRecurringTask {
   constructor(private readonly userRepository: UserRepository) {}
 
-  public async invoke(request: CreateToolConfigRequest): Promise<ToolConfig> {
-    const toolConfig = new ToolConfig(uuid(), request.toolId, {}, false, new Date().toISOString())
+  public async invoke(request: CreateRecurringTaskRequest): Promise<RecurringTask> {
+    const toolConfig = new RecurringTask(uuid(), {}, false, new Date().toISOString())
     const user = await this.userRepository.getById(request.userId)
 
     await this.userRepository.update(request.userId, {
