@@ -53,7 +53,7 @@ export class DynamoUserRepository implements UserRepository {
           userId,
         },
         UpdateExpression:
-          'set recurringTasks = :recurringTasks, notionAccess = :notionAccess, set databaseVisualizations = :databaseVisualizations',
+          'set recurringTasks = :recurringTasks, notionAccess = :notionAccess, databaseVisualizations = :databaseVisualizations',
         ExpressionAttributeValues: {
           ':recurringTasks': JSON.stringify(user.recurringTasks),
           ':databaseVisualizations': JSON.stringify(user.databaseVisualizations),

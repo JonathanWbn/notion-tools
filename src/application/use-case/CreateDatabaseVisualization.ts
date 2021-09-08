@@ -16,7 +16,7 @@ export class CreateDatabaseVisualization {
 
     await this.userRepository.update(request.userId, {
       ...user,
-      databaseVisualizations: [...user.recurringTasks, databaseVisualization],
+      databaseVisualizations: [...user.databaseVisualizations, databaseVisualization],
     })
 
     return databaseVisualization

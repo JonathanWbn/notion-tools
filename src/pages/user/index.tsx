@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { FunctionComponent } from 'react'
 import {
+  addDatabaseVisualization,
   addRecurringTask,
   deleteUser,
   useDatabases,
@@ -39,26 +40,26 @@ const User: FunctionComponent = () => {
         {user ? (
           <>
             <h1 className="text-2xl font-bold mb-2">
-              {user.recurringTasks.length > 0 ? 'Tools' : 'No Tools Yet'}
+              {user.recurringTasks.length > 0 ? 'Recurring Tasks' : 'No Recurring Tasks Yet'}
             </h1>
             {user.recurringTasks.length > 0 && (
               <ul className="list-disc pl-6">
                 {user.recurringTasks.map((config) => {
                   const details = [
-                    databases?.find((db) => db.id === config.settings.databaseId)?.title[0]
-                      .plain_text,
-                    config.settings.frequency,
                     ...Object.values(config.settings.properties || {}).map(
                       (prop) => prop.type === 'title' && prop.title[0].plain_text
                     ),
+                    databases?.find((db) => db.id === config.settings.databaseId)?.title[0]
+                      .plain_text,
+                    config.settings.frequency,
                   ].filter(Boolean)
 
                   return (
                     <li className="mb-1" key={config.id}>
-                      <Link href={`/user/config/${config.id}`}>
+                      <Link href={`/user/recurring-task/${config.id}`}>
                         <a className="border-b border-link text-link hover:border-black hover:text-black">
-                          {!config.isActive && '[disabled]'} <b>Recurring task</b>{' '}
-                          {details.length ? `(${details.join(', ')})` : ''}
+                          {!config.isActive && '[disabled]'}{' '}
+                          {details.length ? details.join(', ') : <i>Not configured yet</i>}
                         </a>
                       </Link>
                     </li>
@@ -71,10 +72,43 @@ const User: FunctionComponent = () => {
               color="green"
               onClick={async () => {
                 const config = await addRecurringTask()
-                router.push(`/user/config/${config.id}`)
+                router.push(`/user/recurring-task/${config.id}`)
               }}
             >
               Add recurring task
+            </Button>
+
+            <div className="w-full border-b border-opacity-80 my-5" />
+
+            <h1 className="text-2xl font-bold mb-2">
+              {user.databaseVisualizations.length > 0
+                ? 'Database Visualizations'
+                : 'No Database Visualizations Yet'}
+            </h1>
+            {user.databaseVisualizations.length > 0 && (
+              <ul className="list-disc pl-6">
+                {user.databaseVisualizations.map((config) => {
+                  return (
+                    <li className="mb-1" key={config.id}>
+                      <Link href={`/user/database-visualization/${config.id}`}>
+                        <a className="border-b border-link text-link hover:border-black hover:text-black">
+                          TODO
+                        </a>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+            <Button
+              className="self-end mt-10"
+              color="green"
+              onClick={async () => {
+                const config = await addDatabaseVisualization()
+                router.push(`/user/database-visualization/${config.id}`)
+              }}
+            >
+              Add database visualization
             </Button>
           </>
         ) : (
