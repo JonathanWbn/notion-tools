@@ -1,13 +1,13 @@
 import { withApiAuthRequired } from '@auth0/nextjs-auth0'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getUserFromSession } from '../../../../infrastructure/api-utils'
-import { AddRecurringTaskResponse } from '../../../../infrastructure/api-client'
+import { AddDatabaseVisualizationResponse } from '../../../../infrastructure/api-client'
 import { DynamoUserRepository } from '../../../../infrastructure/repository/DynamoUserRepository'
-import { CreateRecurringTask } from '../../../../application/use-case/CreateRecurringTask'
+import { CreateDatabaseVisualization } from '../../../../application/use-case/CreateDatabaseVisualization'
 
 const handler = async (
   req: NextApiRequest,
-  res: NextApiResponse<AddRecurringTaskResponse>
+  res: NextApiResponse<AddDatabaseVisualizationResponse>
 ): Promise<void> => {
   const { method } = req
 
@@ -15,9 +15,11 @@ const handler = async (
     switch (method) {
       case 'POST': {
         const authUser = getUserFromSession(req, res)
-        const createRecurringTask = new CreateRecurringTask(new DynamoUserRepository())
+        const createDatabaseVisualization = new CreateDatabaseVisualization(
+          new DynamoUserRepository()
+        )
 
-        const config = await createRecurringTask.invoke({
+        const config = await createDatabaseVisualization.invoke({
           userId: authUser.sub,
         })
 

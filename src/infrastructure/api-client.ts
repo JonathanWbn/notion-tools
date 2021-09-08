@@ -3,13 +3,26 @@ import { useUser as use0AuthUser } from '@auth0/nextjs-auth0'
 import { Database } from '@notionhq/client/build/src/api-types'
 import axios from 'axios'
 import useSWR, { mutate } from 'swr'
+import { IDatabaseVisualization } from '../domain/DatabaseVisualization'
 import { IRecurringTask } from '../domain/RecurringTask'
 import { User } from '../domain/User'
 
-export type AddToolToUserResponse = IRecurringTask
+export type AddRecurringTaskResponse = IRecurringTask
 
-export async function addToolToUser(): Promise<IRecurringTask> {
-  const { data } = await axios.post<AddToolToUserResponse>('/api/users/recurring-task')
+export async function addRecurringTask(): Promise<IRecurringTask> {
+  const { data } = await axios.post<AddRecurringTaskResponse>('/api/users/recurring-task')
+
+  mutate('/api/users/me')
+
+  return data
+}
+
+export type AddDatabaseVisualizationResponse = IDatabaseVisualization
+
+export async function addDatabaseVisualization(): Promise<IDatabaseVisualization> {
+  const { data } = await axios.post<AddDatabaseVisualizationResponse>(
+    '/api/users/database-visualization'
+  )
 
   mutate('/api/users/me')
 
@@ -32,6 +45,20 @@ export async function updateRecurringTask(
 ): Promise<UpdateRecurringTaskResponse> {
   const { data } = await axios.patch<UpdateRecurringTaskResponse>(
     `/api/users/recurring-task/${configId}`,
+    config
+  )
+
+  return data
+}
+
+export type UpdateDatabaseVisualizationResponse = User
+
+export async function updateDatabaseVisualization(
+  configId: string,
+  config: Partial<IDatabaseVisualization>
+): Promise<UpdateDatabaseVisualizationResponse> {
+  const { data } = await axios.patch<UpdateDatabaseVisualizationResponse>(
+    `/api/users/database-visualization/${configId}`,
     config
   )
 

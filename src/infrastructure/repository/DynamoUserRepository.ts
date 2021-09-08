@@ -2,6 +2,7 @@ import { UserRepository } from '../../application/repository/UserRepository'
 import AWS from 'aws-sdk'
 import { User } from '../../domain/User'
 import { IRecurringTask, RecurringTask } from '../../domain/RecurringTask'
+import { DatabaseVisualization, IDatabaseVisualization } from '../../domain/DatabaseVisualization'
 
 const { DYNAMO_DB_USER_REPOSITORY, MY_AWS_ACCESS_KEY_ID, MY_AWS_SECRET_ACCESS_KEY } =
   process.env as Record<string, string>
@@ -17,6 +18,7 @@ const documentClient = new AWS.DynamoDB.DocumentClient()
 interface PersistedItem {
   userId: string
   recurringTasks: string
+  databaseVisualizations: string
   notionAccess: string
 }
 
@@ -25,6 +27,7 @@ export class DynamoUserRepository implements UserRepository {
     const newUser: User = {
       userId,
       recurringTasks: [],
+      databaseVisualizations: [],
     }
 
     await documentClient
@@ -33,6 +36,7 @@ export class DynamoUserRepository implements UserRepository {
         Item: {
           userId: newUser.userId,
           recurringTasks: JSON.stringify(newUser.recurringTasks),
+          databaseVisualizations: JSON.stringify(newUser.databaseVisualizations),
         } as PersistedItem,
         ConditionExpression: 'attribute_not_exists(userId)',
       })
@@ -48,9 +52,11 @@ export class DynamoUserRepository implements UserRepository {
         Key: {
           userId,
         },
-        UpdateExpression: 'set recurringTasks = :configs, notionAccess = :notionAccess',
+        UpdateExpression:
+          'set recurringTasks = :recurringTasks, notionAccess = :notionAccess, set databaseVisualizations = :databaseVisualizations',
         ExpressionAttributeValues: {
-          ':configs': JSON.stringify(user.recurringTasks),
+          ':recurringTasks': JSON.stringify(user.recurringTasks),
+          ':databaseVisualizations': JSON.stringify(user.databaseVisualizations),
           ':notionAccess': JSON.stringify(user.notionAccess) || '',
         },
       })
@@ -103,6 +109,12 @@ export class DynamoUserRepository implements UserRepository {
             recurringTask.createdAt,
             recurringTask.lastExecutedAt
           )
+      ),
+      databaseVisualizations: (
+        JSON.parse(user.databaseVisualizations || '[]') as IDatabaseVisualization[]
+      ).map(
+        (databaseVisualization) =>
+          new DatabaseVisualization(databaseVisualization.id, databaseVisualization.settings)
       ),
       notionAccess: user.notionAccess ? JSON.parse(user.notionAccess) : undefined,
     }

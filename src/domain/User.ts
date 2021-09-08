@@ -1,8 +1,10 @@
+import { DatabaseVisualization } from './DatabaseVisualization'
 import { RecurringTask } from './RecurringTask'
 
 export interface User {
   userId: string
   recurringTasks: RecurringTask[]
+  databaseVisualizations: DatabaseVisualization[]
   notionAccess?: NotionAccess
 }
 

@@ -1,7 +1,12 @@
 import Link from 'next/link'
 import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { FunctionComponent } from 'react'
-import { addToolToUser, deleteUser, useDatabases, useUser } from '../../infrastructure/api-client'
+import {
+  addRecurringTask,
+  deleteUser,
+  useDatabases,
+  useUser,
+} from '../../infrastructure/api-client'
 import { Button } from '../../infrastructure/components/button'
 import router from 'next/router'
 import { Spinner } from '../../infrastructure/components/icons'
@@ -65,7 +70,7 @@ const User: FunctionComponent = () => {
               className="self-end mt-10"
               color="green"
               onClick={async () => {
-                const config = await addToolToUser()
+                const config = await addRecurringTask()
                 router.push(`/user/config/${config.id}`)
               }}
             >
