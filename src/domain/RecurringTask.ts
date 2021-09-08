@@ -3,16 +3,16 @@ import { weekdayMap } from '../utils'
 import { isFuture, sub, set, setDay, isAfter } from 'date-fns'
 
 export class RecurringTask implements IRecurringTask {
-  static _isExecutable(toolConfig: IRecurringTask): boolean {
+  static _isExecutable(recurringTask: IRecurringTask): boolean {
     if (
-      !toolConfig.settings.databaseId ||
-      !toolConfig.settings.timeOfDay ||
-      !toolConfig.settings.frequency
+      !recurringTask.settings.databaseId ||
+      !recurringTask.settings.timeOfDay ||
+      !recurringTask.settings.frequency
     ) {
       return false
     }
 
-    if (toolConfig.settings.frequency === 'weekly' && !toolConfig.settings.weekday) {
+    if (recurringTask.settings.frequency === 'weekly' && !recurringTask.settings.weekday) {
       return false
     }
 

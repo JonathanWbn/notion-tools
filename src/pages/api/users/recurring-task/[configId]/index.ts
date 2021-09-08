@@ -1,6 +1,6 @@
 import { withApiAuthRequired } from '@auth0/nextjs-auth0'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { UpdateToolConfig } from '../../../../../application/use-case/UpdateToolConfig'
+import { UpdateRecurringTask } from '../../../../../application/use-case/UpdateRecurringTask'
 import { getUserFromSession } from '../../../../../infrastructure/api-utils'
 import { DynamoUserRepository } from '../../../../../infrastructure/repository/DynamoUserRepository'
 
@@ -14,12 +14,12 @@ const handler = async (
     switch (method) {
       case 'PATCH': {
         const authUser = getUserFromSession(req, res)
-        const updateToolConfig = new UpdateToolConfig(new DynamoUserRepository())
+        const updateRecurringTask = new UpdateRecurringTask(new DynamoUserRepository())
 
-        await updateToolConfig.invoke({
+        await updateRecurringTask.invoke({
           userId: authUser.sub,
-          toolConfigId: query.configId as string,
-          toolConfig: body,
+          recurringTaskId: query.configId as string,
+          recurringTask: body,
         })
 
         res.status(200).send({ success: true })

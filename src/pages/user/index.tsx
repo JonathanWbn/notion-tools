@@ -34,11 +34,11 @@ const User: FunctionComponent = () => {
         {user ? (
           <>
             <h1 className="text-2xl font-bold mb-2">
-              {user.toolConfigs.length > 0 ? 'Tools' : 'No Tools Yet'}
+              {user.recurringTasks.length > 0 ? 'Tools' : 'No Tools Yet'}
             </h1>
-            {user.toolConfigs.length > 0 && (
+            {user.recurringTasks.length > 0 && (
               <ul className="list-disc pl-6">
-                {user.toolConfigs.map((config) => {
+                {user.recurringTasks.map((config) => {
                   const details = [
                     databases?.find((db) => db.id === config.settings.databaseId)?.title[0]
                       .plain_text,

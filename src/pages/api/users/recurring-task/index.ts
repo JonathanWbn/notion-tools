@@ -15,9 +15,9 @@ const handler = async (
     switch (method) {
       case 'POST': {
         const authUser = getUserFromSession(req, res)
-        const createToolConfig = new CreateRecurringTask(new DynamoUserRepository())
+        const createRecurringTask = new CreateRecurringTask(new DynamoUserRepository())
 
-        const config = await createToolConfig.invoke({
+        const config = await createRecurringTask.invoke({
           userId: authUser.sub,
         })
 

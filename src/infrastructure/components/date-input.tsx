@@ -1,6 +1,6 @@
 import { DateProperty, DatePropertyValue } from '@notionhq/client/build/src/api-types'
 import { ReactElement } from 'react'
-import { PropertyInputProps } from './tool-config-form'
+import { PropertyInputProps } from './recurring-task-form'
 
 import { Select } from './select'
 

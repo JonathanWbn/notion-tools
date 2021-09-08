@@ -16,7 +16,7 @@ const documentClient = new AWS.DynamoDB.DocumentClient()
 
 interface PersistedItem {
   userId: string
-  toolConfigs: string
+  recurringTasks: string
   notionAccess: string
 }
 
@@ -24,7 +24,7 @@ export class DynamoUserRepository implements UserRepository {
   public async create(userId: User['userId']): Promise<User> {
     const newUser: User = {
       userId,
-      toolConfigs: [],
+      recurringTasks: [],
     }
 
     await documentClient
@@ -32,7 +32,7 @@ export class DynamoUserRepository implements UserRepository {
         TableName: DYNAMO_DB_USER_REPOSITORY,
         Item: {
           userId: newUser.userId,
-          toolConfigs: JSON.stringify(newUser.toolConfigs),
+          recurringTasks: JSON.stringify(newUser.recurringTasks),
         } as PersistedItem,
         ConditionExpression: 'attribute_not_exists(userId)',
       })
@@ -48,9 +48,9 @@ export class DynamoUserRepository implements UserRepository {
         Key: {
           userId,
         },
-        UpdateExpression: 'set toolConfigs = :configs, notionAccess = :notionAccess',
+        UpdateExpression: 'set recurringTasks = :configs, notionAccess = :notionAccess',
         ExpressionAttributeValues: {
-          ':configs': JSON.stringify(user.toolConfigs),
+          ':configs': JSON.stringify(user.recurringTasks),
           ':notionAccess': JSON.stringify(user.notionAccess) || '',
         },
       })
@@ -94,14 +94,14 @@ export class DynamoUserRepository implements UserRepository {
   private parseUser(user: PersistedItem): User {
     return {
       ...user,
-      toolConfigs: (JSON.parse(user.toolConfigs || '[]') as IRecurringTask[]).map(
-        (toolConfig) =>
+      recurringTasks: (JSON.parse(user.recurringTasks || '[]') as IRecurringTask[]).map(
+        (recurringTask) =>
           new RecurringTask(
-            toolConfig.id,
-            toolConfig.settings,
-            toolConfig.isActive,
-            toolConfig.createdAt,
-            toolConfig.lastExecutedAt
+            recurringTask.id,
+            recurringTask.settings,
+            recurringTask.isActive,
+            recurringTask.createdAt,
+            recurringTask.lastExecutedAt
           )
       ),
       notionAccess: user.notionAccess ? JSON.parse(user.notionAccess) : undefined,

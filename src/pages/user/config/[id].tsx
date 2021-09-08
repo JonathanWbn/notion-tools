@@ -2,8 +2,8 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { useRouter } from 'next/router'
 import { FunctionComponent, useEffect, useState } from 'react'
 import { mutate } from 'swr'
-import { runToolConfig, updateToolConfig, useUser } from '../../../infrastructure/api-client'
-import { ToolConfigForm } from '../../../infrastructure/components/tool-config-form'
+import { runRecurringTask, updateRecurringTask, useUser } from '../../../infrastructure/api-client'
+import { RecurringTaskForm } from '../../../infrastructure/components/recurring-task-form'
 import { Spinner, Circle } from '../../../infrastructure/components/icons'
 import { Button } from '../../../infrastructure/components/button'
 import { IRecurringTask, RecurringTask } from '../../../domain/RecurringTask'
@@ -32,32 +32,32 @@ const User: FunctionComponent = () => {
     }
   }, [testingState])
 
-  const toolConfig = user?.toolConfigs.find((config) => config.id === id)
+  const recurringTask = user?.recurringTasks.find((config) => config.id === id)
 
   async function handleSubmit(settings: IRecurringTask['settings']): Promise<void> {
-    if (!toolConfig) return
+    if (!recurringTask) return
     setSaving('SAVING')
-    await updateToolConfig(toolConfig.id, { settings })
+    await updateRecurringTask(recurringTask.id, { settings })
     await mutate('/api/users/me')
     setSaving('SAVED')
   }
 
   async function onEnable(): Promise<void> {
-    if (!toolConfig) return
-    await updateToolConfig(toolConfig.id, { isActive: true })
+    if (!recurringTask) return
+    await updateRecurringTask(recurringTask.id, { isActive: true })
     mutate('/api/users/me')
   }
 
   async function onDisable(): Promise<void> {
-    if (!toolConfig) return
-    await updateToolConfig(toolConfig.id, { isActive: false })
+    if (!recurringTask) return
+    await updateRecurringTask(recurringTask.id, { isActive: false })
     mutate('/api/users/me')
   }
 
   async function handleTestRunClick() {
     setTesting('TESTING')
     try {
-      await runToolConfig(id as string)
+      await runRecurringTask(id as string)
       setTesting('TESTED')
     } catch {
       setTesting('FAILED')
@@ -81,11 +81,11 @@ const User: FunctionComponent = () => {
           )}
         </div>
         <div className="w-full border-b border-opacity-80 my-5" />
-        {toolConfig ? (
+        {recurringTask ? (
           <>
-            <ToolConfigForm initialValues={toolConfig.settings} onAutoSave={handleSubmit} />
+            <RecurringTaskForm initialValues={recurringTask.settings} onAutoSave={handleSubmit} />
             <div className="w-full border-b border-opacity-80 my-5" />
-            {toolConfig.isActive ? (
+            {recurringTask.isActive ? (
               <div className="flex items-center justify-between font-bold">
                 <p className="text-lg">✅ Enabled</p>
                 <Button color="red" onClick={onDisable}>
@@ -102,11 +102,11 @@ const User: FunctionComponent = () => {
             )}
             <div className="flex items-center justify-between mt-5">
               <p className="text-lg font-bold">
-                {RecurringTask._isExecutable(toolConfig)
+                {RecurringTask._isExecutable(recurringTask)
                   ? '✅ Is complete'
                   : '❌ Incomplete configuration'}
               </p>
-              {RecurringTask._isExecutable(toolConfig) ? (
+              {RecurringTask._isExecutable(recurringTask) ? (
                 <Button
                   className="self-end"
                   color={

@@ -25,7 +25,7 @@ interface Props {
   onAutoSave: (values: IRecurringTask['settings']) => Promise<void>
 }
 
-export function ToolConfigForm({ initialValues, onAutoSave }: Props): ReactElement {
+export function RecurringTaskForm({ initialValues, onAutoSave }: Props): ReactElement {
   const [values, setValues] = useState<IRecurringTask['settings']>(initialValues)
   const { databases } = useDatabases()
 

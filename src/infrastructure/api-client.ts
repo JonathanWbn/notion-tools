@@ -9,7 +9,7 @@ import { User } from '../domain/User'
 export type AddToolToUserResponse = IRecurringTask
 
 export async function addToolToUser(): Promise<IRecurringTask> {
-  const { data } = await axios.post<AddToolToUserResponse>('/api/users/tool-config')
+  const { data } = await axios.post<AddToolToUserResponse>('/api/users/recurring-task')
 
   mutate('/api/users/me')
 
@@ -20,18 +20,18 @@ export async function deleteUser(): Promise<void> {
   await axios.delete('/api/users/me')
 }
 
-export async function runToolConfig(configId: string): Promise<void> {
-  await axios.post(`/api/users/tool-config/${configId}/run`)
+export async function runRecurringTask(configId: string): Promise<void> {
+  await axios.post(`/api/users/recurring-task/${configId}/run`)
 }
 
-export type UpdateToolConfigResponse = User
+export type UpdateRecurringTaskResponse = User
 
-export async function updateToolConfig(
+export async function updateRecurringTask(
   configId: string,
   config: Partial<IRecurringTask>
-): Promise<UpdateToolConfigResponse> {
-  const { data } = await axios.patch<UpdateToolConfigResponse>(
-    `/api/users/tool-config/${configId}`,
+): Promise<UpdateRecurringTaskResponse> {
+  const { data } = await axios.patch<UpdateRecurringTaskResponse>(
+    `/api/users/recurring-task/${configId}`,
     config
   )
 

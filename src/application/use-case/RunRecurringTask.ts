@@ -5,23 +5,25 @@ import { RecurringTask } from '../../domain/RecurringTask'
 import { User } from '../../domain/User'
 import { UserRepository } from '../repository/UserRepository'
 
-interface RunToolConfigRequest {
+interface RunRecurringTaskRequest {
   userId: User['userId']
-  toolConfigId: RecurringTask['id']
+  recurringTaskId: RecurringTask['id']
 }
 
-export class RunToolConfig {
+export class RunRecurringTask {
   constructor(private readonly userRepository: UserRepository) {}
 
-  public async invoke(request: RunToolConfigRequest): Promise<void> {
+  public async invoke(request: RunRecurringTaskRequest): Promise<void> {
     const user = await this.userRepository.getById(request.userId)
 
-    const toolConfig = user.toolConfigs.find((config) => config.id === request.toolConfigId)
+    const recurringTask = user.recurringTasks.find(
+      (config) => config.id === request.recurringTaskId
+    )
 
-    if (!toolConfig) {
+    if (!recurringTask) {
       throw new Error('No config found')
     }
-    if (!toolConfig.isExecutable) {
+    if (!recurringTask.isExecutable) {
       throw new Error('Incomplete config.')
     }
     if (!user.notionAccess) {
@@ -30,14 +32,14 @@ export class RunToolConfig {
 
     const notion = new Client({ auth: user.notionAccess.access_token })
     await notion.pages.create({
-      parent: { database_id: toolConfig.settings.databaseId as string },
-      properties: this.parseProperties(toolConfig.settings.properties),
+      parent: { database_id: recurringTask.settings.databaseId as string },
+      properties: this.parseProperties(recurringTask.settings.properties),
     })
 
     await this.userRepository.update(user.userId, {
       ...user,
-      toolConfigs: user.toolConfigs.map((config) =>
-        config.id === request.toolConfigId
+      recurringTasks: user.recurringTasks.map((config) =>
+        config.id === request.recurringTaskId
           ? config.copyWith({ lastExecutedAt: new Date().toISOString() })
           : config
       ),

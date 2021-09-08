@@ -2,7 +2,7 @@ import { RecurringTask } from './RecurringTask'
 
 export interface User {
   userId: string
-  toolConfigs: ToolConfig[]
+  recurringTasks: RecurringTask[]
   notionAccess?: NotionAccess
 }
 
@@ -12,5 +12,3 @@ export interface NotionAccess {
   workspace_icon: string
   bot_id: string
 }
-
-export type ToolConfig = RecurringTask

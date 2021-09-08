@@ -1,4 +1,4 @@
-import { RunToolConfig } from '../../application/use-case/RunToolConfig'
+import { RunRecurringTask } from '../../application/use-case/RunRecurringTask'
 import { DynamoUserRepository } from '../repository/DynamoUserRepository'
 
 export const handler = async (): Promise<string> => {
@@ -8,7 +8,7 @@ export const handler = async (): Promise<string> => {
 
   for (const user of users) {
     console.log('user', user)
-    const configsToExecute = user.toolConfigs.filter(
+    const configsToExecute = user.recurringTasks.filter(
       (config) => config.isActive && config.isExecutable
     )
 
@@ -17,11 +17,11 @@ export const handler = async (): Promise<string> => {
 
       if (config.shouldBeExecutedNow()) {
         console.log('executing')
-        const runToolConfig = new RunToolConfig(userRepository)
+        const runRecurringTask = new RunRecurringTask(userRepository)
 
-        await runToolConfig.invoke({
+        await runRecurringTask.invoke({
           userId: user.userId,
-          toolConfigId: config.id,
+          recurringTaskId: config.id,
         })
       }
     }

@@ -1,6 +1,6 @@
 import { CheckboxProperty, CheckboxPropertyValue } from '@notionhq/client/build/src/api-types'
 import { ReactElement } from 'react'
-import { PropertyInputProps } from './tool-config-form'
+import { PropertyInputProps } from './recurring-task-form'
 
 export function CheckboxInput({
   property,

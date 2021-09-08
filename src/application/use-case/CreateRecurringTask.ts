@@ -11,14 +11,14 @@ export class CreateRecurringTask {
   constructor(private readonly userRepository: UserRepository) {}
 
   public async invoke(request: CreateRecurringTaskRequest): Promise<RecurringTask> {
-    const toolConfig = new RecurringTask(uuid(), {}, false, new Date().toISOString())
+    const recurringTask = new RecurringTask(uuid(), {}, false, new Date().toISOString())
     const user = await this.userRepository.getById(request.userId)
 
     await this.userRepository.update(request.userId, {
       ...user,
-      toolConfigs: [...user.toolConfigs, toolConfig],
+      recurringTasks: [...user.recurringTasks, recurringTask],
     })
 
-    return toolConfig
+    return recurringTask
   }
 }
