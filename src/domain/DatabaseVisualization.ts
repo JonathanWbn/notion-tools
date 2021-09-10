@@ -28,4 +28,6 @@ export interface IDatabaseVisualization {
 
 export interface DatabaseVisualizationSettings {
   databaseId?: string
+  xAxis?: string
+  yAxis?: string
 }

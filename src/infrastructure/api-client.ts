@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useUser as use0AuthUser } from '@auth0/nextjs-auth0'
-import { Database } from '@notionhq/client/build/src/api-types'
+import { Database, Page } from '@notionhq/client/build/src/api-types'
 import axios from 'axios'
 import useSWR, { mutate } from 'swr'
 import { IDatabaseVisualization } from '../domain/DatabaseVisualization'
@@ -78,4 +78,10 @@ export function useDatabases() {
   const { data: databases, mutate } = useSWR<Database[]>('/api/notion/databases', fetcher)
 
   return { databases, refetch: mutate }
+}
+
+export function useDatabaseQuery(databaseId: string) {
+  const { data: pages, mutate } = useSWR<Page[]>(`/api/notion/database/${databaseId}`, fetcher)
+
+  return { pages, refetch: mutate }
 }
