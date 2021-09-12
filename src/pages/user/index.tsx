@@ -88,11 +88,24 @@ const User: FunctionComponent = () => {
             {user.databaseVisualizations.length > 0 && (
               <ul className="list-disc pl-6">
                 {user.databaseVisualizations.map((config) => {
+                  const database = databases?.find((db) => db.id === config.settings.databaseId)
+                  const details = [
+                    database?.title[0].plain_text,
+                    database &&
+                      Object.entries(database.properties).find(
+                        ([, val]) => val.id === config.settings.xAxis
+                      )?.[0],
+                    database &&
+                      Object.entries(database.properties).find(
+                        ([, val]) => val.id === config.settings.yAxis
+                      )?.[0],
+                  ].filter(Boolean)
+
                   return (
                     <li className="mb-1" key={config.id}>
                       <Link href={`/user/database-visualization/${config.id}`}>
                         <a className="border-b border-link text-link hover:border-black hover:text-black">
-                          TODO
+                          {details.length ? details.join(', ') : <i>Not configured yet</i>}
                         </a>
                       </Link>
                     </li>

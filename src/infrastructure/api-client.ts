@@ -65,6 +65,10 @@ export async function updateDatabaseVisualization(
   return data
 }
 
+export async function deleteDatabaseVisualization(configId: string): Promise<void> {
+  await axios.delete(`/api/users/database-visualization/${configId}`)
+}
+
 const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 
 export function useUser() {

@@ -56,7 +56,7 @@ export function DatabaseVisualizationForm({ initialValues, onAutoSave }: Props):
 
   return (
     <>
-      <label className="flex justify-between mb-2">
+      <label className="flex justify-between my-1 items-center">
         <span className="text-lg">Database</span>
         <Select
           value={values.databaseId}
@@ -66,7 +66,7 @@ export function DatabaseVisualizationForm({ initialValues, onAutoSave }: Props):
       </label>
       {selectedDatabase && (
         <>
-          <label className="flex justify-between mb-2">
+          <label className="flex justify-between my-1 items-center">
             <span className="text-lg">X Axis</span>
             <Select
               value={values.xAxis}
@@ -74,7 +74,7 @@ export function DatabaseVisualizationForm({ initialValues, onAutoSave }: Props):
               options={dateProperties.map(([name, prop]) => ({ label: name, value: prop.id }))}
             />
           </label>
-          <label className="flex justify-between mb-2">
+          <label className="flex justify-between my-1 items-center">
             <span className="text-lg">Y Axis</span>
             <Select
               value={values.yAxis}
