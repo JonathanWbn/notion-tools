@@ -1,14 +1,14 @@
-import _ from 'lodash'
 import {
   CreatedTimeProperty,
   DateProperty,
   LastEditedTimeProperty,
   NumberProperty,
 } from '@notionhq/client/build/src/api-types'
-import { ReactElement, useEffect, useRef, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useDatabases } from '../api-client'
 import { Select } from './select'
 import { IDatabaseVisualization } from '../../domain/DatabaseVisualization'
+import { useAutoSave } from './useAutoSave'
 
 interface Props {
   initialValues: IDatabaseVisualization['settings']
@@ -18,15 +18,7 @@ interface Props {
 export function DatabaseVisualizationForm({ initialValues, onAutoSave }: Props): ReactElement {
   const [values, setValues] = useState<IDatabaseVisualization['settings']>(initialValues)
   const { databases } = useDatabases()
-
-  const debouncedOnAutoSave = useRef(_.debounce(onAutoSave, 500))
-
-  useEffect(() => {
-    if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
-      debouncedOnAutoSave.current(values)
-      return debouncedOnAutoSave.current.cancel
-    }
-  }, [values])
+  useAutoSave(onAutoSave, values, initialValues)
 
   const databaseOptions = (databases || []).map((database) => ({
     value: database.id,
@@ -35,8 +27,7 @@ export function DatabaseVisualizationForm({ initialValues, onAutoSave }: Props):
 
   function handleChange(name: string, value: unknown) {
     if (name === 'databaseId' && value !== values.databaseId) {
-      // todo reset
-      setValues({ ...values, [name]: value as string })
+      setValues({ ...values, [name]: value as string, xAxis: undefined, yAxis: undefined })
     } else {
       setValues({ ...values, [name]: value })
     }

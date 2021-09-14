@@ -9,7 +9,7 @@ import {
   SelectPropertyValue,
   TitlePropertyValue,
 } from '@notionhq/client/build/src/api-types'
-import { ReactElement, useEffect, useRef, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useDatabases } from '../api-client'
 import { SelectInput } from './select-input'
 import { Select } from './select'
@@ -19,6 +19,7 @@ import { CheckboxInput } from './checkbox-input'
 import { NumberInput } from './number-input'
 import { DateInput } from './date-input'
 import { IRecurringTask } from '../../domain/RecurringTask'
+import { useAutoSave } from './useAutoSave'
 
 interface Props {
   initialValues: IRecurringTask['settings']
@@ -28,15 +29,7 @@ interface Props {
 export function RecurringTaskForm({ initialValues, onAutoSave }: Props): ReactElement {
   const [values, setValues] = useState<IRecurringTask['settings']>(initialValues)
   const { databases } = useDatabases()
-
-  const debouncedOnAutoSave = useRef(_.debounce(onAutoSave, 500))
-
-  useEffect(() => {
-    if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
-      debouncedOnAutoSave.current(values)
-      return debouncedOnAutoSave.current.cancel
-    }
-  }, [values])
+  useAutoSave(onAutoSave, values, initialValues)
 
   const databaseOptions = (databases || []).map((database) => ({
     value: database.id,
