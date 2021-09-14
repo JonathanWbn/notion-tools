@@ -11,6 +11,7 @@ import {
 import { Button } from '../../infrastructure/components/button'
 import router from 'next/router'
 import { Spinner } from '../../infrastructure/components/icons'
+import { Database, TitlePropertyValue } from '@notionhq/client/build/src/api-types'
 
 const User: FunctionComponent = () => {
   const { user } = useUser()
@@ -46,11 +47,10 @@ const User: FunctionComponent = () => {
               <ul className="list-disc pl-6">
                 {user.recurringTasks.map((config) => {
                   const details = [
-                    ...Object.values(config.settings.properties || {}).map(
-                      (prop) => prop.type === 'title' && prop.title[0].plain_text
-                    ),
-                    databases?.find((db) => db.id === config.settings.databaseId)?.title[0]
-                      .plain_text,
+                    Object.values(config.settings.properties || {}).find(
+                      (el): el is TitlePropertyValue => el.type === 'title'
+                    )?.title[0].plain_text,
+                    getDatabaseName(config.settings.databaseId),
                     config.settings.frequency,
                   ].filter(Boolean)
 
@@ -88,17 +88,11 @@ const User: FunctionComponent = () => {
             {user.databaseVisualizations.length > 0 && (
               <ul className="list-disc pl-6">
                 {user.databaseVisualizations.map((config) => {
-                  const database = databases?.find((db) => db.id === config.settings.databaseId)
+                  const database = getDatabase(config.settings.databaseId)
                   const details = [
-                    database?.title[0].plain_text,
-                    database &&
-                      Object.entries(database.properties).find(
-                        ([, val]) => val.id === config.settings.xAxis
-                      )?.[0],
-                    database &&
-                      Object.entries(database.properties).find(
-                        ([, val]) => val.id === config.settings.yAxis
-                      )?.[0],
+                    getDatabaseName(config.settings.databaseId),
+                    getPropertyName(database, config.settings, 'xAxis'),
+                    getPropertyName(database, config.settings, 'yAxis'),
                   ].filter(Boolean)
 
                   return (
@@ -153,6 +147,25 @@ const User: FunctionComponent = () => {
       </div>
     </div>
   )
+
+  function getDatabase(databaseId: string | undefined): Database | undefined {
+    return databases?.find((db) => db.id === databaseId)
+  }
+
+  function getDatabaseName(databaseId: string | undefined): string | undefined {
+    return getDatabase(databaseId)?.title[0].plain_text
+  }
+
+  function getPropertyName(
+    db: Database | undefined,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    settings: any,
+    fieldName: string
+  ) {
+    return Object.entries(db?.properties || {}).find(
+      ([, val]) => val.id === settings[fieldName]
+    )?.[0]
+  }
 }
 
 export const getServerSideProps = withPageAuthRequired()
