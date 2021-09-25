@@ -20,6 +20,7 @@ import { NumberInput } from './number-input'
 import { DateInput } from './date-input'
 import { IRecurringTask } from '../../domain/RecurringTask'
 import { useAutoSave } from './useAutoSave'
+import { DatabaseSelect } from './database-select'
 
 interface Props {
   initialValues: IRecurringTask['settings']
@@ -30,11 +31,6 @@ export function RecurringTaskForm({ initialValues, onAutoSave }: Props): ReactEl
   const [values, setValues] = useState<IRecurringTask['settings']>(initialValues)
   const { databases } = useDatabases()
   useAutoSave(onAutoSave, values, initialValues)
-
-  const databaseOptions = (databases || []).map((database) => ({
-    value: database.id,
-    label: database.title[0].plain_text,
-  }))
 
   function handleChange(name: string, value: unknown) {
     if (name === 'databaseId' && value !== values.databaseId) {
@@ -47,14 +43,10 @@ export function RecurringTaskForm({ initialValues, onAutoSave }: Props): ReactEl
   const selectedDatabase = databases?.find((db) => db.id === values.databaseId)
   return (
     <>
-      <label className="flex justify-between mb-2">
+      <div className="flex justify-between mb-2">
         <span className="text-lg">Database</span>
-        <Select
-          value={values.databaseId}
-          onChange={(v) => handleChange('databaseId', v)}
-          options={databaseOptions}
-        />
-      </label>
+        <DatabaseSelect value={values.databaseId} onChange={(v) => handleChange('databaseId', v)} />
+      </div>
       <label className="flex justify-between mb-2">
         <span className="text-lg">Frequency</span>
         <Select

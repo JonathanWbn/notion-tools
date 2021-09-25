@@ -12,6 +12,7 @@ import { useAutoSave } from './useAutoSave'
 import { Button } from '../components/button'
 import { Trash } from '../components/icons'
 import { DateRangeInput } from './date-range-input'
+import { DatabaseSelect } from './database-select'
 
 interface Props {
   initialValues: IDatabaseVisualization['settings']
@@ -22,11 +23,6 @@ export function DatabaseVisualizationForm({ initialValues, onAutoSave }: Props):
   const [values, setValues] = useState<IDatabaseVisualization['settings']>(initialValues)
   const { databases } = useDatabases()
   useAutoSave(onAutoSave, values, initialValues)
-
-  const databaseOptions = (databases || []).map((database) => ({
-    value: database.id,
-    label: database.title[0].plain_text,
-  }))
 
   const selectedDatabase = databases?.find((db) => db.id === values.databaseId)
 
@@ -42,16 +38,15 @@ export function DatabaseVisualizationForm({ initialValues, onAutoSave }: Props):
 
   return (
     <>
-      <label className="flex justify-between my-1 items-center">
+      <div className="flex justify-between my-1 items-center">
         <span className="text-lg">Database</span>
-        <Select
+        <DatabaseSelect
           value={values.databaseId}
           onChange={(v) => {
             setValues({ ...values, databaseId: v, xAxis: undefined, yAxis: undefined })
           }}
-          options={databaseOptions}
         />
-      </label>
+      </div>
       {selectedDatabase && (
         <>
           <label className="flex justify-between my-1 items-center">

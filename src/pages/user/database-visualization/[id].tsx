@@ -43,25 +43,27 @@ const DatabaseVisualization: FunctionComponent = () => {
   }
 
   const data = (pages || [])
-    .map((page) => ({
-      x: new Date(
-        (
-          Object.values(page.properties).find(
-            (prop) => prop.id === databaseVisualization.settings.xAxis
-          ) as DatePropertyValue
-        )?.date.start
-      ),
-      ...databaseVisualization.settings.yAxis
-        ?.map((v, i): [string, number | undefined] => [
-          v,
-          (
-            Object.values(page.properties).find(
-              (prop) => prop.id === databaseVisualization.settings.yAxis?.[i]
-            ) as NumberPropertyValue | undefined
-          )?.number,
-        ])
-        .reduce((acc, el) => ({ ...acc, [el[0]]: el[1] }), {}),
-    }))
+    .map((page) => {
+      const xDate = (
+        Object.values(page.properties).find(
+          (prop) => prop.id === databaseVisualization.settings.xAxis
+        ) as DatePropertyValue
+      )?.date.start
+
+      return {
+        x: xDate ? new Date(xDate) : new Date(),
+        ...databaseVisualization.settings.yAxis
+          ?.map((v, i): [string, number | undefined] => [
+            v,
+            (
+              Object.values(page.properties).find(
+                (prop) => prop.id === databaseVisualization.settings.yAxis?.[i]
+              ) as NumberPropertyValue | undefined
+            )?.number,
+          ])
+          .reduce((acc, el) => ({ ...acc, [el[0]]: el[1] }), {}),
+      }
+    })
     .sort((a, b) => +a.x - +b.x)
     .filter((el) => {
       const start = databaseVisualization.settings.xAxisTimeFrame?.[0]
