@@ -51,19 +51,22 @@ const DatabaseVisualization: FunctionComponent = () => {
           ) as DatePropertyValue
         )?.date.start
       ),
-      y: (
-        Object.values(page.properties).find(
-          (prop) => prop.id === databaseVisualization.settings.yAxis
-        ) as NumberPropertyValue | undefined
-      )?.number,
+      ...databaseVisualization.settings.yAxis
+        ?.map((v, i): [string, number | undefined] => [
+          v,
+          (
+            Object.values(page.properties).find(
+              (prop) => prop.id === databaseVisualization.settings.yAxis?.[i]
+            ) as NumberPropertyValue | undefined
+          )?.number,
+        ])
+        .reduce((acc, el) => ({ ...acc, [el[0]]: el[1] }), {}),
     }))
     .sort((a, b) => +a.x - +b.x)
     .map((el) => ({
+      ...el,
       x: format(el.x, 'PP'),
-      y: el.y,
     }))
-
-  const yValues = data.map((el) => el.y).filter((el): el is number => typeof el === 'number')
 
   return (
     <div className="px-10 flex flex-col items-center">
@@ -82,13 +85,12 @@ const DatabaseVisualization: FunctionComponent = () => {
         {databaseVisualization && (
           <LineChart width={896} height={400} data={data}>
             <XAxis dataKey="x" />
-            <YAxis
-              type="number"
-              domain={[Math.floor(Math.min(...yValues)), Math.ceil(Math.max(...yValues))]}
-            />
+            <YAxis type="number" />
             <Tooltip />
             <CartesianGrid stroke="#f5f5f5" strokeDasharray="3 3" />
-            <Line type="monotone" dataKey="y" stroke="#ff7300" connectNulls />
+            {databaseVisualization.settings.yAxis?.map((v) => (
+              <Line key={v} type="monotone" dataKey={v} stroke="#ff7300" connectNulls />
+            ))}
           </LineChart>
         )}
         <div className="w-full border-b border-opacity-80 my-5" />
