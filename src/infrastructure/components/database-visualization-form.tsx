@@ -11,6 +11,7 @@ import { IDatabaseVisualization } from '../../domain/DatabaseVisualization'
 import { useAutoSave } from './useAutoSave'
 import { Button } from '../components/button'
 import { Trash } from '../components/icons'
+import { DateRangeInput } from './date-range-input'
 
 interface Props {
   initialValues: IDatabaseVisualization['settings']
@@ -61,6 +62,15 @@ export function DatabaseVisualizationForm({ initialValues, onAutoSave }: Props):
               options={dateProperties.map(([name, prop]) => ({ label: name, value: prop.id }))}
             />
           </label>
+          {values.xAxis && (
+            <label className="flex justify-between my-1 items-center">
+              <span className="text-lg">X Axis Timeframe</span>
+              <DateRangeInput
+                value={values.xAxisTimeFrame}
+                onChange={(v) => setValues({ ...values, xAxisTimeFrame: v })}
+              />
+            </label>
+          )}
           {values.yAxis?.map((value, i) => (
             <label className="flex justify-between my-1 items-center" key={`${value}-${i}`}>
               <span className="text-lg">Y Axis ({i + 1})</span>

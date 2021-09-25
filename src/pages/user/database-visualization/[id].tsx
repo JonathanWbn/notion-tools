@@ -63,6 +63,14 @@ const DatabaseVisualization: FunctionComponent = () => {
         .reduce((acc, el) => ({ ...acc, [el[0]]: el[1] }), {}),
     }))
     .sort((a, b) => +a.x - +b.x)
+    .filter((el) => {
+      const start = databaseVisualization.settings.xAxisTimeFrame?.[0]
+      const end = databaseVisualization.settings.xAxisTimeFrame?.[1]
+      if ((start && +el.x < +new Date(start)) || (end && +el.x > +new Date(end))) {
+        return false
+      }
+      return true
+    })
     .map((el) => ({
       ...el,
       x: format(el.x, 'PP'),

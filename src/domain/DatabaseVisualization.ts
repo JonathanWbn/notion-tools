@@ -29,5 +29,6 @@ export interface IDatabaseVisualization {
 export interface DatabaseVisualizationSettings {
   databaseId?: string
   xAxis?: string
+  xAxisTimeFrame?: [string | undefined, string | undefined]
   yAxis?: string[]
 }
