@@ -93,7 +93,7 @@ const DatabaseVisualization: FunctionComponent = () => {
         {databaseVisualization && (
           <LineChart width={896} height={400} data={data}>
             <XAxis dataKey="x" />
-            <YAxis type="number" />
+            <YAxis type="number" domain={['auto', 'auto']} />
             <Tooltip />
             <CartesianGrid stroke="#f5f5f5" strokeDasharray="3 3" />
             {databaseVisualization.settings.yAxis?.map((v) => (
