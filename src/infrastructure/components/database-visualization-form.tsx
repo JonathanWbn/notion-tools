@@ -66,6 +66,18 @@ export function DatabaseVisualizationForm({ initialValues, onAutoSave }: Props):
               />
             </label>
           )}
+          <label className="flex justify-between my-1 items-center">
+            <span className="text-lg">Chart Type</span>
+            <Select
+              value={values.type}
+              onChange={(v) => setValues({ ...values, type: v as 'line' | 'bar' })}
+              noEmptyOption
+              options={[
+                { value: 'line', label: 'Line' },
+                { value: 'bar', label: 'Bar' },
+              ]}
+            />
+          </label>
           {values.yAxis?.map((value, i) => (
             <label className="flex justify-between my-1 items-center" key={`${value}-${i}`}>
               <span className="text-lg">Y Axis ({i + 1})</span>

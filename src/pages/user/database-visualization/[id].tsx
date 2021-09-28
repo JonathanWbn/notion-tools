@@ -12,7 +12,7 @@ import { Spinner } from '../../../infrastructure/components/icons'
 import { DatabaseVisualizationForm } from '../../../infrastructure/components/database-visualization-form'
 import { Button } from '../../../infrastructure/components/button'
 import { IDatabaseVisualization } from '../../../domain/DatabaseVisualization'
-import { CartesianGrid, LineChart, XAxis, Line, YAxis, Tooltip } from 'recharts'
+import { CartesianGrid, LineChart, XAxis, Line, YAxis, Tooltip, BarChart, Bar } from 'recharts'
 import { DatePropertyValue, NumberPropertyValue } from '@notionhq/client/build/src/api-types'
 import { format } from 'date-fns'
 
@@ -78,6 +78,8 @@ const DatabaseVisualization: FunctionComponent = () => {
       x: format(el.x, 'PP'),
     }))
 
+  const Chart = databaseVisualization.settings.type === 'bar' ? BarChart : LineChart
+
   return (
     <div className="px-10 flex flex-col items-center">
       <div className="max-w-4xl w-full flex flex-col">
@@ -93,15 +95,19 @@ const DatabaseVisualization: FunctionComponent = () => {
         )}
         <div className="w-full border-b border-opacity-80 my-5" />
         {databaseVisualization && (
-          <LineChart width={896} height={400} data={data}>
+          <Chart width={896} height={400} data={data}>
             <XAxis dataKey="x" />
             <YAxis type="number" domain={['auto', 'auto']} />
             <Tooltip />
             <CartesianGrid stroke="#f5f5f5" strokeDasharray="3 3" />
-            {databaseVisualization.settings.yAxis?.map((v) => (
-              <Line key={v} type="monotone" dataKey={v} stroke="#ff7300" connectNulls />
-            ))}
-          </LineChart>
+            {databaseVisualization.settings.yAxis?.map((v) =>
+              databaseVisualization.settings.type === 'bar' ? (
+                <Bar key={v} type="monotone" dataKey={v} stroke="#ff7300" />
+              ) : (
+                <Line key={v} type="monotone" dataKey={v} stroke="#ff7300" connectNulls />
+              )
+            )}
+          </Chart>
         )}
         <div className="w-full border-b border-opacity-80 my-5" />
         <Button color="red" onClick={handleDelete} className="self-start">

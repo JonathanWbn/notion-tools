@@ -31,4 +31,5 @@ export interface DatabaseVisualizationSettings {
   xAxis?: string
   xAxisTimeFrame?: [string | undefined, string | undefined]
   yAxis?: string[]
+  type: 'bar' | 'line'
 }

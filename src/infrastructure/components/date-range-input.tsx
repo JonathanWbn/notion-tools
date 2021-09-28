@@ -10,7 +10,7 @@ export function DateRangeInput({
   onChange: (v: Value) => void
 }): ReactElement {
   return (
-    <label className="flex justify-between mb-2 items-center">
+    <label className="flex justify-between items-center">
       <input
         type="date"
         value={value?.[0]?.substring(0, 10)}
