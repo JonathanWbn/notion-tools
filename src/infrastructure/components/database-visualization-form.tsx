@@ -1,7 +1,10 @@
 import {
   CreatedTimeProperty,
+  CreatedTimePropertyValue,
   DateProperty,
+  DatePropertyValue,
   LastEditedTimeProperty,
+  LastEditedTimePropertyValue,
   NumberProperty,
 } from '@notionhq/client/build/src/api-types'
 import { ReactElement, useState } from 'react'
@@ -13,6 +16,12 @@ import { Button } from '../components/button'
 import { Trash } from '../components/icons'
 import { DateRangeInput } from './date-range-input'
 import { DatabaseSelect } from './database-select'
+
+export type SupportedDateProperty = DateProperty | CreatedTimeProperty | LastEditedTimeProperty
+export type SupportedDatePropertyValue =
+  | DatePropertyValue
+  | CreatedTimePropertyValue
+  | LastEditedTimePropertyValue
 
 interface Props {
   initialValues: IDatabaseVisualization['settings']
@@ -27,7 +36,7 @@ export function DatabaseVisualizationForm({ initialValues, onAutoSave }: Props):
   const selectedDatabase = databases?.find((db) => db.id === values.databaseId)
 
   const dateProperties = Object.entries(selectedDatabase?.properties || {}).filter(
-    (entry): entry is [string, DateProperty | CreatedTimeProperty | LastEditedTimeProperty] =>
+    (entry): entry is [string, SupportedDateProperty] =>
       entry[1].type === 'date' ||
       entry[1].type === 'created_time' ||
       entry[1].type === 'last_edited_time'

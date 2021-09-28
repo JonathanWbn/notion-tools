@@ -9,11 +9,17 @@ import {
   useUser,
 } from '../../../infrastructure/api-client'
 import { Spinner } from '../../../infrastructure/components/icons'
-import { DatabaseVisualizationForm } from '../../../infrastructure/components/database-visualization-form'
+import {
+  DatabaseVisualizationForm,
+  SupportedDatePropertyValue,
+} from '../../../infrastructure/components/database-visualization-form'
 import { Button } from '../../../infrastructure/components/button'
-import { IDatabaseVisualization } from '../../../domain/DatabaseVisualization'
+import {
+  DatabaseVisualizationSettings,
+  IDatabaseVisualization,
+} from '../../../domain/DatabaseVisualization'
 import { CartesianGrid, LineChart, XAxis, Line, YAxis, Tooltip, BarChart, Bar } from 'recharts'
-import { DatePropertyValue, NumberPropertyValue } from '@notionhq/client/build/src/api-types'
+import { NumberPropertyValue, Page } from '@notionhq/client/build/src/api-types'
 import { format } from 'date-fns'
 
 const DatabaseVisualization: FunctionComponent = () => {
@@ -42,41 +48,7 @@ const DatabaseVisualization: FunctionComponent = () => {
     return null
   }
 
-  const data = (pages || [])
-    .map((page) => {
-      const xDate = (
-        Object.values(page.properties).find(
-          (prop) => prop.id === databaseVisualization.settings.xAxis
-        ) as DatePropertyValue
-      )?.date.start
-
-      return {
-        x: xDate ? new Date(xDate) : new Date(),
-        ...databaseVisualization.settings.yAxis
-          ?.map((v, i): [string, number | undefined] => [
-            v,
-            (
-              Object.values(page.properties).find(
-                (prop) => prop.id === databaseVisualization.settings.yAxis?.[i]
-              ) as NumberPropertyValue | undefined
-            )?.number,
-          ])
-          .reduce((acc, el) => ({ ...acc, [el[0]]: el[1] }), {}),
-      }
-    })
-    .sort((a, b) => +a.x - +b.x)
-    .filter((el) => {
-      const start = databaseVisualization.settings.xAxisTimeFrame?.[0]
-      const end = databaseVisualization.settings.xAxisTimeFrame?.[1]
-      if ((start && +el.x < +new Date(start)) || (end && +el.x > +new Date(end))) {
-        return false
-      }
-      return true
-    })
-    .map((el) => ({
-      ...el,
-      x: format(el.x, 'PP'),
-    }))
+  const data = pages ? getDataFromSettings(pages, databaseVisualization.settings) : []
 
   const Chart = databaseVisualization.settings.type === 'bar' ? BarChart : LineChart
 
@@ -116,6 +88,44 @@ const DatabaseVisualization: FunctionComponent = () => {
       </div>
     </div>
   )
+
+  function getDataFromSettings(
+    pages: Page[],
+    settings: DatabaseVisualizationSettings
+  ): Array<Record<string, string>> {
+    return pages
+      .map((page) => {
+        const pageValues = Object.values(page.properties)
+        const datePropertyValue = pageValues.find(
+          (prop) => prop.id === settings.xAxis
+        ) as SupportedDatePropertyValue
+
+        const dateValue =
+          datePropertyValue.type === 'created_time'
+            ? datePropertyValue.created_time
+            : datePropertyValue.type === 'last_edited_time'
+            ? datePropertyValue.last_edited_time
+            : datePropertyValue.date.start
+
+        return {
+          x: dateValue ? new Date(dateValue) : new Date(),
+          ...(settings.yAxis || [])
+            .map((v): { key: string; value: number | undefined } => {
+              const value = pageValues.find((prop) => prop.id === v) as
+                | NumberPropertyValue
+                | undefined
+              return { key: v, value: value?.number }
+            })
+            .reduce((acc, el) => ({ ...acc, [el.key]: el.value }), {}),
+        }
+      })
+      .sort((a, b) => +a.x - +b.x)
+      .filter((el) => {
+        const [start, end] = settings.xAxisTimeFrame || []
+        return (!start || +el.x > +new Date(start)) && (!end || +el.x < +new Date(end))
+      })
+      .map((el) => ({ ...el, x: format(el.x, 'PP') }))
+  }
 }
 
 export const getServerSideProps = withPageAuthRequired()
