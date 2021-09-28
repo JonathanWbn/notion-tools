@@ -22,6 +22,8 @@ import { CartesianGrid, LineChart, XAxis, Line, YAxis, Tooltip, BarChart, Bar } 
 import { NumberPropertyValue, Page } from '@notionhq/client/build/src/api-types'
 import { format } from 'date-fns'
 
+const notionColors = ['#5893b3', '#e49759', '#5b9d92', '#ea7271']
+
 const DatabaseVisualization: FunctionComponent = () => {
   const router = useRouter()
   const { id } = router.query
@@ -72,11 +74,11 @@ const DatabaseVisualization: FunctionComponent = () => {
             <YAxis type="number" domain={['auto', 'auto']} />
             <Tooltip />
             <CartesianGrid stroke="#f5f5f5" strokeDasharray="3 3" />
-            {databaseVisualization.settings.yAxis?.map((v) =>
+            {databaseVisualization.settings.yAxis?.map((v, i) =>
               databaseVisualization.settings.type === 'bar' ? (
-                <Bar key={v} type="monotone" dataKey={v} stroke="#ff7300" />
+                <Bar key={v} type="monotone" dataKey={v} fill={notionColors[i]} />
               ) : (
-                <Line key={v} type="monotone" dataKey={v} stroke="#ff7300" connectNulls />
+                <Line key={v} type="monotone" dataKey={v} stroke={notionColors[i]} connectNulls />
               )
             )}
           </Chart>
