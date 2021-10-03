@@ -84,6 +84,12 @@ export function useDatabases() {
   return { databases, refetch: mutate }
 }
 
+export function useDatabase(databaseId: string) {
+  const { databases, refetch } = useDatabases()
+
+  return { database: databases?.find((el) => el.id === databaseId), refetch }
+}
+
 export function useDatabaseQuery(databaseId: string) {
   const { data: pages, mutate } = useSWR<Page[]>(`/api/notion/database/${databaseId}`, fetcher)
 

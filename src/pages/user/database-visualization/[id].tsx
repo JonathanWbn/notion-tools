@@ -1,10 +1,11 @@
 import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { useRouter } from 'next/router'
-import { FunctionComponent } from 'react'
+import React, { FunctionComponent } from 'react'
 import { mutate } from 'swr'
 import {
   deleteDatabaseVisualization,
   updateDatabaseVisualization,
+  useDatabase,
   useDatabaseQuery,
   useUser,
 } from '../../../infrastructure/api-client'
@@ -18,7 +19,7 @@ import {
   DatabaseVisualizationSettings,
   IDatabaseVisualization,
 } from '../../../domain/DatabaseVisualization'
-import { CartesianGrid, LineChart, XAxis, Line, YAxis, Tooltip, BarChart, Bar } from 'recharts'
+import { LineChart, XAxis, Line, YAxis, Tooltip, BarChart, Bar, Legend } from 'recharts'
 import { NumberPropertyValue, Page } from '@notionhq/client/build/src/api-types'
 import { format } from 'date-fns'
 
@@ -31,6 +32,7 @@ const DatabaseVisualization: FunctionComponent = () => {
 
   const databaseVisualization = user?.databaseVisualizations.find((config) => config.id === id)
 
+  const { database } = useDatabase(databaseVisualization?.settings.databaseId || '')
   const { pages } = useDatabaseQuery(databaseVisualization?.settings.databaseId || '')
 
   async function handleSubmit(settings: IDatabaseVisualization['settings']): Promise<void> {
@@ -68,20 +70,46 @@ const DatabaseVisualization: FunctionComponent = () => {
           <Spinner className="animate-spin mx-auto" />
         )}
         <div className="w-full border-b border-opacity-80 my-5" />
-        {databaseVisualization && (
+        {databaseVisualization && pages ? (
           <Chart width={896} height={400} data={data}>
             <XAxis dataKey="x" />
-            <YAxis type="number" domain={['auto', 'auto']} />
             <Tooltip />
-            <CartesianGrid stroke="#f5f5f5" strokeDasharray="3 3" />
-            {databaseVisualization.settings.yAxis?.map((v, i) =>
-              databaseVisualization.settings.type === 'bar' ? (
-                <Bar key={v} type="monotone" dataKey={v} fill={notionColors[i]} />
-              ) : (
-                <Line key={v} type="monotone" dataKey={v} stroke={notionColors[i]} connectNulls />
-              )
-            )}
+            <Legend />
+            {databaseVisualization.settings.yAxis?.map((v, i) => (
+              <React.Fragment key={i}>
+                <YAxis
+                  yAxisId={v}
+                  width={30}
+                  type="number"
+                  domain={['auto', 'auto']}
+                  orientation={i % 2 === 0 ? 'left' : 'right'}
+                />
+                {databaseVisualization.settings.type === 'bar' ? (
+                  <Bar
+                    yAxisId={v}
+                    key={v}
+                    dataKey={v}
+                    fill={notionColors[i]}
+                    name={getPropertyName(v)}
+                  />
+                ) : (
+                  <Line
+                    key={v}
+                    yAxisId={v}
+                    type="linear"
+                    dataKey={v}
+                    strokeWidth={2}
+                    stroke={notionColors[i]}
+                    dot={false}
+                    connectNulls
+                    name={getPropertyName(v)}
+                  />
+                )}
+              </React.Fragment>
+            ))}
           </Chart>
+        ) : (
+          <Spinner className="animate-spin mx-auto" />
         )}
         <div className="w-full border-b border-opacity-80 my-5" />
         <Button color="red" onClick={handleDelete} className="self-start">
@@ -126,7 +154,13 @@ const DatabaseVisualization: FunctionComponent = () => {
         const [start, end] = settings.xAxisTimeFrame || []
         return (!start || +el.x > +new Date(start)) && (!end || +el.x < +new Date(end))
       })
-      .map((el) => ({ ...el, x: format(el.x, 'PP') }))
+      .map((el) => ({ ...el, x: `  ${format(el.x, 'PP')}  ` }))
+  }
+
+  function getPropertyName(propertyId: string) {
+    return Object.keys(database?.properties || {}).find(
+      (el) => database?.properties[el].id === propertyId
+    )
   }
 }
 

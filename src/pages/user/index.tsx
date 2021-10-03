@@ -38,7 +38,7 @@ const User: FunctionComponent = () => {
           <Spinner className="animate-spin mx-auto" />
         )}
         <div className="w-full border-b border-opacity-80 my-5" />
-        {user ? (
+        {user && databases ? (
           <>
             <h1 className="text-2xl font-bold mb-2">
               {user.recurringTasks.length > 0 ? 'Recurring Tasks' : 'No Recurring Tasks Yet'}
