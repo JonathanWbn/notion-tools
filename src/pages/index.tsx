@@ -45,22 +45,38 @@ const Home: FunctionComponent = () => {
           />
         </div>
       </div>
+      <div className="w-full border-b border-opacity-80" />
+      <div className="w-full max-w-screen-xl flex justify-between py-14">
+        <div className="w-full max-w-lg mr-10 my-4 shadow rounded-lg overflow-hidden">
+          <iframe
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/9golvinps88?rel=0&showinfo=0&modestbranding=0"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title="Demo"
+          />
+        </div>
+        <div className="max-w-2xl w-full flex flex-col">
+          <h3 className="mt-5 text-2xl font-bold">📊 Database visualization</h3>
+          <p className="rounded-sm bg-gray-100 bg-opacity-80 mt-4 p-4">
+            <span className="mr-2">👉</span>This tool allows you to visualization the data in your
+            databases.
+          </p>
+          <p className="font-bold mt-4 mb-1">Examples:</p>
+          <ul className="list-disc pl-6">
+            <li className="mb-1">{'See a graph of your weight over the past 6 months.'}</li>
+            <li className="mb-7">{'Compare your productivity with your sleep.'}</li>
+          </ul>
+          <Button className="self-end mt-10" color="green" href="/api/auth/signup">
+            Try it out!
+          </Button>
+        </div>
+      </div>
       <div className="w-full border-b border-opacity-80 my-5" />
       <div className="max-w-2xl w-full flex flex-col">
         <h3 className="text-2xl font-bold mb-3">❓ FAQ</h3>
-        <Toggle label='Is "Recurring tasks" the only tool?'>
-          <p className="mb-2">
-            As of now, yes. But new tools are already being developed. Here are some of the tools
-            under development:
-          </p>
-          <p>
-            1️⃣ Create pre-filled database items via an embedded button.
-            <br />
-            📩 Emails summarising database activity (tasks done, journals written, books read).
-            <br />
-            📊 Charts to analyse your databases.
-          </p>
-        </Toggle>
         <Toggle label="Is this free?">
           <p>Yes, it is. But I am planning to add a monthly fee at some point in the future.</p>
         </Toggle>
