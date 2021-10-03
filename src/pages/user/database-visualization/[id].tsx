@@ -61,57 +61,59 @@ const DatabaseVisualization: FunctionComponent = () => {
       <div className="max-w-4xl w-full flex flex-col">
         <h1 className="text-4xl font-bold">Database visualization</h1>
         <div className="w-full border-b border-opacity-80 my-5" />
-        {databaseVisualization ? (
+        {databaseVisualization && (
           <DatabaseVisualizationForm
             initialValues={databaseVisualization.settings}
             onAutoSave={handleSubmit}
           />
-        ) : (
-          <Spinner className="animate-spin mx-auto" />
         )}
         <div className="w-full border-b border-opacity-80 my-5" />
-        {databaseVisualization && pages ? (
-          <Chart width={896} height={400} data={data}>
-            <XAxis dataKey="x" />
-            <Tooltip />
-            <Legend />
-            {databaseVisualization.settings.yAxis?.map((v, i) => (
-              <React.Fragment key={i}>
-                <YAxis
-                  yAxisId={v}
-                  width={30}
-                  type="number"
-                  domain={['auto', 'auto']}
-                  orientation={i % 2 === 0 ? 'left' : 'right'}
-                />
-                {databaseVisualization.settings.type === 'bar' ? (
-                  <Bar
-                    yAxisId={v}
-                    key={v}
-                    dataKey={v}
-                    fill={notionColors[i]}
-                    name={getPropertyName(v)}
-                  />
-                ) : (
-                  <Line
-                    key={v}
-                    yAxisId={v}
-                    type="linear"
-                    dataKey={v}
-                    strokeWidth={2}
-                    stroke={notionColors[i]}
-                    dot={false}
-                    connectNulls
-                    name={getPropertyName(v)}
-                  />
-                )}
-              </React.Fragment>
-            ))}
-          </Chart>
-        ) : (
-          <Spinner className="animate-spin mx-auto" />
+        {databaseVisualization.settings.databaseId && databaseVisualization.settings.xAxis && (
+          <>
+            {pages ? (
+              <Chart width={896} height={400} data={data}>
+                <XAxis dataKey="x" />
+                <Tooltip />
+                <Legend />
+                {databaseVisualization.settings.yAxis?.map((v, i) => (
+                  <React.Fragment key={i}>
+                    <YAxis
+                      yAxisId={v}
+                      width={30}
+                      type="number"
+                      domain={['auto', 'auto']}
+                      orientation={i % 2 === 0 ? 'left' : 'right'}
+                    />
+                    {databaseVisualization.settings.type === 'bar' ? (
+                      <Bar
+                        yAxisId={v}
+                        key={v}
+                        dataKey={v}
+                        fill={notionColors[i]}
+                        name={getPropertyName(v)}
+                      />
+                    ) : (
+                      <Line
+                        key={v}
+                        yAxisId={v}
+                        type="linear"
+                        dataKey={v}
+                        strokeWidth={2}
+                        stroke={notionColors[i]}
+                        dot={false}
+                        connectNulls
+                        name={getPropertyName(v)}
+                      />
+                    )}
+                  </React.Fragment>
+                ))}
+              </Chart>
+            ) : (
+              <Spinner className="animate-spin mx-auto" />
+            )}
+            <div className="w-full border-b border-opacity-80 my-5" />
+          </>
         )}
-        <div className="w-full border-b border-opacity-80 my-5" />
         <Button color="red" onClick={handleDelete} className="self-start">
           Delete
         </Button>
@@ -126,9 +128,13 @@ const DatabaseVisualization: FunctionComponent = () => {
     return pages
       .map((page) => {
         const pageValues = Object.values(page.properties)
-        const datePropertyValue = pageValues.find(
-          (prop) => prop.id === settings.xAxis
-        ) as SupportedDatePropertyValue
+        const datePropertyValue = pageValues.find((prop) => prop.id === settings.xAxis) as
+          | SupportedDatePropertyValue
+          | undefined
+
+        if (!datePropertyValue) {
+          return { x: new Date() }
+        }
 
         const dateValue =
           datePropertyValue.type === 'created_time'
