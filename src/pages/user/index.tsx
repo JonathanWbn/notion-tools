@@ -127,8 +127,13 @@ const User: FunctionComponent = () => {
             <Button
               color="red"
               onClick={async () => {
-                await deleteUser()
-                location.href = 'https://notion-tools.io/api/auth/logout'
+                const confirm = window.confirm(
+                  'Do you really want to delete your account? This action cannot be undone.'
+                )
+                if (confirm) {
+                  await deleteUser()
+                  location.href = 'https://notion-tools.io/api/auth/logout'
+                }
               }}
             >
               Delete account
