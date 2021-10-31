@@ -8,6 +8,7 @@ import {
   RichTextPropertyValue,
   SelectPropertyValue,
   TitlePropertyValue,
+  URLPropertyValue,
 } from '@notionhq/client/build/src/api-types'
 import { ReactElement, useState } from 'react'
 import { useDatabases } from '../api-client'
@@ -21,6 +22,7 @@ import { DateInput } from './date-input'
 import { IRecurringTask } from '../../domain/RecurringTask'
 import { useAutoSave } from './useAutoSave'
 import { DatabaseSelect } from './database-select'
+import { URLInput } from './url-input'
 
 interface Props {
   initialValues: IRecurringTask['settings']
@@ -128,6 +130,8 @@ function PropertyInput({ property, value, onChange, name }: PropertyInputProps):
     )
   } else if (property.type === 'number') {
     return <NumberInput {...{ property, value: value as NumberPropertyValue, onChange, name }} />
+  } else if (property.type === 'url') {
+    return <URLInput {...{ property, value: value as URLPropertyValue, onChange, name }} />
   }
 
   return <></>
