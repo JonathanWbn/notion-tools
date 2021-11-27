@@ -21,16 +21,35 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Page[]>): Promi
           return
         }
 
-        const notion = new Client({ auth: user.notionAccess.access_token })
-        const { results } = await notion.databases.query({ database_id: query.id as string })
+        const pages = await queryDatabase(query.id as string, user.notionAccess.access_token)
 
-        res.status(200).send(results)
+        res.status(200).send(pages)
       }
     }
   } catch (err) {
     console.log('err', err)
     res.status(500).end()
   }
+}
+
+async function queryDatabase(
+  databaseId: string,
+  token: string,
+  cursor?: string,
+  pages: Page[] = []
+): Promise<Page[]> {
+  const notion = new Client({ auth: token })
+
+  const { results, has_more, next_cursor } = await notion.databases.query({
+    database_id: databaseId,
+    start_cursor: cursor,
+  })
+
+  if (has_more && next_cursor) {
+    return queryDatabase(databaseId, token, next_cursor, [...pages, ...results])
+  }
+
+  return [...pages, ...results]
 }
 
 export default withApiAuthRequired(handler)
