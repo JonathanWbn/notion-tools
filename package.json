@@ -14,7 +14,7 @@
     "deploy": "sam deploy"
   },
   "dependencies": {
-    "@auth0/nextjs-auth0": "^1.4.2",
+    "@auth0/nextjs-auth0": "^1.6.2",
     "@notionhq/client": "^0.2.0",
     "auth0": "^2.35.1",
     "aws-sdk": "^2.931.0",
