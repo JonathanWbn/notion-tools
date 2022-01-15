@@ -1,6 +1,6 @@
 import { InputPropertyValue } from '@notionhq/client/build/src/api-types'
 import { weekdayMap } from '../utils'
-import { isFuture, sub, set, setDay, isAfter, setDate } from 'date-fns'
+import { isFuture, sub, set, setDay, isAfter, setDate, add, isBefore } from 'date-fns'
 
 export class RecurringTask implements IRecurringTask {
   static _isExecutable(recurringTask: IRecurringTask): boolean {
@@ -82,9 +82,15 @@ export class RecurringTask implements IRecurringTask {
     const hasBeenExecutedSince =
       this.lastExecutedAt && isAfter(new Date(this.lastExecutedAt), latestScheduledExecution)
 
+    const isWithinOneHourOfScheduledExecution = isBefore(
+      new Date(),
+      add(latestScheduledExecution, { hours: 1 })
+    )
+
     return (
       !hasBeenExecutedSince &&
-      (!this.createdAt || isAfter(latestScheduledExecution, new Date(this.createdAt)))
+      (!this.createdAt || isAfter(latestScheduledExecution, new Date(this.createdAt))) &&
+      isWithinOneHourOfScheduledExecution
     )
   }
 
