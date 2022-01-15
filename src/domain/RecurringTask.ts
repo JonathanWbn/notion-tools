@@ -1,6 +1,6 @@
 import { InputPropertyValue } from '@notionhq/client/build/src/api-types'
 import { weekdayMap } from '../utils'
-import { isFuture, sub, set, setDay, isAfter } from 'date-fns'
+import { isFuture, sub, set, setDay, isAfter, setDate } from 'date-fns'
 
 export class RecurringTask implements IRecurringTask {
   static _isExecutable(recurringTask: IRecurringTask): boolean {
@@ -13,6 +13,10 @@ export class RecurringTask implements IRecurringTask {
     }
 
     if (recurringTask.settings.frequency === 'weekly' && !recurringTask.settings.weekday) {
+      return false
+    }
+
+    if (recurringTask.settings.frequency === 'monthly' && !recurringTask.settings.dayOfMonth) {
       return false
     }
 
@@ -60,6 +64,17 @@ export class RecurringTask implements IRecurringTask {
       const executionLastWeek = sub(executionThisWeek, { days: 7 })
 
       latestScheduledExecution = isFuture(executionThisWeek) ? executionLastWeek : executionThisWeek
+    } else if (this.settings.frequency === 'monthly') {
+      const dayOfMonthToSet = this.settings.dayOfMonth
+      const executionThisMonth = setDate(
+        set(now, { hours: +hour, minutes: +minute, seconds: 0, milliseconds: 0 }),
+        dayOfMonthToSet as number
+      )
+      const executionLastMonth = sub(executionThisMonth, { months: 1 })
+
+      latestScheduledExecution = isFuture(executionThisMonth)
+        ? executionLastMonth
+        : executionThisMonth
     } else {
       throw new Error(`Invalid frequency ${this.settings.frequency}`)
     }
@@ -99,8 +114,9 @@ export interface IRecurringTask {
 
 export interface RecurringTaskSettings {
   databaseId?: string
-  frequency?: 'daily' | 'weekly'
+  frequency?: 'daily' | 'weekly' | 'monthly'
   weekday?: Weekday
+  dayOfMonth?: number
   timeOfDay?: TimeOfDay
   properties?: {
     [propertyId: string]: InputPropertyValue
