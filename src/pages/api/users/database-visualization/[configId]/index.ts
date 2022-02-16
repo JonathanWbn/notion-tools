@@ -1,18 +1,24 @@
 import { withApiAuthRequired } from '@auth0/nextjs-auth0'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { encrypt } from '../../../../../../crypto'
 import { DeleteDatabaseVisualization } from '../../../../../application/use-case/DeleteDatabaseVisualization'
 import { UpdateDatabaseVisualization } from '../../../../../application/use-case/UpdateDatabaseVisualization'
 import { getUserFromSession } from '../../../../../infrastructure/api-utils'
 import { DynamoUserRepository } from '../../../../../infrastructure/repository/DynamoUserRepository'
 
-const handler = async (
-  req: NextApiRequest,
-  res: NextApiResponse<{ success: true }>
-): Promise<void> => {
+const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   const { query, method, body } = req
 
   try {
     switch (method) {
+      case 'GET': {
+        const authUser = getUserFromSession(req, res)
+
+        res.status(200).send({
+          key: encrypt(JSON.stringify({ userId: authUser.sub, visualizationId: query.configId })),
+        })
+        break
+      }
       case 'PATCH': {
         const authUser = getUserFromSession(req, res)
         const updateDatabaseVisualization = new UpdateDatabaseVisualization(

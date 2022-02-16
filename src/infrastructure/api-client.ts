@@ -3,7 +3,7 @@ import { useUser as use0AuthUser } from '@auth0/nextjs-auth0'
 import { Database, Page } from '@notionhq/client/build/src/api-types'
 import axios from 'axios'
 import useSWR, { mutate } from 'swr'
-import { IDatabaseVisualization } from '../domain/DatabaseVisualization'
+import { DatabaseVisualization, IDatabaseVisualization } from '../domain/DatabaseVisualization'
 import { IRecurringTask } from '../domain/RecurringTask'
 import { User } from '../domain/User'
 
@@ -76,6 +76,21 @@ export function useUser() {
   const { data: user } = useSWR<User>(auth0user?.sub ? '/api/users/me' : null, fetcher)
 
   return { user, auth0user }
+}
+
+export function useEmbeddedDatabaseVisualization(key: string) {
+  const { data: databaseVisualization } = useSWR<DatabaseVisualization>(
+    `/api/embed/database-visualization/${key}`,
+    fetcher
+  )
+
+  return { databaseVisualization, refetch: mutate }
+}
+
+export function useDatabaseVisualization(configId: string) {
+  const { data } = useSWR<{ key: string }>(`/api/users/database-visualization/${configId}`, fetcher)
+
+  return { key: data?.key, refetch: mutate }
 }
 
 export function useDatabases() {
