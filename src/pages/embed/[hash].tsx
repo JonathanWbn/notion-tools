@@ -12,7 +12,11 @@ const EmbeddedGraph: FunctionComponent = () => {
   return (
     <div className="flex justify-center items-center h-screen w-screen">
       <style>{`header { display: none !important; }`}</style>
-      <DatabaseVisualizationComponent databaseVisualization={databaseVisualization} />
+      <DatabaseVisualizationComponent
+        databaseVisualization={databaseVisualization}
+        width="100%"
+        height="100%"
+      />
     </div>
   )
 }

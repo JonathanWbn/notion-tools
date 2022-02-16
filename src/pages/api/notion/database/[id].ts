@@ -1,7 +1,7 @@
-import { withApiAuthRequired } from '@auth0/nextjs-auth0'
 import { Client } from '@notionhq/client/build/src'
 import { Page } from '@notionhq/client/build/src/api-types'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { decrypt } from '../../../../../crypto'
 import { getUserFromSession } from '../../../../infrastructure/api-utils'
 import { DynamoUserRepository } from '../../../../infrastructure/repository/DynamoUserRepository'
 
@@ -13,9 +13,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Page[]>): Promi
   try {
     switch (method) {
       case 'GET': {
-        const authUser = getUserFromSession(req, res)
+        let userId: string
+        if (req.headers.referer?.includes('/embed/')) {
+          const [, hash] = req.headers.referer.split('/embed/')
+          console.log('hash', hash)
+          ;({ userId } = JSON.parse(decrypt(hash)))
+        } else {
+          const authUser = getUserFromSession(req, res)
+          userId = authUser.sub
+        }
 
-        const user = await userRepository.getById(authUser.sub)
+        const user = await userRepository.getById(userId)
         if (!user.notionAccess) {
           res.status(401).end()
           return
@@ -52,4 +60,4 @@ async function queryDatabase(
   return [...pages, ...results]
 }
 
-export default withApiAuthRequired(handler)
+export default handler

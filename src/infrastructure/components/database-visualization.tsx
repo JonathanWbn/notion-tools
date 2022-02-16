@@ -24,9 +24,15 @@ const notionColors = ['#5893b3', '#e49759', '#5b9d92', '#ea7271']
 
 interface Props {
   databaseVisualization?: DatabaseVisualization
+  width: number | string
+  height: number | string
 }
 
-export function DatabaseVisualizationComponent({ databaseVisualization }: Props): ReactElement {
+export function DatabaseVisualizationComponent({
+  databaseVisualization,
+  width,
+  height,
+}: Props): ReactElement {
   const { database } = useDatabase(databaseVisualization?.settings.databaseId || '')
   const { pages } = useDatabaseQuery(databaseVisualization?.settings.databaseId || '')
 
@@ -43,7 +49,7 @@ export function DatabaseVisualizationComponent({ databaseVisualization }: Props)
   const Chart = databaseVisualization.settings.type === 'bar' ? BarChart : LineChart
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width={width} height={height}>
       <Chart data={data}>
         <XAxis dataKey="x" />
         <Tooltip />

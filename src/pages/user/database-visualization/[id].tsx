@@ -59,7 +59,11 @@ const DatabaseVisualizationPage: FunctionComponent = () => {
         <div className="w-full border-b border-opacity-80 my-5" />
         {databaseVisualization.settings.databaseId && databaseVisualization.settings.xAxis && (
           <>
-            <DatabaseVisualizationComponent databaseVisualization={databaseVisualization} />
+            <DatabaseVisualizationComponent
+              databaseVisualization={databaseVisualization}
+              width={896}
+              height={400}
+            />
             <div className="w-full border-b border-opacity-80 my-5" />
           </>
         )}
