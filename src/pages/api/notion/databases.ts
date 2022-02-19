@@ -1,7 +1,7 @@
 import { Client } from '@notionhq/client/build/src'
 import { Database } from '@notionhq/client/build/src/api-types'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { decrypt } from '../../../../crypto'
+import { decrypt } from '../../crypto'
 import { getUserFromSession } from '../../../infrastructure/api-utils'
 import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
 

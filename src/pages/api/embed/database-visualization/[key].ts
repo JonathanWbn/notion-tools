@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { DynamoUserRepository } from '../../../../infrastructure/repository/DynamoUserRepository'
 import { DatabaseVisualization } from '../../../../domain/DatabaseVisualization'
-import { decrypt } from '../../../../../crypto'
+import { decrypt } from '../../../crypto'
 
 const userRepository = new DynamoUserRepository()
 
