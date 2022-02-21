@@ -3,6 +3,7 @@ import {
   CheckboxPropertyValue,
   DatePropertyValue,
   InputPropertyValue,
+  MultiSelectPropertyValue,
   NumberPropertyValue,
   Property,
   RichTextPropertyValue,
@@ -23,6 +24,7 @@ import { IRecurringTask } from '../../domain/RecurringTask'
 import { useAutoSave } from './useAutoSave'
 import { DatabaseSelect } from './database-select'
 import { URLInput } from './url-input'
+import { MultiSelectInput } from './multi-select-input'
 
 interface Props {
   initialValues: IRecurringTask['settings']
@@ -128,6 +130,12 @@ export interface PropertyInputProps<P = Property, T = InputPropertyValue> {
 function PropertyInput({ property, value, onChange, name }: PropertyInputProps): ReactElement {
   if (property.type === 'select') {
     return <SelectInput {...{ property, value: value as SelectPropertyValue, onChange, name }} />
+  } else if (property.type === 'multi_select') {
+    return (
+      <MultiSelectInput
+        {...{ property, value: value as MultiSelectPropertyValue, onChange, name }}
+      />
+    )
   } else if (property.type === 'title') {
     return <TitleInput {...{ property, value: value as TitlePropertyValue, onChange, name }} />
   } else if (property.type === 'date') {
