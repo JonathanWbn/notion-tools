@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import { FunctionComponent } from 'react'
 
 const algorithm = 'aes256'
 const key = process.env.CRYPTO_SECRET as string
@@ -15,3 +16,7 @@ export const decrypt = (encrypted: string): string => {
 
   return decipher.update(encrypted, 'hex', 'utf8') + decipher.final('utf8')
 }
+
+const Empty: FunctionComponent = () => null
+
+export default Empty
