@@ -51,6 +51,10 @@ export async function updateRecurringTask(
   return data
 }
 
+export async function deleteRecurringTask(configId: string): Promise<void> {
+  await axios.delete<UpdateRecurringTaskResponse>(`/api/users/recurring-task/${configId}`)
+}
+
 export type UpdateDatabaseVisualizationResponse = User
 
 export async function updateDatabaseVisualization(

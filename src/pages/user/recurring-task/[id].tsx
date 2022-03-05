@@ -2,7 +2,12 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { useRouter } from 'next/router'
 import { FunctionComponent, useEffect, useState } from 'react'
 import { mutate } from 'swr'
-import { runRecurringTask, updateRecurringTask, useUser } from '../../../infrastructure/api-client'
+import {
+  deleteRecurringTask,
+  runRecurringTask,
+  updateRecurringTask,
+  useUser,
+} from '../../../infrastructure/api-client'
 import { RecurringTaskForm } from '../../../infrastructure/components/recurring-task-form'
 import { Spinner, Circle } from '../../../infrastructure/components/icons'
 import { Button } from '../../../infrastructure/components/button'
@@ -46,6 +51,16 @@ const User: FunctionComponent = () => {
     if (!recurringTask) return
     await updateRecurringTask(recurringTask.id, { isActive: true })
     mutate('/api/users/me')
+  }
+
+  async function onDelete(): Promise<void> {
+    if (!recurringTask) return
+    const confirmed = confirm('Are you sure you want to delete this recurring task?')
+    if (!confirmed) return
+
+    await deleteRecurringTask(recurringTask.id)
+    await mutate('/api/users/me')
+    router.push('/user')
   }
 
   async function onDisable(): Promise<void> {
@@ -130,6 +145,11 @@ const User: FunctionComponent = () => {
               ) : (
                 <p className="font-thin">Select a database and frequency.</p>
               )}
+            </div>
+            <div className="flex justify-center mt-5">
+              <Button color="red" onClick={onDelete}>
+                Delete
+              </Button>
             </div>
           </>
         ) : (
