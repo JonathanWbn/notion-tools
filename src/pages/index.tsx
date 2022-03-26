@@ -132,6 +132,7 @@ const Home: FunctionComponent = () => {
             </a>{' '}
             to further explain how permissions work.
           </p>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             className="w-80 shadow rounded-lg mx-auto"
             src="/notion-permissions.png"

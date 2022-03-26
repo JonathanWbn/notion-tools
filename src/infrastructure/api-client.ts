@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useUser as use0AuthUser } from '@auth0/nextjs-auth0'
 import { Database, Page } from '@notionhq/client/build/src/api-types'
 import axios from 'axios'

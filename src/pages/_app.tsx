@@ -7,7 +7,6 @@ import { Header } from '../infrastructure/components/header'
 
 interface Props {
   Component: FunctionComponent
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pageProps: Record<string, any>
 }
 
@@ -19,6 +18,7 @@ const App: FunctionComponent<Props> = ({ Component, pageProps }: Props) => {
         <link rel="shortcut icon" type="image/png" href="/favicon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
           rel="stylesheet"

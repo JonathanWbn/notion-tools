@@ -161,12 +161,7 @@ const User: FunctionComponent = () => {
     return getDatabase(databaseId)?.title[0].plain_text
   }
 
-  function getPropertyName(
-    db: Database | undefined,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    settings: any,
-    fieldName: string
-  ) {
+  function getPropertyName(db: Database | undefined, settings: any, fieldName: string) {
     return Object.entries(db?.properties || {}).find(
       ([, val]) => val.id === settings[fieldName]
     )?.[0]

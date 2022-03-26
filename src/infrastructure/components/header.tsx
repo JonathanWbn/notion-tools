@@ -13,6 +13,7 @@ export function Header(): ReactElement {
         <a className="text-3xl">🧰</a>
       </Link>
       {router.asPath === '/user' ? (
+        // eslint-disable-next-line @next/next/no-html-link-for-pages
         <a
           className="border-b border-gray-500 opacity-60 hover:opacity-100"
           href="/api/auth/logout"
@@ -25,6 +26,7 @@ export function Header(): ReactElement {
         </Link>
       ) : (
         <div>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
             className="border-b border-gray-500 opacity-60 hover:opacity-100"
             href="/api/auth/login?returnTo=/user"
@@ -32,6 +34,7 @@ export function Header(): ReactElement {
             login
           </a>
           {' / '}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
             className="border-b border-gray-500 opacity-60 hover:opacity-100"
             href="/api/auth/signup"

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from 'lodash'
 import { useEffect, useRef } from 'react'
 
@@ -14,5 +13,6 @@ export function useAutoSave(
       debouncedOnAutoSave.current(values)
       return debouncedOnAutoSave.current.cancel
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values])
 }
