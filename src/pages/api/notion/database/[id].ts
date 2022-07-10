@@ -16,7 +16,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Page[]>): Promi
         let userId: string
         if (req.headers.referer?.includes('/embed/')) {
           const [, hash] = req.headers.referer.split('/embed/')
-          console.log('hash', hash)
           ;({ userId } = JSON.parse(decrypt(hash)))
         } else {
           const authUser = getUserFromSession(req, res)
