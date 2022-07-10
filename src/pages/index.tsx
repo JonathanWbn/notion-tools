@@ -151,7 +151,7 @@ const Home: FunctionComponent = () => {
         {' / '}
         <a
           className="border-b border-gray-500 opacity-60 hover:opacity-100"
-          href="https://www.notion.so/jwieben/Privacy-Policy-for-Notion-Tools-ac15ce17678a478aaa7fd062da638dcc"
+          href="https://jwieben.notion.site/Privacy-Policy-for-Notion-Tools-ac15ce17678a478aaa7fd062da638dcc"
         >
           privacy
         </a>
