@@ -50,7 +50,7 @@ export function DatabaseVisualizationComponent({
 
   return (
     <div className="relative" style={{ width, height }}>
-      <button className="absolute top-2 right-2 z-10" onClick={() => refetch()}>
+      <button className="absolute bottom-3 right-3 z-10" onClick={() => refetch()}>
         🔄
       </button>
       <ResponsiveContainer width={width} height={height}>
