@@ -34,7 +34,7 @@ export function DatabaseVisualizationComponent({
   height,
 }: Props): ReactElement {
   const { database } = useDatabase(databaseVisualization?.settings.databaseId || '')
-  const { pages } = useDatabaseQuery(databaseVisualization?.settings.databaseId || '')
+  const { pages, refetch } = useDatabaseQuery(databaseVisualization?.settings.databaseId || '')
 
   if (
     !pages ||
@@ -49,45 +49,50 @@ export function DatabaseVisualizationComponent({
   const Chart = databaseVisualization.settings.type === 'bar' ? BarChart : LineChart
 
   return (
-    <ResponsiveContainer width={width} height={height}>
-      <Chart data={data}>
-        <XAxis dataKey="x" />
-        <Tooltip />
-        <Legend />
-        {databaseVisualization.settings.yAxis?.map((v, i) => (
-          <React.Fragment key={i}>
-            <YAxis
-              yAxisId={v}
-              width={30}
-              type="number"
-              domain={['auto', 'auto']}
-              orientation={i % 2 === 0 ? 'left' : 'right'}
-            />
-            {databaseVisualization.settings.type === 'bar' ? (
-              <Bar
+    <div className="relative" style={{ width, height }}>
+      <button className="absolute top-2 right-2 z-10" onClick={() => refetch()}>
+        🔄
+      </button>
+      <ResponsiveContainer width={width} height={height}>
+        <Chart data={data}>
+          <XAxis dataKey="x" />
+          <Tooltip />
+          <Legend />
+          {databaseVisualization.settings.yAxis?.map((v, i) => (
+            <React.Fragment key={i}>
+              <YAxis
                 yAxisId={v}
-                key={v}
-                dataKey={v}
-                fill={notionColors[i]}
-                name={getPropertyName(v)}
+                width={45}
+                type="number"
+                domain={['auto', 'auto']}
+                orientation={i % 2 === 0 ? 'left' : 'right'}
               />
-            ) : (
-              <Line
-                key={v}
-                yAxisId={v}
-                type="linear"
-                dataKey={v}
-                strokeWidth={2}
-                stroke={notionColors[i]}
-                dot={false}
-                connectNulls
-                name={getPropertyName(v)}
-              />
-            )}
-          </React.Fragment>
-        ))}
-      </Chart>
-    </ResponsiveContainer>
+              {databaseVisualization.settings.type === 'bar' ? (
+                <Bar
+                  yAxisId={v}
+                  key={v}
+                  dataKey={v}
+                  fill={notionColors[i]}
+                  name={getPropertyName(v)}
+                />
+              ) : (
+                <Line
+                  key={v}
+                  yAxisId={v}
+                  type="linear"
+                  dataKey={v}
+                  strokeWidth={2}
+                  stroke={notionColors[i]}
+                  dot={false}
+                  connectNulls
+                  name={getPropertyName(v)}
+                />
+              )}
+            </React.Fragment>
+          ))}
+        </Chart>
+      </ResponsiveContainer>
+    </div>
   )
 
   function getDataFromSettings(
