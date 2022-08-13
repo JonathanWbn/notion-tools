@@ -87,6 +87,35 @@ export function DatabaseVisualizationForm({ initialValues, onAutoSave }: Props):
               ]}
             />
           </label>
+          <label className="flex justify-between my-1 items-center">
+            <span className="text-lg">Scale (optional)</span>
+            <div className="flex justify-between items-center">
+              <input
+                type="number"
+                value={values.yAxisScale?.min}
+                placeholder="Min"
+                onChange={(e) =>
+                  setValues({
+                    ...values,
+                    yAxisScale: { min: parseInt(e.target.value, 10), max: values.yAxisScale?.max },
+                  })
+                }
+                className="border w-20 text-sm p-2 appearance-none focus:outline-none focus:border-gray-400 mr-1"
+              />
+              <input
+                type="number"
+                value={values.yAxisScale?.max}
+                placeholder="Max"
+                onChange={(e) =>
+                  setValues({
+                    ...values,
+                    yAxisScale: { min: values.yAxisScale?.min, max: parseInt(e.target.value, 10) },
+                  })
+                }
+                className="border w-20 text-sm p-2 appearance-none focus:outline-none focus:border-gray-400"
+              />
+            </div>
+          </label>
           {values.yAxis?.map((value, i) => (
             <label className="flex justify-between my-1 items-center" key={`${value}-${i}`}>
               <span className="text-lg">Y Axis ({i + 1})</span>

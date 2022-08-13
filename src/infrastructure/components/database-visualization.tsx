@@ -47,6 +47,7 @@ export function DatabaseVisualizationComponent({
 
   const data = pages ? getDataFromSettings(pages, databaseVisualization.settings) : []
   const Chart = databaseVisualization.settings.type === 'bar' ? BarChart : LineChart
+  const { min, max } = databaseVisualization.settings.yAxisScale || {}
 
   return (
     <div className="relative" style={{ width, height }}>
@@ -64,7 +65,10 @@ export function DatabaseVisualizationComponent({
                 yAxisId={v}
                 width={45}
                 type="number"
-                domain={['auto', 'auto']}
+                domain={[
+                  typeof min === 'number' ? min : 'auto',
+                  typeof max === 'number' ? max : 'auto',
+                ]}
                 orientation={i % 2 === 0 ? 'left' : 'right'}
               />
               {databaseVisualization.settings.type === 'bar' ? (
