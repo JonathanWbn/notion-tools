@@ -14,6 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Page[]>): Promi
     switch (method) {
       case 'GET': {
         let userId: string
+        console.log('req.headers', req.headers)
         if (req.headers.referer?.includes('/embed/')) {
           const [, hash] = req.headers.referer.split('/embed/')
           ;({ userId } = JSON.parse(decrypt(hash)))
