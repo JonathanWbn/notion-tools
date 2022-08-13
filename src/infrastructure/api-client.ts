@@ -72,7 +72,8 @@ export async function deleteDatabaseVisualization(configId: string): Promise<voi
   await axios.delete(`/api/users/database-visualization/${configId}`)
 }
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data)
+const fetcher = (url: string) =>
+  axios.get(url, { headers: { url: window.location.href } }).then((res) => res.data)
 
 export function useUser() {
   const { user: auth0user } = use0AuthUser()

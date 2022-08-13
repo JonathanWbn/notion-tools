@@ -14,9 +14,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Database[]>): P
     switch (method) {
       case 'GET': {
         let userId: string
-        console.log('req.headers', req.headers)
-        if (req.headers.referer?.includes('/embed/')) {
-          const [, hash] = req.headers.referer.split('/embed/')
+        if (typeof req.headers.url === 'string' && req.headers.url.includes('/embed/')) {
+          const [, hash] = req.headers.url.split('/embed/')
           ;({ userId } = JSON.parse(decrypt(hash)))
         } else {
           const authUser = getUserFromSession(req, res)
