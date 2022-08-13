@@ -38,117 +38,111 @@ const User: FunctionComponent = () => {
           <Spinner className="animate-spin mx-auto" />
         )}
         <div className="w-full border-b border-opacity-80 my-5" />
-        {user ? (
-          <>
-            <h1 className="text-2xl font-bold mb-2">
-              {user.recurringTasks.length > 0 ? 'Recurring Tasks' : 'No Recurring Tasks Yet'}
-            </h1>
-            {user.recurringTasks.length > 0 && (
-              <ul className="list-disc pl-6">
-                {user.recurringTasks.map((config) => {
-                  const details = [
-                    Object.values(config.settings.properties || {}).find(
-                      (el): el is TitlePropertyValue => el.type === 'title'
-                    )?.title[0].plain_text,
-                    getDatabaseName(config.settings.databaseId),
-                    config.settings.frequency,
-                  ].filter(Boolean)
+        <h1 className="text-2xl font-bold mb-2">
+          {user?.recurringTasks.length === 0 ? 'No Recurring Tasks Yet' : 'Recurring Tasks'}
+        </h1>
+        {user && user.recurringTasks.length > 0 ? (
+          <ul className="list-disc pl-6">
+            {user.recurringTasks.map((config) => {
+              const details = [
+                Object.values(config.settings.properties || {}).find(
+                  (el): el is TitlePropertyValue => el.type === 'title'
+                )?.title[0].plain_text,
+                getDatabaseName(config.settings.databaseId),
+                config.settings.frequency,
+              ].filter(Boolean)
 
-                  return (
-                    <li className="mb-1" key={config.id}>
-                      <Link href={`/user/recurring-task/${config.id}`}>
-                        <a className="border-b border-link text-link hover:border-black hover:text-black">
-                          {!config.isActive && '[disabled]'}{' '}
-                          {details.length ? details.join(', ') : <i>Not configured yet</i>}
-                        </a>
-                      </Link>
-                    </li>
-                  )
-                })}
-              </ul>
-            )}
-            <Button
-              className="self-end mt-10"
-              color="green"
-              onClick={async () => {
-                const config = await addRecurringTask()
-                router.push(`/user/recurring-task/${config.id}`)
-              }}
-            >
-              Add recurring task
-            </Button>
-
-            <div className="w-full border-b border-opacity-80 my-5" />
-
-            <h1 className="text-2xl font-bold mb-2">
-              {user.databaseVisualizations.length > 0
-                ? 'Database Visualizations'
-                : 'No Database Visualizations Yet'}
-            </h1>
-            {user.databaseVisualizations.length > 0 && (
-              <ul className="list-disc pl-6">
-                {user.databaseVisualizations.map((config) => {
-                  const database = getDatabase(config.settings.databaseId)
-                  const details = [
-                    getDatabaseName(config.settings.databaseId),
-                    getPropertyName(database, config.settings, 'xAxis'),
-                    getPropertyName(database, config.settings, 'yAxis'),
-                  ].filter(Boolean)
-
-                  return (
-                    <li className="mb-1" key={config.id}>
-                      <Link href={`/user/database-visualization/${config.id}`}>
-                        <a className="border-b border-link text-link hover:border-black hover:text-black">
-                          {details.length ? details.join(', ') : <i>Not configured yet</i>}
-                        </a>
-                      </Link>
-                    </li>
-                  )
-                })}
-              </ul>
-            )}
-            <Button
-              className="self-end mt-10"
-              color="green"
-              onClick={async () => {
-                const config = await addDatabaseVisualization()
-                router.push(`/user/database-visualization/${config.id}`)
-              }}
-            >
-              Add database visualization
-            </Button>
-          </>
-        ) : (
+              return (
+                <li className="mb-1" key={config.id}>
+                  <Link href={`/user/recurring-task/${config.id}`}>
+                    <a className="border-b border-link text-link hover:border-black hover:text-black">
+                      {!config.isActive && '[disabled]'}{' '}
+                      {details.length ? details.join(', ') : <i>Not configured yet</i>}
+                    </a>
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+        ) : !user ? (
           <Spinner className="animate-spin mx-auto" />
-        )}
+        ) : null}
+        <Button
+          className="self-end mt-10"
+          color="green"
+          onClick={async () => {
+            const config = await addRecurringTask()
+            router.push(`/user/recurring-task/${config.id}`)
+          }}
+        >
+          Add recurring task
+        </Button>
+
         <div className="w-full border-b border-opacity-80 my-5" />
-        {user ? (
-          <div className="flex items-center justify-around">
-            <Button
-              color="red"
-              onClick={async () => {
-                const confirm = window.confirm(
-                  'Do you really want to delete your account? This action cannot be undone.'
-                )
-                if (confirm) {
-                  await deleteUser()
-                  location.href = 'https://notion-tools.io/api/auth/logout'
-                }
-              }}
-            >
-              Delete account
-            </Button>
-            <Button
-              color="yellow"
-              href="mailto:jwieben@hey.com?subject=Bug report: Notion tools"
-              isExternal
-            >
-              Report bug 🐛
-            </Button>
-          </div>
-        ) : (
+
+        <h1 className="text-2xl font-bold mb-2">
+          {user?.databaseVisualizations.length === 0
+            ? 'No Database Visualizations Yet'
+            : 'Database Visualizations'}
+        </h1>
+        {user && user.databaseVisualizations.length > 0 ? (
+          <ul className="list-disc pl-6">
+            {user.databaseVisualizations.map((config) => {
+              const database = getDatabase(config.settings.databaseId)
+              const details = [
+                getDatabaseName(config.settings.databaseId),
+                getPropertyName(database, config.settings, 'xAxis'),
+                getPropertyName(database, config.settings, 'yAxis'),
+              ].filter(Boolean)
+
+              return (
+                <li className="mb-1" key={config.id}>
+                  <Link href={`/user/database-visualization/${config.id}`}>
+                    <a className="border-b border-link text-link hover:border-black hover:text-black">
+                      {details.length ? details.join(', ') : <i>Not configured yet</i>}
+                    </a>
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+        ) : !user ? (
           <Spinner className="animate-spin mx-auto" />
-        )}
+        ) : null}
+        <Button
+          className="self-end mt-10"
+          color="green"
+          onClick={async () => {
+            const config = await addDatabaseVisualization()
+            router.push(`/user/database-visualization/${config.id}`)
+          }}
+        >
+          Add database visualization
+        </Button>
+        <div className="w-full border-b border-opacity-80 my-5" />
+        <div className="flex items-center justify-around">
+          <Button
+            color="red"
+            onClick={async () => {
+              const confirm = window.confirm(
+                'Do you really want to delete your account? This action cannot be undone.'
+              )
+              if (confirm) {
+                await deleteUser()
+                location.href = 'https://notion-tools.io/api/auth/logout'
+              }
+            }}
+          >
+            Delete account
+          </Button>
+          <Button
+            color="yellow"
+            href="mailto:jwieben@hey.com?subject=Bug report: Notion tools"
+            isExternal
+          >
+            Report bug 🐛
+          </Button>
+        </div>
       </div>
     </div>
   )

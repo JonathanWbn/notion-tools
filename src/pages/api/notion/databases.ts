@@ -21,7 +21,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Database[]>): P
           const authUser = getUserFromSession(req, res)
           userId = authUser.sub
         }
-        console.log(req.headers.referer)
 
         const user = await userRepository.getById(userId)
         if (!user.notionAccess) {

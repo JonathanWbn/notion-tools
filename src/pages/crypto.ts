@@ -5,7 +5,6 @@ const algorithm = 'aes256'
 const key = process.env.CRYPTO_SECRET as string
 
 export const encrypt = (text: string): string => {
-  console.log('key', key)
   const cipher = crypto.createCipher(algorithm, key)
 
   return cipher.update(text, 'utf8', 'hex') + cipher.final('hex')
