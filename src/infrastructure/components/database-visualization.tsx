@@ -47,7 +47,9 @@ export function DatabaseVisualizationComponent({
 
   const data = pages ? getDataFromSettings(pages, databaseVisualization.settings) : []
   const Chart = databaseVisualization.settings.type === 'bar' ? BarChart : LineChart
-  const { min, max } = databaseVisualization.settings.yAxisScale || {}
+  const hasNoScaleSetting =
+    !databaseVisualization.settings.yAxisScaleLeft &&
+    !databaseVisualization.settings.yAxisScaleRight
 
   return (
     <div className="relative" style={{ width, height }}>
@@ -59,21 +61,44 @@ export function DatabaseVisualizationComponent({
           <XAxis dataKey="x" />
           <Tooltip />
           <Legend />
+          {databaseVisualization.settings.yAxisScaleLeft && (
+            <YAxis
+              yAxisId="left"
+              width={45}
+              type="number"
+              domain={[
+                databaseVisualization.settings.yAxisScaleLeft.min || 'auto',
+                databaseVisualization.settings.yAxisScaleLeft.max || 'auto',
+              ]}
+              orientation="left"
+            />
+          )}
+          {databaseVisualization.settings.yAxisScaleRight && (
+            <YAxis
+              yAxisId="right"
+              width={45}
+              type="number"
+              domain={[
+                databaseVisualization.settings.yAxisScaleRight.min || 'auto',
+                databaseVisualization.settings.yAxisScaleRight.max || 'auto',
+              ]}
+              orientation="right"
+            />
+          )}
           {databaseVisualization.settings.yAxis?.map((v, i) => (
             <React.Fragment key={i}>
-              <YAxis
-                yAxisId={v}
-                width={45}
-                type="number"
-                domain={[
-                  typeof min === 'number' ? min : 'auto',
-                  typeof max === 'number' ? max : 'auto',
-                ]}
-                orientation={i % 2 === 0 ? 'left' : 'right'}
-              />
+              {hasNoScaleSetting && (
+                <YAxis
+                  yAxisId={v}
+                  width={45}
+                  type="number"
+                  domain={['auto', 'auto']}
+                  orientation={i % 2 === 0 ? 'left' : 'right'}
+                />
+              )}
               {databaseVisualization.settings.type === 'bar' ? (
                 <Bar
-                  yAxisId={v}
+                  yAxisId={hasNoScaleSetting ? v : i > 1 ? 'right' : 'left'}
                   key={v}
                   dataKey={v}
                   fill={notionColors[i]}
@@ -82,7 +107,7 @@ export function DatabaseVisualizationComponent({
               ) : (
                 <Line
                   key={v}
-                  yAxisId={v}
+                  yAxisId={hasNoScaleSetting ? v : i > 1 ? 'right' : 'left'}
                   type="linear"
                   dataKey={v}
                   strokeWidth={2}

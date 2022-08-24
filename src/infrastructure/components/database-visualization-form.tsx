@@ -88,28 +88,69 @@ export function DatabaseVisualizationForm({ initialValues, onAutoSave }: Props):
             />
           </label>
           <label className="flex justify-between my-1 items-center">
-            <span className="text-lg">Scale (optional)</span>
+            <span className="text-lg">Scale Left (optional)</span>
             <div className="flex justify-between items-center">
               <input
                 type="number"
-                value={values.yAxisScale?.min}
+                value={values.yAxisScaleLeft?.min}
                 placeholder="Min"
                 onChange={(e) =>
                   setValues({
                     ...values,
-                    yAxisScale: { min: parseInt(e.target.value, 10), max: values.yAxisScale?.max },
+                    yAxisScaleLeft: {
+                      min: parseInt(e.target.value, 10),
+                      max: values.yAxisScaleLeft?.max,
+                    },
                   })
                 }
                 className="border w-20 text-sm p-2 appearance-none focus:outline-none focus:border-gray-400 mr-1"
               />
               <input
                 type="number"
-                value={values.yAxisScale?.max}
+                value={values.yAxisScaleLeft?.max}
                 placeholder="Max"
                 onChange={(e) =>
                   setValues({
                     ...values,
-                    yAxisScale: { min: values.yAxisScale?.min, max: parseInt(e.target.value, 10) },
+                    yAxisScaleLeft: {
+                      min: values.yAxisScaleLeft?.min,
+                      max: parseInt(e.target.value, 10),
+                    },
+                  })
+                }
+                className="border w-20 text-sm p-2 appearance-none focus:outline-none focus:border-gray-400"
+              />
+            </div>
+          </label>
+          <label className="flex justify-between my-1 items-center">
+            <span className="text-lg">Scale Right (optional)</span>
+            <div className="flex justify-between items-center">
+              <input
+                type="number"
+                value={values.yAxisScaleRight?.min}
+                placeholder="Min"
+                onChange={(e) =>
+                  setValues({
+                    ...values,
+                    yAxisScaleRight: {
+                      min: parseInt(e.target.value, 10),
+                      max: values.yAxisScaleRight?.max,
+                    },
+                  })
+                }
+                className="border w-20 text-sm p-2 appearance-none focus:outline-none focus:border-gray-400 mr-1"
+              />
+              <input
+                type="number"
+                value={values.yAxisScaleRight?.max}
+                placeholder="Max"
+                onChange={(e) =>
+                  setValues({
+                    ...values,
+                    yAxisScaleRight: {
+                      min: values.yAxisScaleRight?.min,
+                      max: parseInt(e.target.value, 10),
+                    },
                   })
                 }
                 className="border w-20 text-sm p-2 appearance-none focus:outline-none focus:border-gray-400"

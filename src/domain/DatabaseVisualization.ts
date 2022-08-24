@@ -30,7 +30,8 @@ export interface DatabaseVisualizationSettings {
   databaseId?: string
   xAxis?: string
   xAxisTimeFrame?: [string | undefined, string | undefined]
-  yAxisScale?: { min?: number; max?: number }
+  yAxisScaleLeft?: { min?: number; max?: number }
+  yAxisScaleRight?: { min?: number; max?: number }
   yAxis?: string[]
   type: 'bar' | 'line'
 }
