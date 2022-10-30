@@ -118,8 +118,8 @@ const Home: FunctionComponent = () => {
         <Toggle label="How can I trust that you are not going to misuse my data?">
           <p className="mb-2">
             Notion tools does not collect any user data (except an email for signup/login). When
-            connecting notion-tools.io to your Notion account, you are going to be asked to select
-            the pages/databases you want to give access to. You can also later re-configure these
+            connecting notion-tools.io to your Notion account, you will be asked to select the
+            pages/databases you want to give access to. You can also later re-configure these
             permissions either within Notion or within the settings of this app. I encourage you to
             only select the pages you are actually going to use. Notion also has a{' '}
             <a

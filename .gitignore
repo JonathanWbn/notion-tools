@@ -1,6 +1,7 @@
 node_modules
 .next
 .env*
+!.env.example
 .vercel
 .build
 .aws-sam
