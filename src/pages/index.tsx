@@ -78,7 +78,7 @@ const Home: FunctionComponent = () => {
       <div className="max-w-2xl w-full flex flex-col">
         <h3 className="text-2xl font-bold mb-3">❓ FAQ</h3>
         <Toggle label="Is this free?">
-          <p>Yes, it is. But I am planning to add a monthly fee at some point in the future.</p>
+          <p>Yes.</p>
         </Toggle>
         <Toggle label="Is this product affiliated with Notion Labs, Inc.?">
           <p>
