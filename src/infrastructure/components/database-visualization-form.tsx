@@ -3,6 +3,7 @@ import {
   CreatedTimePropertyValue,
   DateProperty,
   DatePropertyValue,
+  FormulaProperty,
   LastEditedTimeProperty,
   LastEditedTimePropertyValue,
   NumberProperty,
@@ -42,7 +43,8 @@ export function DatabaseVisualizationForm({ initialValues, onAutoSave }: Props):
       entry[1].type === 'last_edited_time'
   )
   const numberProperties = Object.entries(selectedDatabase?.properties || {}).filter(
-    (entry): entry is [string, NumberProperty] => entry[1].type === 'number'
+    (entry): entry is [string, NumberProperty | FormulaProperty] =>
+      entry[1].type === 'number' || entry[1].type === 'formula'
   )
 
   return (

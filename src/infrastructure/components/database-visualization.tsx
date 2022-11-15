@@ -9,7 +9,11 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts'
-import { NumberPropertyValue, Page } from '@notionhq/client/build/src/api-types'
+import {
+  FormulaPropertyValue,
+  NumberPropertyValue,
+  Page,
+} from '@notionhq/client/build/src/api-types'
 import { format } from 'date-fns'
 import { useDatabase, useDatabaseQuery } from '../api-client'
 import { SupportedDatePropertyValue } from './database-visualization-form'
@@ -152,8 +156,17 @@ export function DatabaseVisualizationComponent({
             .map((v): { key: string; value: number | undefined } => {
               const value = pageValues.find((prop) => prop.id === v) as
                 | NumberPropertyValue
+                | FormulaPropertyValue
                 | undefined
-              return { key: v, value: value?.number }
+              return {
+                key: v,
+                value:
+                  value?.type === 'number'
+                    ? value.number
+                    : value?.type === 'formula' && value.formula.type === 'number'
+                    ? value.formula.number || undefined
+                    : undefined,
+              }
             })
             .reduce((acc, el) => ({ ...acc, [el.key]: el.value }), {}),
         }
