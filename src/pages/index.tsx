@@ -12,9 +12,19 @@ const Home: FunctionComponent = () => {
       <div className="w-full border-b border-opacity-80 mt-80" />
       <div className="w-full max-w-screen-xl flex justify-between py-14">
         <div className="max-w-2xl w-full flex flex-col">
-          <h3 className="mt-5 text-2xl font-bold">
-            🔁 Recurring tasks <span className="font-light">| beta</span>
-          </h3>
+          <h3 className="mt-5 text-2xl font-bold">🔁 Recurring tasks</h3>
+          <p className="rounded-sm bg-amber-100 bg-opacity-80 mt-4 p-4">
+            <span className="mr-2">👌</span>This use case has now been solved by Notion&lsquo;s{' '}
+            <a
+              href="https://www.notion.so/help/guides/automate-work-repeating-database-templates"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 underline transition-colors hover:text-gray-600"
+            >
+              repeating database templates
+            </a>
+            .
+          </p>
           <p className="rounded-sm bg-gray-100 bg-opacity-80 mt-4 p-4">
             <span className="mr-2">👉</span>This tool allows you to automatically create database
             pages on a schedule.
