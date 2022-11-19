@@ -1,5 +1,4 @@
-import { Client } from '@notionhq/client/build/src'
-import { Database } from '@notionhq/client/build/src/api-types'
+import axios from 'axios'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { decrypt } from '../../crypto'
 import { getUserFromSession } from '../../../infrastructure/api-utils'
@@ -7,7 +6,7 @@ import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoU
 
 const userRepository = new DynamoUserRepository()
 
-const handler = async (req: NextApiRequest, res: NextApiResponse<Database[]>): Promise<void> => {
+const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   const { method } = req
 
   try {
@@ -28,10 +27,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Database[]>): P
           return
         }
 
-        const notion = new Client({ auth: user.notionAccess.access_token })
-        const databases = await notion.databases.list()
+        const { data } = await axios.post(
+          'https://api.notion.com/v1/search',
+          { filter: { value: 'database', property: 'object' } },
+          {
+            headers: {
+              'content-type': 'application/json',
+              accept: 'application/json',
+              'Notion-Version': '2022-06-28',
+              Authorization: `Bearer ${user.notionAccess.access_token}`,
+            },
+          }
+        )
 
-        res.status(200).send(databases.results)
+        res.status(200).send(data.results)
       }
     }
   } catch (err) {
