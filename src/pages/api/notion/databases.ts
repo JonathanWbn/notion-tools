@@ -32,8 +32,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
           { filter: { value: 'database', property: 'object' } },
           {
             headers: {
-              'content-type': 'application/json',
-              accept: 'application/json',
               'Notion-Version': '2022-06-28',
               Authorization: `Bearer ${user.notionAccess.access_token}`,
             },

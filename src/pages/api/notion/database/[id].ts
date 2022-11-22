@@ -1,4 +1,4 @@
-import { Client } from '@notionhq/client/build/src'
+import axios from 'axios'
 import { Page } from '@notionhq/client/build/src/api-types'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { decrypt } from '../../../crypto'
@@ -45,12 +45,18 @@ async function queryDatabase(
   cursor?: string,
   pages: Page[] = []
 ): Promise<Page[]> {
-  const notion = new Client({ auth: token })
-
-  const { results, has_more, next_cursor } = await notion.databases.query({
-    database_id: databaseId,
-    start_cursor: cursor,
-  })
+  const {
+    data: { results, has_more, next_cursor },
+  } = await axios.post(
+    `https://api.notion.com/v1/databases/${databaseId}/query`,
+    { start_cursor: cursor },
+    {
+      headers: {
+        'Notion-Version': '2022-06-28',
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
 
   if (has_more && next_cursor) {
     return queryDatabase(databaseId, token, next_cursor, [...pages, ...results])
