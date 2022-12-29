@@ -3,6 +3,7 @@
   "description": "A set of tools to automate things around Notion.",
   "author": "Jonathan Wieben <jwieben@hey.com>",
   "license": "MIT",
+  "version": "1.0.0",
   "scripts": {
     "lint": "next lint && tsc --noEmit",
     "dev": "next dev",
