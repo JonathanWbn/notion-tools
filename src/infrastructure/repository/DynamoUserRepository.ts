@@ -92,10 +92,10 @@ export class DynamoUserRepository implements UserRepository {
     }
 
     const user: PersistedItem = {
-      userId: results.Items[0].userId.S || '',
-      recurringTasks: results.Items[0].recurringTasks.S || '',
-      databaseVisualizations: results.Items[0].databaseVisualizations.S || '',
-      notionAccess: results.Items[0].notionAccess.S || '',
+      userId: results.Items[0].userId?.S || '',
+      recurringTasks: results.Items[0].recurringTasks?.S || '',
+      databaseVisualizations: results.Items[0].databaseVisualizations?.S || '',
+      notionAccess: results.Items[0].notionAccess?.S || '',
     }
 
     return this.parseUser(user)
@@ -112,10 +112,10 @@ export class DynamoUserRepository implements UserRepository {
 
     return results.Items.map((item) => {
       const user: PersistedItem = {
-        userId: item.userId.S || '',
-        recurringTasks: item.recurringTasks.S || '',
-        databaseVisualizations: item.databaseVisualizations.S || '',
-        notionAccess: item.notionAccess.S || '',
+        userId: item.userId?.S || '',
+        recurringTasks: item.recurringTasks?.S || '',
+        databaseVisualizations: item.databaseVisualizations?.S || '',
+        notionAccess: item.notionAccess?.S || '',
       }
       return this.parseUser(user)
     })

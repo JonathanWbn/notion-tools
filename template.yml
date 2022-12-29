@@ -1,25 +1,6 @@
 Transform: AWS::Serverless-2016-10-31
 
 Resources:
-  ExecuteTools:
-    Type: AWS::Serverless::Function
-    Properties:
-      Runtime: nodejs14.x
-      Handler: infrastructure/lambdas/execute-tools.handler
-      CodeUri: ./.build
-      Timeout: 10
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref UserTable
-      Environment:
-        Variables:
-          DYNAMO_DB_USER_REPOSITORY: !Ref UserTable
-      Events:
-        EveryMinute:
-          Type: Schedule
-          Properties:
-            Schedule: rate(1 minute)
-
   UserTable:
     Type: AWS::DynamoDB::Table
     Properties:
