@@ -1,9 +1,8 @@
 import Image from 'next/image'
 import { FunctionComponent } from 'react'
+import permissionsScreenshot from '../../public/notion-permissions.png'
 import { Button } from '../infrastructure/components/button'
 import { Toggle } from '../infrastructure/components/toggle'
-
-import permissionsScreenshot from '../../public/notion-permissions.png'
 
 const Home: FunctionComponent = () => {
   return (

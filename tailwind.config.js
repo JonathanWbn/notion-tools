@@ -1,7 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
-  purge: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/infrastructure/components/*.{js,ts,jsx,tsx}'],
+  purge: [
+    './src/app/**/*.{js,ts,jsx,tsx}',
+    './src/pages/**/*.{js,ts,jsx,tsx}',
+    './src/infrastructure/components/*.{js,ts,jsx,tsx}',
+  ],
   theme: {
     extend: {
       colors: {

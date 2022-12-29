@@ -1,55 +1,48 @@
-import {
-  LineChart,
-  XAxis,
-  Line,
-  YAxis,
-  Tooltip,
-  BarChart,
-  Bar,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts'
+'use client'
+
 import {
   FormulaPropertyValue,
   NumberPropertyValue,
   Page,
 } from '@notionhq/client/build/src/api-types'
 import { format } from 'date-fns'
-import { useDatabase, useDatabaseQuery } from '../api-client'
-import { SupportedDatePropertyValue } from './database-visualization-form'
-import {
-  DatabaseVisualization,
-  DatabaseVisualizationSettings,
-} from '../../domain/DatabaseVisualization'
+import { useRouter } from 'next/navigation'
 import React, { ReactElement } from 'react'
-import { Spinner } from './icons'
+import {
+  Bar,
+  BarChart,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
+import {
+  DatabaseVisualizationSettings,
+  IDatabaseVisualization,
+} from '../../domain/DatabaseVisualization'
+import { SupportedDatePropertyValue } from './database-visualization-form'
 
 const notionColors = ['#5893b3', '#e49759', '#5b9d92', '#ea7271']
 
 interface Props {
-  databaseVisualization?: DatabaseVisualization
+  databaseVisualization: IDatabaseVisualization
+  pages: Page[]
   width: number | string
   height: number | string
 }
 
 export function DatabaseVisualizationComponent({
   databaseVisualization,
+  pages,
   width,
   height,
 }: Props): ReactElement {
-  const { database } = useDatabase(databaseVisualization?.settings.databaseId || '')
-  const { pages, refetch } = useDatabaseQuery(databaseVisualization?.settings.databaseId || '')
+  const router = useRouter()
 
-  if (
-    !pages ||
-    !databaseVisualization ||
-    !databaseVisualization.settings.databaseId ||
-    !databaseVisualization.settings.xAxis
-  ) {
-    return <Spinner className="animate-spin mx-auto" />
-  }
-
-  const data = pages ? getDataFromSettings(pages, databaseVisualization.settings) : []
+  const data = getDataFromSettings(pages, databaseVisualization.settings)
   const Chart = databaseVisualization.settings.type === 'bar' ? BarChart : LineChart
   const hasNoScaleSetting =
     !databaseVisualization.settings.yAxisScaleLeft &&
@@ -57,7 +50,7 @@ export function DatabaseVisualizationComponent({
 
   return (
     <div className="relative" style={{ width, height }}>
-      <button className="absolute bottom-3 right-3 z-10" onClick={() => refetch()}>
+      <button className="absolute bottom-3 right-3 z-10" onClick={() => router.refresh()}>
         🔄
       </button>
       <ResponsiveContainer width={width} height={height}>
@@ -180,8 +173,10 @@ export function DatabaseVisualizationComponent({
   }
 
   function getPropertyName(propertyId: string) {
-    return Object.keys(database?.properties || {}).find(
-      (el) => database?.properties[el].id === propertyId
-    )
+    const [page] = pages
+    if (!page) {
+      return ''
+    }
+    return Object.keys(page.properties || {}).find((el) => page.properties[el].id === propertyId)
   }
 }

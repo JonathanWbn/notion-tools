@@ -2,16 +2,17 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { useRouter } from 'next/router'
 import React, { FunctionComponent } from 'react'
 import { mutate } from 'swr'
+import { IDatabaseVisualization } from '../../../domain/DatabaseVisualization'
 import {
   deleteDatabaseVisualization,
   updateDatabaseVisualization,
+  useDatabaseQuery,
   useDatabaseVisualization,
   useUser,
 } from '../../../infrastructure/api-client'
-import { DatabaseVisualizationForm } from '../../../infrastructure/components/database-visualization-form'
 import { Button } from '../../../infrastructure/components/button'
-import { IDatabaseVisualization } from '../../../domain/DatabaseVisualization'
 import { DatabaseVisualizationComponent } from '../../../infrastructure/components/database-visualization'
+import { DatabaseVisualizationForm } from '../../../infrastructure/components/database-visualization-form'
 
 const DatabaseVisualizationPage: FunctionComponent = () => {
   const router = useRouter()
@@ -21,6 +22,7 @@ const DatabaseVisualizationPage: FunctionComponent = () => {
   const { key } = useDatabaseVisualization(id as string)
 
   const databaseVisualization = user?.databaseVisualizations.find((config) => config.id === id)
+  const { pages } = useDatabaseQuery(databaseVisualization?.settings.databaseId || '')
 
   async function handleSubmit(settings: IDatabaseVisualization['settings']): Promise<void> {
     if (!databaseVisualization) return
@@ -57,16 +59,19 @@ const DatabaseVisualizationPage: FunctionComponent = () => {
           />
         )}
         <div className="w-full border-b border-opacity-80 my-5" />
-        {databaseVisualization.settings.databaseId && databaseVisualization.settings.xAxis && (
-          <>
-            <DatabaseVisualizationComponent
-              databaseVisualization={databaseVisualization}
-              width={896}
-              height={400}
-            />
-            <div className="w-full border-b border-opacity-80 my-5" />
-          </>
-        )}
+        {databaseVisualization.settings.databaseId &&
+          databaseVisualization.settings.xAxis &&
+          pages && (
+            <>
+              <DatabaseVisualizationComponent
+                databaseVisualization={databaseVisualization}
+                pages={pages}
+                width={896}
+                height={400}
+              />
+              <div className="w-full border-b border-opacity-80 my-5" />
+            </>
+          )}
         <Button color="red" onClick={handleDelete} className="self-start">
           Delete
         </Button>
