@@ -1,7 +1,7 @@
-import { ReactElement } from 'react'
 import { useUser } from '@auth0/nextjs-auth0'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { ReactElement } from 'react'
 
 export function Header(): ReactElement {
   const { user } = useUser()
@@ -9,8 +9,8 @@ export function Header(): ReactElement {
 
   return (
     <header className="flex justify-between p-6 items-center">
-      <Link href={user ? '/user' : '/'}>
-        <a className="text-3xl">🧰</a>
+      <Link href={user ? '/user' : '/'} className="text-3xl">
+        🧰
       </Link>
       {router.asPath === '/user' ? (
         // eslint-disable-next-line @next/next/no-html-link-for-pages
@@ -21,8 +21,8 @@ export function Header(): ReactElement {
           logout
         </a>
       ) : user ? (
-        <Link href="/user">
-          <a className="border-b border-gray-500 opacity-60 hover:opacity-100">my tools</a>
+        <Link href="/user" className="border-b border-gray-500 opacity-60 hover:opacity-100">
+          my tools
         </Link>
       ) : (
         <div>

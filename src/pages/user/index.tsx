@@ -1,5 +1,7 @@
-import Link from 'next/link'
 import { withPageAuthRequired } from '@auth0/nextjs-auth0'
+import { Database, TitlePropertyValue } from '@notionhq/client/build/src/api-types'
+import Link from 'next/link'
+import router from 'next/router'
 import { FunctionComponent } from 'react'
 import {
   addDatabaseVisualization,
@@ -9,9 +11,7 @@ import {
   useUser,
 } from '../../infrastructure/api-client'
 import { Button } from '../../infrastructure/components/button'
-import router from 'next/router'
 import { Spinner } from '../../infrastructure/components/icons'
-import { Database, TitlePropertyValue } from '@notionhq/client/build/src/api-types'
 
 const User: FunctionComponent = () => {
   const { user } = useUser()
@@ -54,11 +54,12 @@ const User: FunctionComponent = () => {
 
               return (
                 <li className="mb-1" key={config.id}>
-                  <Link href={`/user/recurring-task/${config.id}`}>
-                    <a className="border-b border-link text-link hover:border-black hover:text-black">
-                      {!config.isActive && '[disabled]'}{' '}
-                      {details.length ? details.join(', ') : <i>Not configured yet</i>}
-                    </a>
+                  <Link
+                    href={`/user/recurring-task/${config.id}`}
+                    className="border-b border-link text-link hover:border-black hover:text-black"
+                  >
+                    {!config.isActive && '[disabled]'}{' '}
+                    {details.length ? details.join(', ') : <i>Not configured yet</i>}
                   </Link>
                 </li>
               )
@@ -97,10 +98,11 @@ const User: FunctionComponent = () => {
 
               return (
                 <li className="mb-1" key={config.id}>
-                  <Link href={`/user/database-visualization/${config.id}`}>
-                    <a className="border-b border-link text-link hover:border-black hover:text-black">
-                      {details.length ? details.join(', ') : <i>Not configured yet</i>}
-                    </a>
+                  <Link
+                    href={`/user/database-visualization/${config.id}`}
+                    className="border-b border-link text-link hover:border-black hover:text-black"
+                  >
+                    {details.length ? details.join(', ') : <i>Not configured yet</i>}
                   </Link>
                 </li>
               )

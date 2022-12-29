@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import {
   CheckboxPropertyValue,
   DatePropertyValue,
@@ -11,20 +10,21 @@ import {
   TitlePropertyValue,
   URLPropertyValue,
 } from '@notionhq/client/build/src/api-types'
+import { omit } from 'lodash'
 import { ReactElement, useState } from 'react'
-import { useDatabases } from '../api-client'
-import { SelectInput } from './select-input'
-import { Select } from './select'
-import { TitleInput } from './title-input'
-import { TextInput } from './text-input'
-import { CheckboxInput } from './checkbox-input'
-import { NumberInput } from './number-input'
-import { DateInput } from './date-input'
 import { IRecurringTask } from '../../domain/RecurringTask'
-import { useAutoSave } from './useAutoSave'
+import { useDatabases } from '../api-client'
+import { CheckboxInput } from './checkbox-input'
 import { DatabaseSelect } from './database-select'
-import { URLInput } from './url-input'
+import { DateInput } from './date-input'
 import { MultiSelectInput } from './multi-select-input'
+import { NumberInput } from './number-input'
+import { Select } from './select'
+import { SelectInput } from './select-input'
+import { TextInput } from './text-input'
+import { TitleInput } from './title-input'
+import { URLInput } from './url-input'
+import { useAutoSave } from './useAutoSave'
 
 interface Props {
   initialValues: IRecurringTask['settings']
@@ -109,7 +109,7 @@ export function RecurringTaskForm({ initialValues, onAutoSave }: Props): ReactEl
                       [property.id]: propertyValue,
                     })
                   } else {
-                    handleChange('properties', _.omit(values.properties, property.id))
+                    handleChange('properties', omit(values.properties, property.id))
                   }
                 }}
               />

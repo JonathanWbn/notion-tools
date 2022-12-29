@@ -1,9 +1,11 @@
-import React, { FunctionComponent } from 'react'
 import { UserProvider } from '@auth0/nextjs-auth0'
-import 'tailwindcss/tailwind.css'
+import { Roboto } from '@next/font/google'
 import Head from 'next/head'
-
+import React, { FunctionComponent } from 'react'
 import { Header } from '../infrastructure/components/header'
+import '../styles/globals.css'
+
+const inter = Roboto({ weight: ['300', '400', '500'], subsets: ['latin'] })
 
 interface Props {
   Component: FunctionComponent
@@ -15,31 +17,10 @@ const App: FunctionComponent<Props> = ({ Component, pageProps }: Props) => {
     <UserProvider>
       <Head>
         <title>Notion tools</title>
-        <link rel="shortcut icon" type="image/png" href="/favicon.png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
-          rel="stylesheet"
-        />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <meta
-          name="description"
-          content="Notion tools solves the problem of recurring tasks in Notion. Instead of using workarounds, you can now fully automate your workflow."
-        />
-        <meta
-          name="keywords"
-          content="notion tools recurring tasks automation integration repeat free"
-        />
-        <meta name="author" content="Jonathan Wieben" />
-        <meta
-          name="google-site-verification"
-          content="42MP1RP9DRZu3YefHgPeqdmpnI9WQfrHCS2sAbTlbMI"
-        />
       </Head>
       <Header />
-      <main>
+      <main className={inter.className}>
         <Component {...pageProps} />
       </main>
     </UserProvider>

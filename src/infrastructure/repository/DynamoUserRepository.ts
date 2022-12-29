@@ -1,19 +1,26 @@
+import {
+  DeleteItemCommand,
+  DynamoDBClient,
+  PutItemCommand,
+  QueryCommand,
+  ScanCommand,
+  UpdateItemCommand,
+} from '@aws-sdk/client-dynamodb'
 import { UserRepository } from '../../application/repository/UserRepository'
-import AWS from 'aws-sdk'
-import { User } from '../../domain/User'
-import { IRecurringTask, RecurringTask } from '../../domain/RecurringTask'
 import { DatabaseVisualization, IDatabaseVisualization } from '../../domain/DatabaseVisualization'
+import { IRecurringTask, RecurringTask } from '../../domain/RecurringTask'
+import { User } from '../../domain/User'
 
 const { DYNAMO_DB_USER_REPOSITORY, MY_AWS_ACCESS_KEY_ID, MY_AWS_SECRET_ACCESS_KEY } =
   process.env as Record<string, string>
 
-AWS.config.update({
-  accessKeyId: MY_AWS_ACCESS_KEY_ID,
-  secretAccessKey: MY_AWS_SECRET_ACCESS_KEY,
+const documentClient = new DynamoDBClient({
+  credentials: {
+    accessKeyId: MY_AWS_ACCESS_KEY_ID,
+    secretAccessKey: MY_AWS_SECRET_ACCESS_KEY,
+  },
   region: 'eu-central-1',
 })
-
-const documentClient = new AWS.DynamoDB.DocumentClient()
 
 interface PersistedItem {
   userId: string
@@ -30,71 +37,88 @@ export class DynamoUserRepository implements UserRepository {
       databaseVisualizations: [],
     }
 
-    await documentClient
-      .put({
+    await documentClient.send(
+      new PutItemCommand({
         TableName: DYNAMO_DB_USER_REPOSITORY,
         Item: {
-          userId: newUser.userId,
-          recurringTasks: JSON.stringify(newUser.recurringTasks),
-          databaseVisualizations: JSON.stringify(newUser.databaseVisualizations),
-        } as PersistedItem,
+          userId: { S: newUser.userId },
+          recurringTasks: { S: JSON.stringify(newUser.recurringTasks) },
+          databaseVisualizations: { S: JSON.stringify(newUser.databaseVisualizations) },
+        },
         ConditionExpression: 'attribute_not_exists(userId)',
       })
-      .promise()
+    )
 
     return newUser
   }
 
   public async update(userId: User['userId'], user: User): Promise<User> {
-    await documentClient
-      .update({
+    await documentClient.send(
+      new UpdateItemCommand({
         TableName: DYNAMO_DB_USER_REPOSITORY,
-        Key: {
-          userId,
-        },
+        Key: { userId: { S: userId } },
         UpdateExpression:
           'set recurringTasks = :recurringTasks, notionAccess = :notionAccess, databaseVisualizations = :databaseVisualizations',
         ExpressionAttributeValues: {
-          ':recurringTasks': JSON.stringify(user.recurringTasks),
-          ':databaseVisualizations': JSON.stringify(user.databaseVisualizations),
-          ':notionAccess': JSON.stringify(user.notionAccess) || '',
+          ':recurringTasks': { S: JSON.stringify(user.recurringTasks) },
+          ':databaseVisualizations': { S: JSON.stringify(user.databaseVisualizations) },
+          ':notionAccess': { S: JSON.stringify(user.notionAccess) || '' },
         },
       })
-      .promise()
-
+    )
     return user
   }
 
   public async delete(userId: User['userId']): Promise<void> {
-    await documentClient.delete({ TableName: DYNAMO_DB_USER_REPOSITORY, Key: { userId } }).promise()
+    await documentClient.send(
+      new DeleteItemCommand({
+        TableName: DYNAMO_DB_USER_REPOSITORY,
+        Key: { userId: { S: userId } },
+      })
+    )
   }
 
   public async getById(userId: User['userId']): Promise<User> {
-    const results = await documentClient
-      .query({
+    const results = await documentClient.send(
+      new QueryCommand({
         TableName: DYNAMO_DB_USER_REPOSITORY,
         KeyConditionExpression: 'userId = :userId',
-        ExpressionAttributeValues: { ':userId': userId },
+        ExpressionAttributeValues: { ':userId': { S: userId } },
       })
-      .promise()
+    )
 
-    if (!results.Items) {
+    if (!results.Items || results.Items.length === 0) {
       throw Error('No User found.')
     }
 
-    const user = results.Items[0] as PersistedItem
+    const user: PersistedItem = {
+      userId: results.Items[0].userId.S || '',
+      recurringTasks: results.Items[0].recurringTasks.S || '',
+      databaseVisualizations: results.Items[0].databaseVisualizations.S || '',
+      notionAccess: results.Items[0].notionAccess.S || '',
+    }
 
     return this.parseUser(user)
   }
 
   public async getAll(): Promise<User[]> {
-    const results = await documentClient.scan({ TableName: DYNAMO_DB_USER_REPOSITORY }).promise()
+    const results = await documentClient.send(
+      new ScanCommand({ TableName: DYNAMO_DB_USER_REPOSITORY })
+    )
 
     if (!results.Items) {
       throw Error('No User found.')
     }
 
-    return (results.Items as PersistedItem[]).map(this.parseUser)
+    return results.Items.map((item) => {
+      const user: PersistedItem = {
+        userId: item.userId.S || '',
+        recurringTasks: item.recurringTasks.S || '',
+        databaseVisualizations: item.databaseVisualizations.S || '',
+        notionAccess: item.notionAccess.S || '',
+      }
+      return this.parseUser(user)
+    })
   }
 
   private parseUser(user: PersistedItem): User {

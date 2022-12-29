@@ -1,6 +1,9 @@
+import Image from 'next/image'
 import { FunctionComponent } from 'react'
 import { Button } from '../infrastructure/components/button'
 import { Toggle } from '../infrastructure/components/toggle'
+
+import permissionsScreenshot from '../../public/notion-permissions.png'
 
 const Home: FunctionComponent = () => {
   return (
@@ -142,10 +145,9 @@ const Home: FunctionComponent = () => {
             </a>{' '}
             to further explain how permissions work.
           </p>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             className="w-80 shadow rounded-lg mx-auto"
-            src="/notion-permissions.png"
+            src={permissionsScreenshot}
             alt="Notion permissions"
           />
         </Toggle>
