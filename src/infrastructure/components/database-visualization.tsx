@@ -95,7 +95,13 @@ export function DatabaseVisualizationComponent({
               )}
               {databaseVisualization.settings.type === 'bar' ? (
                 <Bar
-                  yAxisId={hasNoScaleSetting ? v : i > 1 ? 'right' : 'left'}
+                  yAxisId={
+                    hasNoScaleSetting
+                      ? v
+                      : i > 1 && databaseVisualization.settings.yAxisScaleRight
+                      ? 'right'
+                      : 'left'
+                  }
                   key={v}
                   dataKey={v}
                   fill={notionColors[i]}
@@ -104,7 +110,13 @@ export function DatabaseVisualizationComponent({
               ) : (
                 <Line
                   key={v}
-                  yAxisId={hasNoScaleSetting ? v : i > 1 ? 'right' : 'left'}
+                  yAxisId={
+                    hasNoScaleSetting
+                      ? v
+                      : i > 1 && databaseVisualization.settings.yAxisScaleRight
+                      ? 'right'
+                      : 'left'
+                  }
                   type="linear"
                   dataKey={v}
                   strokeWidth={2}
