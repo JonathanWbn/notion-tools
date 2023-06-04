@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         <meta
           name="description"
           content="Notion tools solves the problem of recurring tasks in Notion. Instead of using workarounds, you can now fully automate your workflow."
