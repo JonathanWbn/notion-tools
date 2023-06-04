@@ -14,7 +14,7 @@ const handler = async (
   try {
     switch (method) {
       case 'POST': {
-        const authUser = getUserFromSession(req, res)
+        const authUser = await getUserFromSession(req, res)
         const createRecurringTask = new CreateRecurringTask(new DynamoUserRepository())
 
         const config = await createRecurringTask.invoke({

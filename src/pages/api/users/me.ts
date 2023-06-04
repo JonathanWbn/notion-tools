@@ -11,7 +11,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
   try {
     switch (method) {
       case 'GET': {
-        const authUser = getUserFromSession(req, res)
+        const authUser = await getUserFromSession(req, res)
         const userRepository = new DynamoUserRepository()
         const user = await userRepository.getById(authUser.sub as string)
 
@@ -25,7 +25,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
           clientSecret: process.env.AUTH0_BE_CLIENT_SECRET,
           scope: 'delete:users',
         })
-        const authUser = getUserFromSession(req, res)
+        const authUser = await getUserFromSession(req, res)
         const deleteUser = new DeleteUser(new DynamoUserRepository())
 
         await deleteUser.invoke({ userId: authUser.sub as string })

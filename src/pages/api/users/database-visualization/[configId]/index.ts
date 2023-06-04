@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
   try {
     switch (method) {
       case 'GET': {
-        const authUser = getUserFromSession(req, res)
+        const authUser = await getUserFromSession(req, res)
 
         res.status(200).send({
           key: encrypt(JSON.stringify({ userId: authUser.sub, visualizationId: query.configId })),
@@ -20,7 +20,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
         break
       }
       case 'PATCH': {
-        const authUser = getUserFromSession(req, res)
+        const authUser = await getUserFromSession(req, res)
         const updateDatabaseVisualization = new UpdateDatabaseVisualization(
           new DynamoUserRepository()
         )
@@ -35,7 +35,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
         break
       }
       case 'DELETE': {
-        const authUser = getUserFromSession(req, res)
+        const authUser = await getUserFromSession(req, res)
         const deleteDatabaseVisualization = new DeleteDatabaseVisualization(
           new DynamoUserRepository()
         )

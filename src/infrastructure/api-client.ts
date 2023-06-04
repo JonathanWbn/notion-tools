@@ -1,4 +1,4 @@
-import { useUser as use0AuthUser } from '@auth0/nextjs-auth0'
+import { useUser as use0AuthUser } from '@auth0/nextjs-auth0/client'
 import { Database, Page } from '@notionhq/client/build/src/api-types'
 import axios from 'axios'
 import useSWR, { mutate } from 'swr'

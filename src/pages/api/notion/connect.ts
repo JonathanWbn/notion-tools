@@ -20,7 +20,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
           return
         }
 
-        const authUser = getUserFromSession(req, res)
+        const authUser = await getUserFromSession(req, res)
 
         const { data } = await axios.post(
           'https://api.notion.com/v1/oauth/token',

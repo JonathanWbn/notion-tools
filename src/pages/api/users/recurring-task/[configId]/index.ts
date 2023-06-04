@@ -14,7 +14,7 @@ const handler = async (
   try {
     switch (method) {
       case 'PATCH': {
-        const authUser = getUserFromSession(req, res)
+        const authUser = await getUserFromSession(req, res)
         const updateRecurringTask = new UpdateRecurringTask(new DynamoUserRepository())
 
         await updateRecurringTask.invoke({
@@ -26,7 +26,7 @@ const handler = async (
         return res.status(200).send({ success: true })
       }
       case 'DELETE': {
-        const authUser = getUserFromSession(req, res)
+        const authUser = await getUserFromSession(req, res)
         const deleteRecurringTask = new DeleteRecurringTask(new DynamoUserRepository())
 
         await deleteRecurringTask.invoke({

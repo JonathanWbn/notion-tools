@@ -18,7 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Page[]>): Promi
           const [, hash] = req.headers.url.split('/embed/')
           ;({ userId } = JSON.parse(decrypt(hash)))
         } else {
-          const authUser = getUserFromSession(req, res)
+          const authUser = await getUserFromSession(req, res)
           userId = authUser.sub
         }
 

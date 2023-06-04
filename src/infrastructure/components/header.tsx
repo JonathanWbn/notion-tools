@@ -1,6 +1,6 @@
 'use client'
 
-import { useUser } from '@auth0/nextjs-auth0'
+import { useUser } from '@auth0/nextjs-auth0/client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ReactElement } from 'react'
