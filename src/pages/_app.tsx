@@ -1,5 +1,5 @@
 import { UserProvider } from '@auth0/nextjs-auth0'
-import { Roboto } from '@next/font/google'
+import { Roboto } from "next/font/google"
 import Head from 'next/head'
 import React, { FunctionComponent } from 'react'
 import { Header } from '../infrastructure/components/header'

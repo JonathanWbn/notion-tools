@@ -15,7 +15,6 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.6.2",
     "@aws-sdk/client-dynamodb": "^3.238.0",
-    "@next/font": "^13.1.1",
     "@notionhq/client": "^0.2.0",
     "auth0": "^3.0.1",
     "axios": "^0.21.2",
