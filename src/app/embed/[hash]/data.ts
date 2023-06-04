@@ -1,7 +1,7 @@
 import { Page } from '@notionhq/client/build/src/api-types'
 import axios from 'axios'
+import { decrypt } from '../../../application/crypto'
 import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
-import { decrypt } from '../../../pages/crypto'
 
 const userRepository = new DynamoUserRepository()
 

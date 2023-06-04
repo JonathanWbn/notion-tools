@@ -1,6 +1,6 @@
 import { withApiAuthRequired } from '@auth0/nextjs-auth0'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { encrypt } from '../../../../crypto'
+import { encrypt } from '../../../../../application/crypto'
 import { DeleteDatabaseVisualization } from '../../../../../application/use-case/DeleteDatabaseVisualization'
 import { UpdateDatabaseVisualization } from '../../../../../application/use-case/UpdateDatabaseVisualization'
 import { getUserFromSession } from '../../../../../infrastructure/api-utils'

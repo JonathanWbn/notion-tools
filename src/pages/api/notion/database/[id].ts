@@ -1,9 +1,9 @@
 import axios from 'axios'
 import { Page } from '@notionhq/client/build/src/api-types'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { decrypt } from '../../../crypto'
 import { getUserFromSession } from '../../../../infrastructure/api-utils'
 import { DynamoUserRepository } from '../../../../infrastructure/repository/DynamoUserRepository'
+import { decrypt } from '../../../../application/crypto'
 
 const userRepository = new DynamoUserRepository()
 

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { decrypt } from '../../crypto'
+import { decrypt } from '../../../application/crypto'
 import { getUserFromSession } from '../../../infrastructure/api-utils'
 import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
 

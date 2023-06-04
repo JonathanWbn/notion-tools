@@ -2,7 +2,7 @@ import {
   DeleteItemCommand,
   DynamoDBClient,
   PutItemCommand,
-  QueryCommand,
+  GetItemCommand,
   ScanCommand,
   UpdateItemCommand,
 } from '@aws-sdk/client-dynamodb'
@@ -79,23 +79,22 @@ export class DynamoUserRepository implements UserRepository {
   }
 
   public async getById(userId: User['userId']): Promise<User> {
-    const results = await documentClient.send(
-      new QueryCommand({
+    const { Item } = await documentClient.send(
+      new GetItemCommand({
         TableName: DYNAMO_DB_USER_REPOSITORY,
-        KeyConditionExpression: 'userId = :userId',
-        ExpressionAttributeValues: { ':userId': { S: userId } },
+        Key: { userId: { S: userId } },
       })
     )
 
-    if (!results.Items || results.Items.length === 0) {
+    if (!Item) {
       throw Error('No User found.')
     }
 
     const user: PersistedItem = {
-      userId: results.Items[0].userId?.S || '',
-      recurringTasks: results.Items[0].recurringTasks?.S || '',
-      databaseVisualizations: results.Items[0].databaseVisualizations?.S || '',
-      notionAccess: results.Items[0].notionAccess?.S || '',
+      userId: Item.userId?.S || '',
+      recurringTasks: Item.recurringTasks?.S || '',
+      databaseVisualizations: Item.databaseVisualizations?.S || '',
+      notionAccess: Item.notionAccess?.S || '',
     }
 
     return this.parseUser(user)
