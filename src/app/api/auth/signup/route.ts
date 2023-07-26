@@ -8,3 +8,5 @@ export const GET = (req: NextRequest, ctx: { params: {} }) =>
       screen_hint: 'signup',
     },
   })
+
+export const dynamic = 'force-dynamic'
