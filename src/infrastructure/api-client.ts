@@ -6,32 +6,6 @@ import { IDatabaseVisualization } from '../domain/DatabaseVisualization'
 import { IRecurringTask } from '../domain/RecurringTask'
 import { User } from '../domain/User'
 
-export type AddRecurringTaskResponse = IRecurringTask
-
-export async function addRecurringTask(): Promise<IRecurringTask> {
-  const { data } = await axios.post<AddRecurringTaskResponse>('/api/users/recurring-task')
-
-  mutate('/api/users/me')
-
-  return data
-}
-
-export type AddDatabaseVisualizationResponse = IDatabaseVisualization
-
-export async function addDatabaseVisualization(): Promise<IDatabaseVisualization> {
-  const { data } = await axios.post<AddDatabaseVisualizationResponse>(
-    '/api/users/database-visualization'
-  )
-
-  mutate('/api/users/me')
-
-  return data
-}
-
-export async function deleteUser(): Promise<void> {
-  await axios.delete('/api/users/me')
-}
-
 export async function runRecurringTask(configId: string): Promise<void> {
   await axios.post(`/api/users/recurring-task/${configId}/run`)
 }
