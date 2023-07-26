@@ -3,7 +3,8 @@ import type { NextRequest } from 'next/server'
 
 export const GET = async (req: NextRequest, ctx: { params: {} }) => {
   try {
-    console.log('req', req)
+    console.log('req is req', req instanceof Request)
+    console.log('req has headers', req.headers)
     await handleLogin(req, ctx, {
       returnTo: '/user',
       authorizationParams: {
