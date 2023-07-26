@@ -13,14 +13,14 @@
     "deploy": "sam deploy"
   },
   "dependencies": {
-    "@auth0/nextjs-auth0": "^2.6.0",
+    "@auth0/nextjs-auth0": "^3.0.0",
     "@aws-sdk/client-dynamodb": "^3.351.0",
     "@notionhq/client": "^0.2.0",
     "auth0": "^3.0.1",
     "axios": "^0.21.2",
     "date-fns": "^2.22.1",
     "lodash": "^4.17.21",
-    "next": "^13.4.4",
+    "next": "^13.4.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "recharts": "^2.3.2",

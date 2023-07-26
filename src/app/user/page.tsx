@@ -1,7 +1,8 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0'
+'use client'
+
 import { Database, TitlePropertyValue } from '@notionhq/client/build/src/api-types'
 import Link from 'next/link'
-import router from 'next/router'
+import { useRouter } from 'next/navigation'
 import { FunctionComponent } from 'react'
 import {
   addDatabaseVisualization,
@@ -14,6 +15,7 @@ import { Button } from '../../infrastructure/components/button'
 import { Spinner } from '../../infrastructure/components/icons'
 
 const User: FunctionComponent = () => {
+  const router = useRouter()
   const { user } = useUser()
   const { databases } = useDatabases()
 
@@ -163,7 +165,5 @@ const User: FunctionComponent = () => {
     )?.[0]
   }
 }
-
-export const getServerSideProps = withPageAuthRequired()
 
 export default User

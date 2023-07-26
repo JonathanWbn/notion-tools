@@ -1,22 +1,23 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0'
-import { useRouter } from 'next/router'
+'use client'
+
+import { useRouter } from 'next/navigation'
 import React, { FunctionComponent } from 'react'
 import { mutate } from 'swr'
-import { IDatabaseVisualization } from '../../../domain/DatabaseVisualization'
 import {
   deleteDatabaseVisualization,
   updateDatabaseVisualization,
   useDatabaseQuery,
   useDatabaseVisualization,
   useUser,
-} from '../../../infrastructure/api-client'
-import { Button } from '../../../infrastructure/components/button'
-import { DatabaseVisualizationComponent } from '../../../infrastructure/components/database-visualization'
-import { DatabaseVisualizationForm } from '../../../infrastructure/components/database-visualization-form'
+} from '../../../../infrastructure/api-client'
+import { Button } from '../../../../infrastructure/components/button'
+import { DatabaseVisualizationComponent } from '../../../../infrastructure/components/database-visualization'
+import { DatabaseVisualizationForm } from '../../../../infrastructure/components/database-visualization-form'
+import { IDatabaseVisualization } from '../../../../domain/DatabaseVisualization'
 
-const DatabaseVisualizationPage: FunctionComponent = () => {
+const DatabaseVisualizationPage: FunctionComponent<{ params: { id: string } }> = ({ params }) => {
   const router = useRouter()
-  const { id } = router.query
+  const { id } = params
   const { user } = useUser()
 
   const { key } = useDatabaseVisualization(id as string)
@@ -79,7 +80,5 @@ const DatabaseVisualizationPage: FunctionComponent = () => {
     </div>
   )
 }
-
-export const getServerSideProps = withPageAuthRequired()
 
 export default DatabaseVisualizationPage

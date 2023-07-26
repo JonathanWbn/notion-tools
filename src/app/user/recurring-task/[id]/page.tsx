@@ -1,5 +1,6 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0'
-import { useRouter } from 'next/router'
+'use client'
+
+import { useRouter } from 'next/navigation'
 import { FunctionComponent, useEffect, useState } from 'react'
 import { mutate } from 'swr'
 import {
@@ -7,18 +8,18 @@ import {
   runRecurringTask,
   updateRecurringTask,
   useUser,
-} from '../../../infrastructure/api-client'
-import { RecurringTaskForm } from '../../../infrastructure/components/recurring-task-form'
-import { Spinner, Circle } from '../../../infrastructure/components/icons'
-import { Button } from '../../../infrastructure/components/button'
-import { IRecurringTask, RecurringTask } from '../../../domain/RecurringTask'
+} from '../../../../infrastructure/api-client'
+import { RecurringTaskForm } from '../../../../infrastructure/components/recurring-task-form'
+import { Spinner, Circle } from '../../../../infrastructure/components/icons'
+import { Button } from '../../../../infrastructure/components/button'
+import { IRecurringTask, RecurringTask } from '../../../../domain/RecurringTask'
 
 type SavingState = 'INITIAL' | 'SAVING' | 'SAVED'
 type TestingState = 'INITIAL' | 'TESTING' | 'TESTED' | 'FAILED'
 
-const User: FunctionComponent = () => {
+const User: FunctionComponent<{ params: { id: string } }> = ({ params }) => {
   const router = useRouter()
-  const { id } = router.query
+  const { id } = params
   const { user } = useUser()
   const [savingState, setSaving] = useState<SavingState>('INITIAL')
   const [testingState, setTesting] = useState<TestingState>('INITIAL')
@@ -159,7 +160,5 @@ const User: FunctionComponent = () => {
     </div>
   )
 }
-
-export const getServerSideProps = withPageAuthRequired()
 
 export default User
