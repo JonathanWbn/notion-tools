@@ -1,13 +1,13 @@
 import { redirect } from 'next/navigation'
 import React, { Suspense } from 'react'
-import { Button } from '../../../../infrastructure/components/button'
-import { DatabaseVisualizationForm } from '../../../../infrastructure/components/database-visualization-form'
+import { Button } from '../../../../components/button'
+import { DatabaseVisualizationForm } from '../../../../components/database-visualization-form'
 import { DeleteDatabaseVisualization } from '../../../../application/use-case/DeleteDatabaseVisualization'
 import { DynamoUserRepository } from '../../../../infrastructure/repository/DynamoUserRepository'
 import { getDatabases, getUser } from '../../actions'
 import { encrypt } from '../../../../application/crypto'
-import { DatabaseVisualizationComponent } from '../../../../infrastructure/components/database-visualization'
-import { Spinner } from '../../../../infrastructure/components/icons'
+import { DatabaseVisualizationComponent } from '../../../../components/database-visualization'
+import { Spinner } from '../../../../components/icons'
 
 const userRepository = new DynamoUserRepository()
 const deleteDatabaseVisualizationAction = new DeleteDatabaseVisualization(userRepository)

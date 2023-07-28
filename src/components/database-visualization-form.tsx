@@ -12,15 +12,15 @@ import {
   NumberProperty,
 } from '@notionhq/client/build/src/api-types'
 import { ReactElement, useState } from 'react'
-import { updateDatabaseVisualization } from '../api-client'
+import { updateDatabaseVisualization } from '../infrastructure/api-client'
 import { Select } from './select'
 import {
   DatabaseVisualizationSettings,
   DatabaseVisualization,
-} from '../../domain/DatabaseVisualization'
+} from '../domain/DatabaseVisualization'
 import { useAutoSave } from './useAutoSave'
-import { Button } from '../components/button'
-import { Trash } from '../components/icons'
+import { Button } from './button'
+import { Trash } from './icons'
 import { DateRangeInput } from './date-range-input'
 import { DatabaseSelect } from './database-select'
 import { useRouter } from 'next/navigation'

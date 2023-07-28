@@ -1,11 +1,11 @@
 import { Database, TitlePropertyValue } from '@notionhq/client/build/src/api-types'
 import Link from 'next/link'
-import { Button } from '../../infrastructure/components/button'
+import { Button } from '../../components/button'
 import { DynamoUserRepository } from '../../infrastructure/repository/DynamoUserRepository'
 import { redirect } from 'next/navigation'
 import { CreateRecurringTask } from '../../application/use-case/CreateRecurringTask'
 import { CreateDatabaseVisualization } from '../../application/use-case/CreateDatabaseVisualization'
-import { DeleteAccountButton } from '../../infrastructure/components/delete-account-button'
+import { DeleteAccountButton } from '../../components/delete-account-button'
 import { getDatabases, getUser } from './actions'
 
 const userRepository = new DynamoUserRepository()

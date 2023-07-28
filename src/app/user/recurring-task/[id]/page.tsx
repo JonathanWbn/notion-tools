@@ -1,4 +1,4 @@
-import { RecurringTaskView } from '../../../../infrastructure/components/recurring-task'
+import { RecurringTaskView } from '../../../../components/recurring-task'
 import { getUser } from '../../actions'
 import { redirect } from 'next/navigation'
 

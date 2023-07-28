@@ -1,6 +1,6 @@
 'use client'
 
-import { User } from '../../domain/User'
+import { User } from '../domain/User'
 import { Button } from './button'
 import axios from 'axios'
 

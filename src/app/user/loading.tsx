@@ -1,4 +1,4 @@
-import { Spinner } from '../../infrastructure/components/icons'
+import { Spinner } from '../../components/icons'
 
 export default function LoadingPage() {
   return (

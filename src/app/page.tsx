@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import { FunctionComponent } from 'react'
 import permissionsScreenshot from './notion-permissions.png'
-import { Button } from '../infrastructure/components/button'
-import { Toggle } from '../infrastructure/components/toggle'
+import { Button } from '../components/button'
+import { Toggle } from '../components/toggle'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {

@@ -1,4 +1,4 @@
-import { DatabaseVisualizationComponent } from '../../../infrastructure/components/database-visualization'
+import { DatabaseVisualizationComponent } from '../../../components/database-visualization'
 import { decrypt } from '../../../application/crypto'
 import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
 

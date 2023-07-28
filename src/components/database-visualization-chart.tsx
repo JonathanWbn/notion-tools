@@ -22,7 +22,7 @@ import {
 import {
   DatabaseVisualizationSettings,
   DatabaseVisualization,
-} from '../../domain/DatabaseVisualization'
+} from '../domain/DatabaseVisualization'
 import { SupportedDatePropertyValue } from './database-visualization-form'
 
 const notionColors = ['#5893b3', '#e49759', '#5b9d92', '#ea7271']

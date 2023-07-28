@@ -1,9 +1,13 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { RecurringTask, isExecutable } from '../../domain/RecurringTask'
+import { RecurringTask, isExecutable } from '../domain/RecurringTask'
 import { useEffect, useState } from 'react'
-import { deleteRecurringTask, runRecurringTask, updateRecurringTask } from '../api-client'
+import {
+  deleteRecurringTask,
+  runRecurringTask,
+  updateRecurringTask,
+} from '../infrastructure/api-client'
 import { Circle, Spinner } from './icons'
 import { RecurringTaskForm } from './recurring-task-form'
 import { Button } from './button'
