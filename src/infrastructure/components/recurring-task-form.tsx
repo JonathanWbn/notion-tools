@@ -12,7 +12,7 @@ import {
 } from '@notionhq/client/build/src/api-types'
 import { omit } from 'lodash'
 import { ReactElement, useState } from 'react'
-import { IRecurringTask } from '../../domain/RecurringTask'
+import { RecurringTask } from '../../domain/RecurringTask'
 import { useDatabases } from '../api-client'
 import { CheckboxInput } from './checkbox-input'
 import { DatabaseSelect } from './database-select'
@@ -27,12 +27,12 @@ import { URLInput } from './url-input'
 import { useAutoSave } from './useAutoSave'
 
 interface Props {
-  initialValues: IRecurringTask['settings']
-  onAutoSave: (values: IRecurringTask['settings']) => Promise<void>
+  initialValues: RecurringTask['settings']
+  onAutoSave: (values: RecurringTask['settings']) => Promise<void>
 }
 
 export function RecurringTaskForm({ initialValues, onAutoSave }: Props): ReactElement {
-  const [values, setValues] = useState<IRecurringTask['settings']>(initialValues)
+  const [values, setValues] = useState<RecurringTask['settings']>(initialValues)
   const { databases } = useDatabases()
   useAutoSave(onAutoSave, values, initialValues)
 
@@ -49,7 +49,11 @@ export function RecurringTaskForm({ initialValues, onAutoSave }: Props): ReactEl
     <>
       <div className="flex justify-between mb-2">
         <span className="text-lg">Database</span>
-        <DatabaseSelect value={values.databaseId} onChange={(v) => handleChange('databaseId', v)} />
+        <DatabaseSelect
+          value={values.databaseId}
+          onChange={(v) => handleChange('databaseId', v)}
+          databases={databases || []}
+        />
       </div>
       <label className="flex justify-between mb-2">
         <span className="text-lg">Frequency</span>

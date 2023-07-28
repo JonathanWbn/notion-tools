@@ -1,6 +1,9 @@
+'use client'
+
 import {
   CreatedTimeProperty,
   CreatedTimePropertyValue,
+  Database,
   DateProperty,
   DatePropertyValue,
   FormulaProperty,
@@ -9,14 +12,18 @@ import {
   NumberProperty,
 } from '@notionhq/client/build/src/api-types'
 import { ReactElement, useState } from 'react'
-import { useDatabases } from '../api-client'
+import { updateDatabaseVisualization } from '../api-client'
 import { Select } from './select'
-import { IDatabaseVisualization } from '../../domain/DatabaseVisualization'
+import {
+  DatabaseVisualizationSettings,
+  DatabaseVisualization,
+} from '../../domain/DatabaseVisualization'
 import { useAutoSave } from './useAutoSave'
 import { Button } from '../components/button'
 import { Trash } from '../components/icons'
 import { DateRangeInput } from './date-range-input'
 import { DatabaseSelect } from './database-select'
+import { useRouter } from 'next/navigation'
 
 export type SupportedDateProperty = DateProperty | CreatedTimeProperty | LastEditedTimeProperty
 export type SupportedDatePropertyValue =
@@ -25,16 +32,23 @@ export type SupportedDatePropertyValue =
   | LastEditedTimePropertyValue
 
 interface Props {
-  initialValues: IDatabaseVisualization['settings']
-  onAutoSave: (values: IDatabaseVisualization['settings']) => Promise<void>
+  initialValues: DatabaseVisualization['settings']
+  databases: Database[]
+  id: string
 }
 
-export function DatabaseVisualizationForm({ initialValues, onAutoSave }: Props): ReactElement {
-  const [values, setValues] = useState<IDatabaseVisualization['settings']>(initialValues)
-  const { databases } = useDatabases()
-  useAutoSave(onAutoSave, values, initialValues)
+export function DatabaseVisualizationForm({ initialValues, id, databases }: Props): ReactElement {
+  const router = useRouter()
+  const [values, setValues] = useState<DatabaseVisualization['settings']>(initialValues)
 
-  const selectedDatabase = databases?.find((db) => db.id === values.databaseId)
+  async function onSave(settings: DatabaseVisualizationSettings) {
+    await updateDatabaseVisualization(id, { settings })
+    router.refresh()
+  }
+
+  useAutoSave(onSave, values, initialValues)
+
+  const selectedDatabase = databases.find((db) => db.id === values.databaseId)
 
   const dateProperties = Object.entries(selectedDatabase?.properties || {}).filter(
     (entry): entry is [string, SupportedDateProperty] =>
@@ -52,6 +66,7 @@ export function DatabaseVisualizationForm({ initialValues, onAutoSave }: Props):
       <div className="flex justify-between my-1 items-center">
         <span className="text-lg">Database</span>
         <DatabaseSelect
+          databases={databases}
           value={values.databaseId}
           onChange={(v) => {
             setValues({ ...values, databaseId: v, xAxis: undefined, yAxis: undefined })

@@ -10,14 +10,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
 
   try {
     switch (method) {
-      case 'GET': {
-        const authUser = await getUserFromSession(req, res)
-        const userRepository = new DynamoUserRepository()
-        const user = await userRepository.getById(authUser.sub as string)
-
-        res.status(200).send(user)
-        break
-      }
       case 'DELETE': {
         const managementClient = new ManagementClient({
           domain: 'notion-tools.eu.auth0.com',

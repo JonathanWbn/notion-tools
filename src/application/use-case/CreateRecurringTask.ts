@@ -11,7 +11,12 @@ export class CreateRecurringTask {
   constructor(private readonly userRepository: UserRepository) {}
 
   public async invoke(request: CreateRecurringTaskRequest): Promise<RecurringTask> {
-    const recurringTask = new RecurringTask(uuid(), {}, false, new Date().toISOString())
+    const recurringTask: RecurringTask = {
+      id: uuid(),
+      settings: {},
+      isActive: false,
+      createdAt: new Date().toISOString(),
+    }
     const user = await this.userRepository.getById(request.userId)
 
     await this.userRepository.update(request.userId, {

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { RunRecurringTask } from '../../../application/use-case/RunRecurringTask'
 import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
+import { isExecutable, shouldBeExecutedNow } from '../../../domain/RecurringTask'
 
 const userRepository = new DynamoUserRepository()
 
@@ -14,13 +15,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
       for (const user of users) {
         console.log('user', user)
         const configsToExecute = user.recurringTasks.filter(
-          (config) => config.isActive && config.isExecutable
+          (config) => config.isActive && isExecutable(config)
         )
 
         for (const config of configsToExecute) {
           console.log('config', config)
 
-          if (config.shouldBeExecutedNow()) {
+          if (shouldBeExecutedNow(config)) {
             console.log('executing')
             const runRecurringTask = new RunRecurringTask(userRepository)
 

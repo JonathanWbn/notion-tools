@@ -1,45 +1,42 @@
-'use client'
-
-import { useRouter } from 'next/navigation'
-import React, { FunctionComponent } from 'react'
-import { mutate } from 'swr'
-import {
-  deleteDatabaseVisualization,
-  updateDatabaseVisualization,
-  useDatabaseQuery,
-  useDatabaseVisualization,
-  useUser,
-} from '../../../../infrastructure/api-client'
+import { redirect } from 'next/navigation'
+import React, { Suspense } from 'react'
 import { Button } from '../../../../infrastructure/components/button'
-import { DatabaseVisualizationComponent } from '../../../../infrastructure/components/database-visualization'
 import { DatabaseVisualizationForm } from '../../../../infrastructure/components/database-visualization-form'
-import { IDatabaseVisualization } from '../../../../domain/DatabaseVisualization'
+import { DeleteDatabaseVisualization } from '../../../../application/use-case/DeleteDatabaseVisualization'
+import { DynamoUserRepository } from '../../../../infrastructure/repository/DynamoUserRepository'
+import { getDatabases, getUser } from '../../actions'
+import { encrypt } from '../../../../application/crypto'
+import { DatabaseVisualizationComponent } from '../../../../infrastructure/components/database-visualization'
+import { Spinner } from '../../../../infrastructure/components/icons'
 
-const DatabaseVisualizationPage: FunctionComponent<{ params: { id: string } }> = ({ params }) => {
-  const router = useRouter()
+const userRepository = new DynamoUserRepository()
+const deleteDatabaseVisualizationAction = new DeleteDatabaseVisualization(userRepository)
+
+const DatabaseVisualizationPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params
-  const { user } = useUser()
+  const user = await getUser()
 
-  const { key } = useDatabaseVisualization(id as string)
-
-  const databaseVisualization = user?.databaseVisualizations.find((config) => config.id === id)
-  const { pages } = useDatabaseQuery(databaseVisualization?.settings.databaseId || '')
-
-  async function handleSubmit(settings: IDatabaseVisualization['settings']): Promise<void> {
-    if (!databaseVisualization) return
-    await updateDatabaseVisualization(databaseVisualization.id, { settings })
-    await mutate('/api/users/me')
+  if (!user || !user.notionAccess) {
+    redirect('/')
   }
 
-  async function handleDelete(): Promise<void> {
-    if (!databaseVisualization) return
-    await deleteDatabaseVisualization(databaseVisualization.id)
-    await mutate('/api/users/me')
-    router.push('/user')
-  }
+  const key = encrypt(JSON.stringify({ userId: user.userId, visualizationId: id }))
+  const databaseVisualization = user.databaseVisualizations.find((config) => config.id === id)
 
   if (!databaseVisualization) {
-    return null
+    redirect('/user')
+  }
+
+  const databases = (await getDatabases(user.notionAccess.access_token)) || []
+
+  async function deleteDatabaseVisualization() {
+    'use server'
+    if (!databaseVisualization || !user) return
+    await deleteDatabaseVisualizationAction.invoke({
+      userId: user.userId,
+      databaseVisualizationId: databaseVisualization.id,
+    })
+    redirect('/user')
   }
 
   return (
@@ -53,29 +50,36 @@ const DatabaseVisualizationPage: FunctionComponent<{ params: { id: string } }> =
         </div>
 
         <div className="w-full border-b border-opacity-80 my-5" />
-        {databaseVisualization && (
-          <DatabaseVisualizationForm
-            initialValues={databaseVisualization.settings}
-            onAutoSave={handleSubmit}
-          />
-        )}
+        <DatabaseVisualizationForm
+          id={databaseVisualization.id}
+          initialValues={databaseVisualization.settings}
+          databases={databases}
+        />
         <div className="w-full border-b border-opacity-80 my-5" />
-        {databaseVisualization.settings.databaseId &&
-          databaseVisualization.settings.xAxis &&
-          pages && (
-            <>
+        {databaseVisualization.settings.databaseId && databaseVisualization.settings.xAxis && (
+          <>
+            <Suspense
+              fallback={
+                <div className="flex justify-center">
+                  <Spinner className="animate-spin" />
+                </div>
+              }
+            >
               <DatabaseVisualizationComponent
+                user={user}
                 databaseVisualization={databaseVisualization}
-                pages={pages}
                 width={896}
                 height={400}
               />
-              <div className="w-full border-b border-opacity-80 my-5" />
-            </>
-          )}
-        <Button color="red" onClick={handleDelete} className="self-start">
-          Delete
-        </Button>
+            </Suspense>
+            <div className="w-full border-b border-opacity-80 my-5" />
+          </>
+        )}
+        <form action={deleteDatabaseVisualization}>
+          <Button color="red" className="self-start" type="submit">
+            Delete
+          </Button>
+        </form>
       </div>
     </div>
   )

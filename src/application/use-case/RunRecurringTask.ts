@@ -1,7 +1,7 @@
 import { Client } from '@notionhq/client/build/src'
 import { InputPropertyValue, RichTextInput } from '@notionhq/client/build/src/api-types'
 import { add, format } from 'date-fns'
-import { RecurringTask } from '../../domain/RecurringTask'
+import { RecurringTask, isExecutable } from '../../domain/RecurringTask'
 import { User } from '../../domain/User'
 import { UserRepository } from '../repository/UserRepository'
 
@@ -23,7 +23,7 @@ export class RunRecurringTask {
     if (!recurringTask) {
       throw new Error('No config found')
     }
-    if (!recurringTask.isExecutable) {
+    if (!isExecutable(recurringTask)) {
       throw new Error('Incomplete config.')
     }
     if (!user.notionAccess) {
@@ -40,7 +40,7 @@ export class RunRecurringTask {
       ...user,
       recurringTasks: user.recurringTasks.map((config) =>
         config.id === request.recurringTaskId
-          ? config.copyWith({ lastExecutedAt: new Date().toISOString() })
+          ? { ...config, lastExecutedAt: new Date().toISOString() }
           : config
       ),
     })

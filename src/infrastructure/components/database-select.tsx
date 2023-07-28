@@ -1,16 +1,17 @@
 import React from 'react'
 
-import { useDatabases } from '../api-client'
 import { Select } from './select'
+import { Database } from '@notionhq/client/build/src/api-types'
 
 export function DatabaseSelect({
   value,
   onChange,
+  databases,
 }: {
   value?: string
   onChange: (v: string) => void
+  databases: Database[]
 }): React.ReactElement {
-  const { databases } = useDatabases()
   const [useManual, setUseManual] = React.useState(false)
 
   const databaseOptions = (databases || []).map((database) => ({

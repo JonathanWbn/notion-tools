@@ -1,23 +1,21 @@
 import { Database, TitlePropertyValue } from '@notionhq/client/build/src/api-types'
 import Link from 'next/link'
 import { Button } from '../../infrastructure/components/button'
-import { getSession } from '@auth0/nextjs-auth0'
 import { DynamoUserRepository } from '../../infrastructure/repository/DynamoUserRepository'
-import axios from 'axios'
-import { User } from '../../domain/User'
 import { redirect } from 'next/navigation'
 import { CreateRecurringTask } from '../../application/use-case/CreateRecurringTask'
 import { CreateDatabaseVisualization } from '../../application/use-case/CreateDatabaseVisualization'
 import { DeleteAccountButton } from '../../infrastructure/components/delete-account-button'
+import { getDatabases, getUser } from './actions'
 
 const userRepository = new DynamoUserRepository()
 const createRecurringTask = new CreateRecurringTask(userRepository)
 const createDatabaseVisualization = new CreateDatabaseVisualization(userRepository)
 
-const User = async () => {
+const UserPage = async () => {
   const user = await getUser()
-  if (!user) redirect('/')
-  const databases = await getDatabases(user)
+  if (!user || !user.notionAccess) redirect('/')
+  const databases = await getDatabases(user.notionAccess.access_token)
 
   async function addRecurringTask() {
     'use server'
@@ -149,34 +147,4 @@ const User = async () => {
   }
 }
 
-async function getUser() {
-  const session = await getSession()
-
-  if (!session) {
-    return null
-  }
-
-  const user = userRepository.getById(session.user.sub)
-  return user
-}
-
-async function getDatabases(user: User) {
-  if (!user.notionAccess) {
-    return null
-  }
-
-  const { data } = await axios.post<{ results: Database[] }>(
-    'https://api.notion.com/v1/search',
-    { filter: { value: 'database', property: 'object' } },
-    {
-      headers: {
-        'Notion-Version': '2022-06-28',
-        Authorization: `Bearer ${user.notionAccess.access_token}`,
-      },
-    }
-  )
-
-  return data.results
-}
-
-export default User
+export default UserPage

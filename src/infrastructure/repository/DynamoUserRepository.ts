@@ -7,8 +7,8 @@ import {
   UpdateItemCommand,
 } from '@aws-sdk/client-dynamodb'
 import { UserRepository } from '../../application/repository/UserRepository'
-import { DatabaseVisualization, IDatabaseVisualization } from '../../domain/DatabaseVisualization'
-import { IRecurringTask, RecurringTask } from '../../domain/RecurringTask'
+import { DatabaseVisualization } from '../../domain/DatabaseVisualization'
+import { RecurringTask } from '../../domain/RecurringTask'
 import { User } from '../../domain/User'
 
 const { DYNAMO_DB_USER_REPOSITORY, MY_AWS_ACCESS_KEY_ID, MY_AWS_SECRET_ACCESS_KEY } =
@@ -123,22 +123,10 @@ export class DynamoUserRepository implements UserRepository {
   private parseUser(user: PersistedItem): User {
     return {
       ...user,
-      recurringTasks: (JSON.parse(user.recurringTasks || '[]') as IRecurringTask[]).map(
-        (recurringTask) =>
-          new RecurringTask(
-            recurringTask.id,
-            recurringTask.settings,
-            recurringTask.isActive,
-            recurringTask.createdAt,
-            recurringTask.lastExecutedAt
-          )
-      ),
-      databaseVisualizations: (
-        JSON.parse(user.databaseVisualizations || '[]') as IDatabaseVisualization[]
-      ).map(
-        (databaseVisualization) =>
-          new DatabaseVisualization(databaseVisualization.id, databaseVisualization.settings)
-      ),
+      recurringTasks: JSON.parse(user.recurringTasks || '[]') as RecurringTask[],
+      databaseVisualizations: JSON.parse(
+        user.databaseVisualizations || '[]'
+      ) as DatabaseVisualization[],
       notionAccess: user.notionAccess ? JSON.parse(user.notionAccess) : undefined,
     }
   }

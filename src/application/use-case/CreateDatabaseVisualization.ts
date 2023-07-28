@@ -11,7 +11,7 @@ export class CreateDatabaseVisualization {
   constructor(private readonly userRepository: UserRepository) {}
 
   public async invoke(request: CreateDatabaseVisualizationRequest): Promise<DatabaseVisualization> {
-    const databaseVisualization = new DatabaseVisualization(uuid(), { type: 'line' })
+    const databaseVisualization: DatabaseVisualization = { id: uuid(), settings: { type: 'line' } }
     const user = await this.userRepository.getById(request.userId)
 
     await this.userRepository.update(request.userId, {

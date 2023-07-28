@@ -17,7 +17,16 @@ export class UpdateRecurringTask {
     return await this.userRepository.update(request.userId, {
       ...user,
       recurringTasks: user.recurringTasks.map((tc) =>
-        tc.id === request.recurringTaskId ? tc.copyWith(request.recurringTask) : tc
+        tc.id === request.recurringTaskId
+          ? {
+              ...tc,
+              ...request.recurringTask,
+              isActive:
+                request.recurringTask.isActive !== undefined
+                  ? request.recurringTask.isActive
+                  : tc.isActive,
+            }
+          : tc
       ),
     })
   }

@@ -17,7 +17,7 @@ export class UpdateDatabaseVisualization {
     return await this.userRepository.update(request.userId, {
       ...user,
       databaseVisualizations: user.databaseVisualizations.map((tc) =>
-        tc.id === request.databaseVisualizationId ? tc.copyWith(request.databaseVisualization) : tc
+        tc.id === request.databaseVisualizationId ? { ...tc, ...request.databaseVisualization } : tc
       ),
     })
   }
