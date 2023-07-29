@@ -1,12 +1,22 @@
-'use client'
-
 import { UserProvider } from '@auth0/nextjs-auth0/client'
 import { Roboto } from 'next/font/google'
 import { Header } from '../components/header'
-import '../styles/globals.css'
+import './globals.css'
 import { Metadata } from 'next'
 
 const inter = Roboto({ weight: ['300', '400', '500'], subsets: ['latin'] })
+
+export const metadata: Metadata = {
+  title: 'Notion tools',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+  },
+  description:
+    'Notion tools solves the problem of recurring tasks in Notion. Instead of using workarounds, you can now fully automate your workflow.',
+  keywords: 'notion tools recurring tasks automation integration repeat free',
+  authors: [{ name: 'Jonathan Wieben', url: 'https://jonathanwieben.com/' }],
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
