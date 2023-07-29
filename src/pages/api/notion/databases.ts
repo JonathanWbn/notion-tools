@@ -1,8 +1,8 @@
-import axios from 'axios'
-import { NextApiRequest, NextApiResponse } from 'next'
 import { decrypt } from '../../../application/crypto'
 import { getUserFromSession } from '../../../infrastructure/api-utils'
 import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
+import axios from 'axios'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 const userRepository = new DynamoUserRepository()
 

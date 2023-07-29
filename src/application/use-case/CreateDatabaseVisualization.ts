@@ -1,7 +1,7 @@
-import { v4 as uuid } from 'uuid'
+import { DatabaseVisualization } from '../../domain/DatabaseVisualization'
 import { User } from '../../domain/User'
 import { UserRepository } from '../repository/UserRepository'
-import { DatabaseVisualization } from '../../domain/DatabaseVisualization'
+import { v4 as uuid } from 'uuid'
 
 interface CreateDatabaseVisualizationRequest {
   userId: User['userId']

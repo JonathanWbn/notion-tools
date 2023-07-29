@@ -1,8 +1,8 @@
-import { withApiAuthRequired } from '@auth0/nextjs-auth0'
-import { NextApiRequest, NextApiResponse } from 'next'
 import { RunRecurringTask } from '../../../../../application/use-case/RunRecurringTask'
 import { getUserFromSession } from '../../../../../infrastructure/api-utils'
 import { DynamoUserRepository } from '../../../../../infrastructure/repository/DynamoUserRepository'
+import { withApiAuthRequired } from '@auth0/nextjs-auth0'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 const handler = async (
   req: NextApiRequest,

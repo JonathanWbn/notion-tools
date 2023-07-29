@@ -1,5 +1,5 @@
-import { InputPropertyValue } from '@notionhq/client/build/src/api-types'
 import { weekdayMap } from '../utils'
+import { InputPropertyValue } from '@notionhq/client/build/src/api-types'
 import { isFuture, sub, set, setDay, isAfter, setDate, add, isBefore } from 'date-fns'
 
 export function isExecutable(recurringTask: RecurringTask): boolean {

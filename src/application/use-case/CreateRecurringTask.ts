@@ -1,7 +1,7 @@
-import { v4 as uuid } from 'uuid'
+import { RecurringTask } from '../../domain/RecurringTask'
 import { User } from '../../domain/User'
 import { UserRepository } from '../repository/UserRepository'
-import { RecurringTask } from '../../domain/RecurringTask'
+import { v4 as uuid } from 'uuid'
 
 interface CreateRecurringTaskRequest {
   userId: User['userId']

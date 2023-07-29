@@ -1,6 +1,17 @@
 'use client'
 
 import {
+  DatabaseVisualizationSettings,
+  DatabaseVisualization,
+} from '../domain/DatabaseVisualization'
+import { updateDatabaseVisualization } from '../infrastructure/api-client'
+import { Button } from './button'
+import { DatabaseSelect } from './database-select'
+import { DateRangeInput } from './date-range-input'
+import { Trash } from './icons'
+import { Select } from './select'
+import { useAutoSave } from './useAutoSave'
+import {
   CreatedTimeProperty,
   CreatedTimePropertyValue,
   Database,
@@ -11,19 +22,8 @@ import {
   LastEditedTimePropertyValue,
   NumberProperty,
 } from '@notionhq/client/build/src/api-types'
-import { ReactElement, useState } from 'react'
-import { updateDatabaseVisualization } from '../infrastructure/api-client'
-import { Select } from './select'
-import {
-  DatabaseVisualizationSettings,
-  DatabaseVisualization,
-} from '../domain/DatabaseVisualization'
-import { useAutoSave } from './useAutoSave'
-import { Button } from './button'
-import { Trash } from './icons'
-import { DateRangeInput } from './date-range-input'
-import { DatabaseSelect } from './database-select'
 import { useRouter } from 'next/navigation'
+import { ReactElement, useState } from 'react'
 
 export type SupportedDateProperty = DateProperty | CreatedTimeProperty | LastEditedTimeProperty
 export type SupportedDatePropertyValue =

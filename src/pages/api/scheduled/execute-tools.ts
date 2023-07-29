@@ -1,7 +1,7 @@
-import { NextApiRequest, NextApiResponse } from 'next'
 import { RunRecurringTask } from '../../../application/use-case/RunRecurringTask'
-import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
 import { isExecutable, shouldBeExecutedNow } from '../../../domain/RecurringTask'
+import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 const userRepository = new DynamoUserRepository()
 

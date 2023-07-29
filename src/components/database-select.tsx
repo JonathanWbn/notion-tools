@@ -1,7 +1,6 @@
-import React from 'react'
-
 import { Select } from './select'
 import { Database } from '@notionhq/client/build/src/api-types'
+import React from 'react'
 
 export function DatabaseSelect({
   value,

@@ -1,7 +1,7 @@
+import { PropertyInputProps } from './recurring-task-form'
 import { TitleProperty, TitlePropertyValue } from '@notionhq/client/build/src/api-types'
 import { format } from 'date-fns'
 import { ReactElement } from 'react'
-import { PropertyInputProps } from './recurring-task-form'
 
 export function TitleInput({
   property,

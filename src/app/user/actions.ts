@@ -1,7 +1,7 @@
 'use server'
 
-import { getSession } from '@auth0/nextjs-auth0'
 import { DynamoUserRepository } from '../../infrastructure/repository/DynamoUserRepository'
+import { getSession } from '@auth0/nextjs-auth0'
 import { Database } from '@notionhq/client/build/src/api-types'
 
 const userRepository = new DynamoUserRepository()

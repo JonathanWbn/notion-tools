@@ -1,5 +1,5 @@
-import { DatabaseVisualizationComponent } from '../../../components/database-visualization'
 import { decrypt } from '../../../application/crypto'
+import { DatabaseVisualizationComponent } from '../../../components/database-visualization'
 import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
 
 export default async function Embedded(props: { params: { hash: string } }) {

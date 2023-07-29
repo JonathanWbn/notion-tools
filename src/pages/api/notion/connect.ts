@@ -1,9 +1,9 @@
-import { withApiAuthRequired } from '@auth0/nextjs-auth0'
-import axios from 'axios'
-import { NextApiRequest, NextApiResponse } from 'next'
 import { ConnectNotion } from '../../../application/use-case/ConnectNotion'
 import { getUserFromSession } from '../../../infrastructure/api-utils'
 import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
+import { withApiAuthRequired } from '@auth0/nextjs-auth0'
+import axios from 'axios'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 const { NOTION_OAUTH_CLIENT_ID, NOTION_OAUTH_CLIENT_SECRET } = process.env
 

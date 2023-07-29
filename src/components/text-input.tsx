@@ -1,6 +1,6 @@
+import { PropertyInputProps } from './recurring-task-form'
 import { RichTextProperty, RichTextPropertyValue } from '@notionhq/client/build/src/api-types'
 import { ReactElement } from 'react'
-import { PropertyInputProps } from './recurring-task-form'
 
 export function TextInput({
   property,

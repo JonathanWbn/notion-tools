@@ -1,3 +1,16 @@
+import { RecurringTask } from '../domain/RecurringTask'
+import { useDatabases } from '../infrastructure/api-client'
+import { CheckboxInput } from './checkbox-input'
+import { DatabaseSelect } from './database-select'
+import { DateInput } from './date-input'
+import { MultiSelectInput } from './multi-select-input'
+import { NumberInput } from './number-input'
+import { Select } from './select'
+import { SelectInput } from './select-input'
+import { TextInput } from './text-input'
+import { TitleInput } from './title-input'
+import { URLInput } from './url-input'
+import { useAutoSave } from './useAutoSave'
 import {
   CheckboxPropertyValue,
   DatePropertyValue,
@@ -12,19 +25,6 @@ import {
 } from '@notionhq/client/build/src/api-types'
 import { omit } from 'lodash'
 import { ReactElement, useState } from 'react'
-import { RecurringTask } from '../domain/RecurringTask'
-import { useDatabases } from '../infrastructure/api-client'
-import { CheckboxInput } from './checkbox-input'
-import { DatabaseSelect } from './database-select'
-import { DateInput } from './date-input'
-import { MultiSelectInput } from './multi-select-input'
-import { NumberInput } from './number-input'
-import { Select } from './select'
-import { SelectInput } from './select-input'
-import { TextInput } from './text-input'
-import { TitleInput } from './title-input'
-import { URLInput } from './url-input'
-import { useAutoSave } from './useAutoSave'
 
 interface Props {
   initialValues: RecurringTask['settings']

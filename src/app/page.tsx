@@ -1,21 +1,8 @@
-import Image from 'next/image'
-import { FunctionComponent } from 'react'
-import permissionsScreenshot from './notion-permissions.png'
 import { Button } from '../components/button'
 import { Toggle } from '../components/toggle'
-import { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Notion tools',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-  },
-  description:
-    'Notion tools solves the problem of recurring tasks in Notion. Instead of using workarounds, you can now fully automate your workflow.',
-  keywords: 'notion tools recurring tasks automation integration repeat free',
-  authors: [{ name: 'Jonathan Wieben', url: 'https://jonathanwieben.com/' }],
-}
+import permissionsScreenshot from './notion-permissions.png'
+import Image from 'next/image'
+import { FunctionComponent } from 'react'
 
 const Home: FunctionComponent = () => {
   return (

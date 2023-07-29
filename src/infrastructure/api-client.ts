@@ -1,10 +1,10 @@
+import { DatabaseVisualization } from '../domain/DatabaseVisualization'
+import { RecurringTask } from '../domain/RecurringTask'
+import { User } from '../domain/User'
 import { useUser as use0AuthUser } from '@auth0/nextjs-auth0/client'
 import { Database } from '@notionhq/client/build/src/api-types'
 import axios from 'axios'
 import useSWR from 'swr'
-import { DatabaseVisualization } from '../domain/DatabaseVisualization'
-import { RecurringTask } from '../domain/RecurringTask'
-import { User } from '../domain/User'
 
 export async function runRecurringTask(configId: string): Promise<void> {
   await axios.post(`/api/users/recurring-task/${configId}/run`)

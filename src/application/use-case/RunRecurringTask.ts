@@ -1,9 +1,9 @@
-import { Client } from '@notionhq/client/build/src'
-import { InputPropertyValue, RichTextInput } from '@notionhq/client/build/src/api-types'
-import { add, format } from 'date-fns'
 import { RecurringTask, isExecutable } from '../../domain/RecurringTask'
 import { User } from '../../domain/User'
 import { UserRepository } from '../repository/UserRepository'
+import { Client } from '@notionhq/client/build/src'
+import { InputPropertyValue, RichTextInput } from '@notionhq/client/build/src/api-types'
+import { add, format } from 'date-fns'
 
 interface RunRecurringTaskRequest {
   userId: User['userId']

@@ -1,3 +1,7 @@
+import { UserRepository } from '../../application/repository/UserRepository'
+import { DatabaseVisualization } from '../../domain/DatabaseVisualization'
+import { RecurringTask } from '../../domain/RecurringTask'
+import { User } from '../../domain/User'
 import {
   DeleteItemCommand,
   DynamoDBClient,
@@ -6,10 +10,6 @@ import {
   ScanCommand,
   UpdateItemCommand,
 } from '@aws-sdk/client-dynamodb'
-import { UserRepository } from '../../application/repository/UserRepository'
-import { DatabaseVisualization } from '../../domain/DatabaseVisualization'
-import { RecurringTask } from '../../domain/RecurringTask'
-import { User } from '../../domain/User'
 
 const { DYNAMO_DB_USER_REPOSITORY, MY_AWS_ACCESS_KEY_ID, MY_AWS_SECRET_ACCESS_KEY } =
   process.env as Record<string, string>

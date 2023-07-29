@@ -1,9 +1,9 @@
 'use server'
 
-import { Page } from '@notionhq/client/build/src/api-types'
-import { User } from '../domain/User'
 import { DatabaseVisualization } from '../domain/DatabaseVisualization'
+import { User } from '../domain/User'
 import { DatabaseVisualizationChart } from './database-visualization-chart'
+import { Page } from '@notionhq/client/build/src/api-types'
 
 type Props = {
   user: User

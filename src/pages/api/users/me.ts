@@ -1,9 +1,9 @@
-import { withApiAuthRequired } from '@auth0/nextjs-auth0'
-import { ManagementClient } from 'auth0'
-import { NextApiRequest, NextApiResponse } from 'next'
 import { DeleteUser } from '../../../application/use-case/DeleteUser'
 import { getUserFromSession } from '../../../infrastructure/api-utils'
 import { DynamoUserRepository } from '../../../infrastructure/repository/DynamoUserRepository'
+import { withApiAuthRequired } from '@auth0/nextjs-auth0'
+import { ManagementClient } from 'auth0'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   const { method } = req

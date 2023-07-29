@@ -1,6 +1,6 @@
+import { PropertyInputProps } from './recurring-task-form'
 import { NumberProperty, NumberPropertyValue } from '@notionhq/client/build/src/api-types'
 import { ReactElement } from 'react'
-import { PropertyInputProps } from './recurring-task-form'
 
 export function NumberInput({
   property,
