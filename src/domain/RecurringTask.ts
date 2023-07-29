@@ -1,6 +1,15 @@
-import { weekdayMap } from '../utils'
 import { InputPropertyValue } from '@notionhq/client/build/src/api-types'
 import { isFuture, sub, set, setDay, isAfter, setDate, add, isBefore } from 'date-fns'
+
+const weekdayMap: Record<Weekday, number> = {
+  sun: 0,
+  mon: 1,
+  tues: 2,
+  wed: 3,
+  thu: 4,
+  fri: 5,
+  sat: 6,
+}
 
 export function isExecutable(recurringTask: RecurringTask): boolean {
   if (
