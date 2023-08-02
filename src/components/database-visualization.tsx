@@ -51,6 +51,7 @@ async function queryDatabase(
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
+    cache: 'no-cache',
   })
 
   const { results, has_more, next_cursor } = await res.json()
