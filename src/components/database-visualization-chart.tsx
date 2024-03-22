@@ -177,10 +177,6 @@ export function DatabaseVisualizationChart({
         }
       })
       .sort((a, b) => +a.x - +b.x)
-      .filter((el) => {
-        const [start, end] = settings.xAxisTimeFrame || []
-        return (!start || +el.x > +new Date(start)) && (!end || +el.x < +new Date(end))
-      })
       .map((el) => ({ ...el, x: `  ${format(el.x, 'PP')}  ` }))
   }
 
