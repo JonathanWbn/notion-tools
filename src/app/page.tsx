@@ -72,6 +72,18 @@ const Home: FunctionComponent = () => {
         </div>
         <div className="max-w-2xl w-full flex flex-col">
           <h3 className="mt-5 text-2xl font-bold">📊 Database visualization</h3>
+          <p className="rounded-sm bg-amber-100 bg-opacity-80 mt-4 p-4">
+            <span className="mr-2">👌</span>This use case has now been solved by Notion&lsquo;s{' '}
+            <a
+              href="https://www.notion.so/help/charts"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 underline transition-colors hover:text-gray-600"
+            >
+              chart view
+            </a>
+            .
+          </p>
           <p className="rounded-sm bg-gray-100 bg-opacity-80 mt-4 p-4">
             <span className="mr-2">👉</span>This tool allows you to visualization the data in your
             databases.
