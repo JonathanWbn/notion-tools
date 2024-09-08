@@ -1,6 +1,7 @@
 import { Header } from '../components/header'
 import './globals.css'
 import { UserProvider } from '@auth0/nextjs-auth0/client'
+import { Analytics } from '@vercel/analytics/react'
 import { Metadata } from 'next'
 import { Roboto } from 'next/font/google'
 
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <UserProvider>
           <Header />
           <main>{children}</main>
+          <Analytics />
         </UserProvider>
       </body>
     </html>
